@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from config import Config  
 from sqlalchemy import text
 from routes.auth import auth_bp
+from routes.nvtn import nvtn_bp
 from extensions import db
 
 app = Flask(__name__)
@@ -10,7 +11,7 @@ app.config.from_object(Config)
 db.init_app(app)
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
-
+app.register_blueprint(nvtn_bp, url_prefix="/nhanvientn")
 @app.route('/')
 def index():
     return "Hello, World!"

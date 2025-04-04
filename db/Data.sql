@@ -29,3 +29,4 @@ EXEC sp_them_nhan_vien
     @PASSWORD = 'mai456';
 GO
 
+select * from users
