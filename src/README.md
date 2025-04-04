@@ -33,12 +33,15 @@
 
 ### Frontend
 Vào thu mục frontend
-1. Cài đặt các gói cần thiết từ `package.json` 
+1. Cài đặt các gói cần thiết từ `package.json`
+   
    Di chuyển vào thư mục frontend và chạy:
    `cd my-react-app`
+   
    Sau khi di chuyển vào thư mục my-react-app chạy:
    `npm install`  
 
-2. Sau khi hoản tất các bước trên, chạy:
+3. Sau khi hoản tất các bước trên, chạy:
    `npm run dev`
+   
    Server sẽ được mở trên local host hiển thị ở terminal, hãy Ctrl + Click chuột vào đường dẫn đó để mở
