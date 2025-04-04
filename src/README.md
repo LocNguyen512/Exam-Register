@@ -15,14 +15,14 @@
    
    `.\env-er\Scripts\activate.bat`  
 
-4. Cài đặt tất cả các gói trong file `requirements.txt` vào môi trường ảo  
-   `pip install -r requirements.txt`  
+4. Cài đặt tất cả các gói trong file `requirments.txt` vào môi trường ảo  
+   `pip install -r requirments.txt`  
 
 5. Khi muốn cài đặt một gói mới vào môi trường ảo
    - Cài đặt gói mới  
      `pip install [package]`
-   - Cập nhật lại `requirements.txt`  
-     `pip freeze > requirements.txt`  
+   - Cập nhật lại `requirments.txt`  
+     `pip freeze > requirments.txt`  
 
 6. Chạy backend
    `py app.py`
@@ -32,16 +32,10 @@
 
 
 ### Frontend
-Vào thu mục frontend
-1. Cài đặt các gói cần thiết từ `package.json`
-   
-   Di chuyển vào thư mục frontend và chạy:
-   `cd my-react-app`
-   
-   Sau khi di chuyển vào thư mục my-react-app chạy:
+
+1. Cài đặt các gói cần thiết từ `package.json` 
+   Di chuyển vào thư mục frontend và chạy:  
    `npm install`  
 
-3. Sau khi hoản tất các bước trên, chạy:
-   `npm run dev`
-   
-   Server sẽ được mở trên local host hiển thị ở terminal, hãy Ctrl + Click chuột vào đường dẫn đó để mở
+2. Chạy frontend
+   `npm start`  
