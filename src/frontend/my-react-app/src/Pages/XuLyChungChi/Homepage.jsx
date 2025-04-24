@@ -1,14 +1,15 @@
-import Header from '../../component/Header/Customer/Header';
+import Header from '../../component/Header/NVNhapLieu/Header';
 import Footer from '../../component/Footer/Footer';
 import Body from '../../component/Body/Body';
-import './Home.css';
+import './Homepage.css';
 
 function Layout({ children }) {
     return (
         <div className="layout">
             <Header />
-            <Body />
+            <Body/>
             <Footer />
+            
         </div>
     );
 }

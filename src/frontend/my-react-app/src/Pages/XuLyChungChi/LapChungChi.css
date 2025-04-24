@@ -1,0 +1,104 @@
+.form-container {
+    max-width: 600px;
+    margin: 0px auto;
+    margin-top: -10px;
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #111;
+}
+
+.certificate-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-group {
+    position: relative;
+    margin: 20px 0;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    background: none;
+}
+
+.input-group label {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    color: #999;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.2s ease all;
+    background-color: white;
+    padding: 0 4px;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown):valid + label {
+    top: -10px;
+    left: 8px;
+    font-size: 13px;
+    color: #4f46e5;
+}
+
+/* Ẩn placeholder mặc định của input type="date" trên trình duyệt Chrome */
+input[type="date"]::placeholder {
+    color: transparent;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+    color: transparent;
+}
+
+/* Khi người dùng focus vào input, hiển thị lại ngày */
+input[type="date"]:focus::-webkit-datetime-edit {
+    color: #000;
+}
+
+/* Khi người dùng đã nhập và mất focus, giữ giá trị ngày đã nhập */
+input[type="date"]:valid::-webkit-datetime-edit {
+    color: #000;
+}
+
+.submit-btn {
+    background-color: #4f46e5;
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+    background-color: #4338ca;
+}
+
+.error-msg {
+    color: #e11d48;
+    font-size: 14px;
+    margin-top: -10px;
+    font-weight: 500;
+    text-align: center;
+}

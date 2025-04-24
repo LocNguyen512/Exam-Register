@@ -1,6 +1,6 @@
 import React from 'react';
 import './BangGia.css';
-import Header from '../../component/Header/Header';
+import Header from '../../component/Header/Customer/Header';
 import Footer from '../../component/Footer/Footer';
 
 function BlankPage() {
