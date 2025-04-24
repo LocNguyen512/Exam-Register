@@ -1,7 +1,5 @@
 import './Header.css';
 function Header() {
-    const location = useLocation();
-    const hideNav = location.pathname === '/DangNhap'; // Ẩn menu khi ở trang đăng nhập
     return (
         <header className="header">
       <div className="header-left">
