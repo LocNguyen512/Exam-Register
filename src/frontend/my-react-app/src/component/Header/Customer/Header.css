@@ -72,11 +72,3 @@ nav ul li a:hover {
         gap: 8px;
     }
 } 
-.login-button.active {
-    background: transparent;
-    color: #6366f1;
-    font-weight: bold;
-    border-bottom: 3px solid #6366f1;
-    border-radius: 0;
-  }
-  
