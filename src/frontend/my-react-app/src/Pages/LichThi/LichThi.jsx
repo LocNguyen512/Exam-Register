@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../../component/Header/Header';
+import Header from '../../component/Header/Customer/Header';
 import Footer from '../../component/Footer/Footer';
 import './LichThi.css';
 
