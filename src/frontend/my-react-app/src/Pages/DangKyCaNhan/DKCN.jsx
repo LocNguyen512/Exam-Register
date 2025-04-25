@@ -1,7 +1,88 @@
 import './DKCN.css';
+<<<<<<< Updated upstream
 import Header from '../../component/Header/NVTN/Header';
+=======
+import Header from '../../component/Header/Header';
+import { useRef, useState, useEffect } from 'react';
+import axios from 'axios';
+>>>>>>> Stashed changes
 
-function Layout() {
+
+  function Layout() {
+    // Khách hàng
+    const fullNameRef = useRef();
+    const phoneRef = useRef();
+    const emailRef = useRef();
+    const addressRef = useRef();
+    const cityRef = useRef();
+    const provinceRef = useRef();
+
+    // Thí sinh
+    const fullNameTSRef = useRef();
+    const dobTSRef = useRef();
+    const sdtTSRef = useRef();
+    const emailTSRef = useRef();
+    const cccdTSRef = useRef();
+
+    // Kiểm tra thông tin khách hàng
+    const [hasCheckedValid, setHasCheckedValid] = useState(false);  
+    const [certificates, setCertificates] = useState([]);
+
+    useEffect(() => {
+      const fetchCertificates = async () => {
+        try {
+          const res = await axios.get('http://localhost:5000/loaidgnl/docds_dgnl');
+          setCertificates(res.data);  // lưu danh sách vào state
+        } catch (error) {
+          console.error("Lỗi khi lấy danh sách chứng chỉ:", error);
+        }
+      };
+    
+      fetchCertificates();
+    }, []);
+
+    const handleCheckCustomer = async () => {
+      const customer = {
+        fullName: fullNameRef.current.value,
+        phone: phoneRef.current.value,
+        email: emailRef.current.value,
+        address: addressRef.current.value,
+        city: cityRef.current.value,
+        province: provinceRef.current.value,
+      };
+    
+      const candidate = {
+        fullName: fullNameTSRef.current.value,
+        dob: dobTSRef.current.value,
+        phone: sdtTSRef.current.value,
+        email: emailTSRef.current.value,
+        cccd: cccdTSRef.current.value,
+      };
+    
+      try {
+        const res = await axios.post('http://localhost:5000/thisinh/kiemtra', {
+          customer,
+          candidate,
+        });
+    
+        alert(res.data.message); // ✅ Dữ liệu hợp lệ
+        setHasCheckedValid(true);
+      } catch (err) {
+        alert(err.response?.data?.error || 'Đã xảy ra lỗi kết nối với máy chủ');
+        setHasCheckedValid(false);
+      }
+    };
+    
+    const handlePrintRegistration = async () => {
+      if (!hasCheckedValid) {
+        alert("Vui lòng kiểm tra thông tin khách hàng trước khi in phiếu.");
+        return;
+      }
+    
+      // Nếu muốn xác nhận lại với backend, có thể gọi validateData() lại ở đây.
+      alert("✅ Thông tin đã được xác minh. Tiến hành in phiếu...");
+      // window.print(); hoặc chuyển trang
+    };
   return (
     <div className="layout">
       <Header />
@@ -28,77 +109,76 @@ function Layout() {
           </div>
 
           <div className="form-section">
-            <fieldset>
+          <fieldset>
             <legend>
-              <img src="/field-input-dkcn.png" alt="icon" class="legend-icon" />
+              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon" />
               Khách hàng tự do
             </legend>
-              <div className="row">
-                <div class="form-group">
-                  <label for="full-name">Tên khách hàng</label>
-                  <input id="full-name" placeholder="Full name" />
-                </div>
-                  <div class="form-group">
-                    <label for="phone">Số điện thoại</label>
-                    <input id="phone" placeholder="Phone number" />
-                  </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="cus-full-name">Tên khách hàng</label>
+                <input id="cus-full-name" placeholder="Full name" ref={fullNameRef} />
               </div>
-              <div className="row">
-                <div class="form-group">
-                      <label for="email">Email</label>
-                      <input id="email" placeholder="Email" />
-                </div>
-                <div class="form-group">
-                  <label for="address">Địa chỉ nhà</label>
-                  <input id="address" placeholder="Add address" />
-                </div>
+              <div className="form-group">
+                <label htmlFor="cus-phone">Số điện thoại</label>
+                <input id="cus-phone" placeholder="Phone number" ref={phoneRef} />
               </div>
-              <div className="row">
-                <div class="form-group">
-                  <label for="city">Thành phố</label>
-                  <input id="city" placeholder="City" />
-                </div>
-                <div class="form-group">
-                  <label for="province">Tỉnh thành</label>   
-                  <input id="province" placeholder="Province" />   
-                </div>
+            </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="cus-email">Email</label>
+                <input id="cus-email" placeholder="Email" ref={emailRef} />
               </div>
-            </fieldset>
+              <div className="form-group">
+                <label htmlFor="cus-address">Địa chỉ nhà</label>
+                <input id="cus-address" placeholder="Add address" ref={addressRef} />
+              </div>
+            </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="cus-city">Thành phố</label>
+                <input id="cus-city" placeholder="City" ref={cityRef} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cus-province">Tỉnh thành</label>
+                <input id="cus-province" placeholder="Province" ref={provinceRef} />
+              </div>
+            </div>
+          </fieldset>
 
-            <fieldset>
+          <fieldset>
             <legend>
-              <img src="/field-input-dkcn.png" alt="icon" class="legend-icon" />
+              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon" />
               Thông tin thí sinh
             </legend>
-              <div className="row">
-                <div class="form-group">
-                  <label for="name">Họ tên</label>
-                  <input id="name" placeholder="Name" />
-                </div>
-                <div class="form-group">  
-                  <label for="DOB">DOB</label>
-                  <input id="DOB" placeholder="mm/dd/yyyy" type="date" />  
-                </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="can-name">Họ tên</label>
+                <input id="can-name" placeholder="Name" ref={fullNameTSRef} />
               </div>
-              <div className="row">
-                <div class="form-group">
-                    <label for="phone">Số điện thoại</label>
-                    <input id="phone" placeholder="Phone number" />
-                </div>
-                <div class="form-group">
-                      <label for="email">Email</label>
-                      <input id="email" placeholder="Email" />
-                </div>
+              <div className="form-group">
+                <label htmlFor="can-dob">DOB</label>
+                <input id="can-dob" type="date" ref={dobTSRef} />
               </div>
-              <div className="row">
-                <div class="form-group">
-                  <label for="CCCD">Số CCCD</label>
-                  <input id="CCCD" placeholder="CCCD" />
-                </div>
+            </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="can-phone">Số điện thoại</label>
+                <input id="can-phone" placeholder="Phone number" ref={sdtTSRef} />
               </div>
-              <button className="btn-blue">Kiểm tra thông tin khách hàng</button>
-            </fieldset>
-
+              <div className="form-group">
+                <label htmlFor="can-email">Email</label>
+                <input id="can-email" placeholder="Email" ref={emailTSRef} />
+              </div>
+            </div>
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="can-cccd">Số CCCD</label>
+                <input id="can-cccd" placeholder="CCCD" ref={cccdTSRef} />
+              </div>
+            </div>
+            <button className="btn-blue" onClick={handleCheckCustomer}>Kiểm tra thông tin khách hàng</button>
+          </fieldset> 
             <fieldset>
             <legend>
               <img src="/field-input-dkcn.png" alt="icon" class="legend-icon" />
@@ -108,8 +188,12 @@ function Layout() {
                 <div class="form-group">  
                   <label for="exam-type">Loại chứng chỉ</label> 
                   <select>
-                  <option>Tiếng anh</option><option>MOS</option>
-                </select>
+                    {certificates.map((cert) => (
+                      <option key={cert.id} value={cert.name}>
+                        {cert.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="exam-date">Ngày thi</label> 
@@ -141,7 +225,7 @@ function Layout() {
               </table>
 
               <div className="text-right">
-                <button className="btn-purple">In phiếu đăng ký →</button>
+                <button className="btn-purple" onClick={handlePrintRegistration}>In phiếu đăng ký →</button>
               </div>
             </fieldset>
           </div>

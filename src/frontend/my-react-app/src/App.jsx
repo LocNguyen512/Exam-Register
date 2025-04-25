@@ -13,8 +13,37 @@ function App() {
           <Route path="/BangGia" element={<BangGia />} />
           <Route path="/LichThi" element={<LichThi />} />
           <Route path="/ChungChi" element={<TraCuuChungChi />} />
+<<<<<<< Updated upstream
           <Route path="/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
           <Route path="/DangNhap" element={<DangNhap />} />
+=======
+
+          {/* Nhân viên nhập liệu */}
+          <Route path="/Homepage/NVNL" element={<XuLyChungChi_Home />} />
+          <Route path="/XuLyChungChi/QuanLy" element={<XuLyChungChi_QuanLy />} />
+          <Route path="/XuLyChungChi/LapChungChi" element={<XuLyChungChi_LapChungChi />} />
+          
+
+          {/* Đăng nhập */}
+          <Route path="/DangNhap" element={<DangNhap />} />
+        
+          {/* Nhân viên tiếp nhận */}
+          <Route path="/Homepage/NVTN" element={<Homepage_TiepNhan />} />
+          <Route path="/GiaHan" element={<GiaHan />} />
+          <Route path="/GiaHan/:cccd" element={<GiaHanDetail />} />
+          <Route path="/GiaHan/:cccd/:monThi" element={<ChonLichThi />} />
+          <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
+          <Route path="/capChungChi" element={<TraCuuChungChi />} />
+
+          <Route path="/Homepage/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
+        
+          <Route path="/XuLyChungChi/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
+        
+          {/* Nhân viên kế toán */}
+          <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
+          <Route path="/BangGia" element={<BangGia_thanhtoan />} />
+          <Route path="/ThanhToan" element={<ThanhToan />} />
+>>>>>>> Stashed changes
         </Routes>
     </Router>
   );

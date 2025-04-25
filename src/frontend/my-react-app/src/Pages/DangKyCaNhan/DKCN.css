@@ -27,10 +27,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    min-width: 220px;
+    min-width: 200px;
   }
   .form-group:only-child {
-    max-width: 430px; /* hoặc 400px tùy bạn */
+    max-width: 300px; /* hoặc 400px tùy bạn */
   }
   label {
     font-weight: 700;
