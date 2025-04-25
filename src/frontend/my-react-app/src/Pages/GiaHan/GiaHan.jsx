@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeaderGiaHan from '../../component/Header/HeaderGiaHan';
+import HeaderGiaHan from '../../component/Header/HeaderBack';
 import Footer from '../../component/Footer/Footer';
 import './GiaHan.css';
 

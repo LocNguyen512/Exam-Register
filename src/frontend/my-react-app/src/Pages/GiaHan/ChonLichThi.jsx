@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import Header from "../../component/Header/HeaderGiaHan";
+import Header from "../../component/Header/HeaderBack";
 import "./ChonLichThi.css";
 
 const ChonLichThi = () => {

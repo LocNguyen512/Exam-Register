@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Header from "../../component/Header/HeaderGiaHan";
+import Header from "../../component/Header/HeaderBack";
 import "./PhieuGiaHan.css";
 
 const PhieuGiaHan = () => {

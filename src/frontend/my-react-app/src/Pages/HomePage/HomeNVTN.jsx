@@ -1,4 +1,4 @@
-import Header from '../../component/Header/HeaderNVTN';
+import Header from '../../component/Header/NVTN_GiaHan/HeaderNVTN';
 import Footer from '../../component/Footer/Footer';
 import Body from '../../component/Body/Body';
 import './Home.css';

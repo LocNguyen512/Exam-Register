@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './GiaHanDetail.css';
-import HeaderGiaHan from '../../component/Header/HeaderGiaHan';
+import HeaderGiaHan from '../../component/Header/HeaderBack';
 
 function GiaHanDetail() {
   const { cccd } = useParams();

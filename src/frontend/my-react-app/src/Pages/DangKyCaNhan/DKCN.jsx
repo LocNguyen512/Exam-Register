@@ -1,5 +1,5 @@
 import './DKCN.css';
-import Header from '../../component/Header/NVTN/Header';
+import Header from '../../component/Header/Header';
 
 function Layout() {
   return (

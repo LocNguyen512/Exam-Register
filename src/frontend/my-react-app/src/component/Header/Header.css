@@ -1,0 +1,82 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 12px 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-container {
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.logo {
+  height: 80px;
+  width: 200px;
+}
+
+.logo img {
+  height: 80px;
+  width: 200px;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.icon-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logout-button {
+  background-color: white;
+  border: 2px solid #1f2937;
+  color: #1f2937;
+  font-weight: bold;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #f3f4f6;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-circle {
+  background-color: #6366f1;
+  color: white;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 50%;
+}
