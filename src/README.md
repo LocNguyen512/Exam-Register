@@ -35,7 +35,9 @@
 
 1. Cài đặt các gói cần thiết từ `package.json` 
    Di chuyển vào thư mục frontend và chạy:  
+   `cd my-react-app`
    `npm install`  
 
+
 2. Chạy frontend
-   `npm start`  
+   `npm run dev`  

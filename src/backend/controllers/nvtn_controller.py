@@ -2,7 +2,7 @@ from flask import request, jsonify
 from sqlalchemy import text
 from extensions import db
 
-def them_khach_hang_tu_do_controller(data):
+def them_khach_hang(data):
     try:
         sdt = data.get("SDT")
         email = data.get("EMAIL")
