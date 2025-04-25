@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\ASUS\Documents\GitHub\Exam-Register\src\backend\env-er
+set VIRTUAL_ENV=D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\src\backend\env-er
 
 if not defined PROMPT set PROMPT=$P$G
 
