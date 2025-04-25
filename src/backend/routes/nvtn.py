@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.nvtn_controller import get_all_khach_hang, them_khach_hang
+from services.nvtn_controller import get_all_khach_hang, them_khach_hang
 
 nvtn_bp = Blueprint('nhanvientn', __name__)
 

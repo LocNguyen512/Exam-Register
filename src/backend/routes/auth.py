@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controllers.auth_controller import login
+from services.auth_controller import login
 
 auth_bp = Blueprint('auth', __name__)
 
