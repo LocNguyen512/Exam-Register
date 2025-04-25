@@ -11,7 +11,6 @@ function CaNhan() {
     ngaySinh: "20/03/2000",
     cccd: "089438163493",
     maThiSinh: "TS0123",
-    gioiTinh: "Nam",
     nguoiDangKy: "Taylor Swift",
     chungChiDangKy: [
       { ten: "Toeic", gia: "1,080,000" },
@@ -58,10 +57,6 @@ function CaNhan() {
           <div>
             <label>Mã thí sinh</label>
             <input type="text" value={data.maThiSinh} readOnly />
-          </div>
-          <div>
-            <label>Giới tính</label>
-            <input type="text" value={data.gioiTinh} readOnly />
           </div>
           <div>
             <label>Người đăng ký</label>

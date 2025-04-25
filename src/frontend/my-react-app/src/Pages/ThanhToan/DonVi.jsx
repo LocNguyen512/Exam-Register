@@ -9,6 +9,7 @@ function CaNhan() {
   const mockData = {
     tenDonVi: "David Smith",
     email: "TS0123",
+    madonvi: "DV0001",
     danhSachDangKy: [
       { ten: "IELTS", soLuong: 80, ngayThi: "20/10/2025", donGia: "5,000,000" },
       { ten: "MOS", soLuong: 100, ngayThi: "20/11/2025", donGia: "108,000" },
@@ -46,6 +47,10 @@ function CaNhan() {
           <div>
             <label>Email</label>
             <input type="text" value={data.email} readOnly />
+          </div>
+          <div>
+            <label>Mã đơn vị</label>
+            <input type="text" value={data.madonvi} readOnly />
           </div>
 
           <div>
