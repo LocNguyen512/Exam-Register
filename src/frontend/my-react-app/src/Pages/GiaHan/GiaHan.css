@@ -1,0 +1,52 @@
+.giahan-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f7f6fb;
+}
+  
+.giahan-hero {
+    flex: 1;
+    background-image: url('/backgroundblur.png');
+    background-size: cover;
+    background-position: center;
+    padding: 80px 24px;
+    text-align: center;
+}
+  
+.giahan-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    color: #000;
+}
+  
+.giahan-search-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+  
+.giahan-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+  
+.giahan-search-row button {
+    padding: 10px 24px;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+  
