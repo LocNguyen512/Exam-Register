@@ -7,6 +7,7 @@ function BlankPage() {
     return (
         <div className='layout'>
             <Header></Header>
+            
             <div className="blank-page">
                 <img
                     src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
