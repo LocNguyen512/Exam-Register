@@ -1,34 +1,19 @@
 .form-container {
-    max-width: 600px;
-    margin: 0px auto;
-    margin-top: -10px;
+    width: 400px;
+    height: 80vh;
+    margin: 0 auto;
+    margin-top: -60px;
     padding: 20px;
     text-align: center;
 }
 
-h2 {
+.form-container h2 {
     font-size: 24px;
-    margin-bottom: 20px;
     font-weight: bold;
     color: #111;
 }
 
-.certificate-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.input-group {
-    position: relative;
-    margin: 20px 0;
-}
-
-.input-group input {
+input {
     width: 100%;
     padding: 12px 10px;
     font-size: 16px;
@@ -36,6 +21,12 @@ h2 {
     border-radius: 8px;
     outline: none;
     background: none;
+}
+
+.input-group {
+    position: relative;
+    margin: 25px 0;
+    height: fit-content;
 }
 
 .input-group label {
@@ -46,19 +37,17 @@ h2 {
     font-size: 16px;
     pointer-events: none;
     transition: 0.2s ease all;
-    background-color: white;
     padding: 0 4px;
 }
 
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown):valid + label {
-    top: -10px;
+    top: -25px;
     left: 8px;
-    font-size: 13px;
+    font-size: 16px;
     color: #4f46e5;
 }
 
-/* Ẩn placeholder mặc định của input type="date" trên trình duyệt Chrome */
 input[type="date"]::placeholder {
     color: transparent;
 }
@@ -67,12 +56,10 @@ input[type="date"]::-webkit-datetime-edit {
     color: transparent;
 }
 
-/* Khi người dùng focus vào input, hiển thị lại ngày */
 input[type="date"]:focus::-webkit-datetime-edit {
     color: #000;
 }
 
-/* Khi người dùng đã nhập và mất focus, giữ giá trị ngày đã nhập */
 input[type="date"]:valid::-webkit-datetime-edit {
     color: #000;
 }

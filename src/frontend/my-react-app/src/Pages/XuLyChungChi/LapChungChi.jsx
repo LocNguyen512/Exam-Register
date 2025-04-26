@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../../component/Header/NVNhapLieu/Header';
+import Header from '../../component/Header/NVNhapLieu/HeaderBack';
 import './LapChungChi.css';
 
 function TaoChungChi() {
@@ -15,11 +15,11 @@ function TaoChungChi() {
     <div className="layout">
       <Header />
       <div className="form-container">
-        <h2>Hãy nhập thông tin chứng chỉ</h2>
+        <h2>Lập chứng chỉ</h2>
         <form className="certificate-form" onSubmit={handleSubmit}>
             <div className="input-group">
                 <input type="text" id="monThi" required />
-                <label htmlFor="monThi">Môn thi</label>
+                <label htmlFor="monThi">Chứng chỉ</label>
             </div>
             <div className="input-group">
                 <input type="text" id="ketQua" required />

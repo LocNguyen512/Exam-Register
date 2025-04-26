@@ -110,3 +110,19 @@ th {
     background-color: #6366f1;
     color: white;
 }
+
+.page-numbers button {
+    color: black;          /* Màu chữ đen */
+    font-weight: bold;     /* Chữ in đậm */
+    background: none;      /* Không nền hoặc tùy chọn */
+    border: 1px solid #ccc; /* Viền nhẹ đẹp */
+    padding: 5px 10px;
+    margin: 0 3px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .page-numbers button.active {
+    background-color: #007bff; /* Trang hiện tại có nền xanh */
+    color: white;              /* Chữ trắng cho dễ nhìn */
+  }
