@@ -1,11 +1,7 @@
 import './DKCN.css';
-<<<<<<< Updated upstream
 import Header from '../../component/Header/NVTN/Header';
-=======
-import Header from '../../component/Header/Header';
 import { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
->>>>>>> Stashed changes
 
 
   function Layout() {

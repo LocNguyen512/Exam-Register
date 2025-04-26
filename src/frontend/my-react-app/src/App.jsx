@@ -13,10 +13,6 @@ function App() {
           <Route path="/BangGia" element={<BangGia />} />
           <Route path="/LichThi" element={<LichThi />} />
           <Route path="/ChungChi" element={<TraCuuChungChi />} />
-<<<<<<< Updated upstream
-          <Route path="/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
-          <Route path="/DangNhap" element={<DangNhap />} />
-=======
 
           {/* Nhân viên nhập liệu */}
           <Route path="/Homepage/NVNL" element={<XuLyChungChi_Home />} />
@@ -43,7 +39,6 @@ function App() {
           <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
           <Route path="/BangGia" element={<BangGia_thanhtoan />} />
           <Route path="/ThanhToan" element={<ThanhToan />} />
->>>>>>> Stashed changes
         </Routes>
     </Router>
   );
