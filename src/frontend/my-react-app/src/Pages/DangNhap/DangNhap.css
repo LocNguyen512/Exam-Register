@@ -120,6 +120,4 @@
     right: 0;
     z-index: 100;
   }
-  .login-page {
-    padding-top: 80px; /* để tránh đè lên phần header */
-  }
+ 

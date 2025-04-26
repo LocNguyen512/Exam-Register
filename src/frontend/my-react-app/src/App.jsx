@@ -52,7 +52,7 @@ function App() {
           <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
           <Route path="/capChungChi" element={<TraCuuChungChi />} />
 
-          <Route path="/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
+          <Route path="/Homepage/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
         
           <Route path="/XuLyChungChi/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
         
