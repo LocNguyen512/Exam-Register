@@ -1,12 +1,35 @@
+import React, { useState, useEffect } from 'react';
 import Header from '../../component/Header/NVNhapLieu/Header';
 import { useNavigate } from 'react-router-dom';
 import './QuanLy.css';
 
 function Layout() {
-    const navigate = useNavigate();
-    const handleCreateCertificate = () => {
-        navigate('/XuLyChungChi/LapChungChi'); // Đường dẫn tới trang mới
-    };
+  const [chungChiList, setChungChiList] = useState([]);  // Dữ liệu chứng chỉ từ API
+  const [searchTerm, setSearchTerm] = useState('');  // Search term CCCD
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Gọi API để lấy danh sách chứng chỉ
+    fetch("http://localhost:5000/chungchi/laychungchi")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setChungChiList(data.data); // Giả sử backend trả về dữ liệu đúng
+        } else {
+          console.error("Không lấy được dữ liệu chứng chỉ");
+        }
+      })
+      .catch(err => {
+        console.error("Lỗi khi gọi API:", err);
+      });
+  }, []);
+
+  const handleCreateCertificate = () => {
+      navigate('/XuLyChungChi/LapChungChi'); // Đường dẫn tới trang mới
+  };
+  const handleSearch = () => {
+    // Bạn có thể gọi API tìm kiếm với searchTerm nếu cần
+    console.log("Tìm kiếm với CCCD:", searchTerm);
+  };
 return (
     <div className="layout">
       <Header />
@@ -15,7 +38,7 @@ return (
         <div className="certificate-actions">
             <h2>Danh sách chứng chỉ</h2>
           <input type="text" placeholder="🔍 CCCD thí sinh" />
-          <button className="search-btn">Tìm kiếm</button>
+          <button className="search-btn" onClick={handleSearch}>Tìm kiếm</button>
           <button className="create-btn" onClick={handleCreateCertificate}>+ Lập chứng chỉ mới</button>
         </div>
 
@@ -32,36 +55,35 @@ return (
               </tr>
             </thead>
             <tbody>
-              {[
-                ['CC0001', 'IELTS', '01/01/2025', 80, '000000000001', 'NV0001'],
-                ['CC0002', 'TOEIC', '01/01/2025', 90, '000000000001', 'NV0001'],
-                ['CC0003', 'MOS', '01/01/2025', 75, '000000000001', 'NV0001'],
-                ['CC0004', 'TOÁN', '01/01/2025', 50, '000000000001', 'NV0001'],
-                ['CC0005', 'VĂN', '01/01/2025', 100, '000000000002', 'NV0002'],
-                ['CC0006', 'ANH', '01/01/2025', 70, '000000000002', 'NV0002'],
-                ['CC0007', 'TIN HỌC', '01/01/2025', 90, '000000000002', 'NV0002'],
-                ['CC0008', 'SỬ', '01/01/2025', 100, '000000000002', 'NV0002'],
-                ['CC0009', 'ĐỊA', '01/01/2025', 70, '000000000002', 'NV0002'],
-                ['CC0010', 'HÓA', '01/01/2025', 80, '000000000002', 'NV0002']
-              ].map((item, index) => (
-                <tr key={index}>
-                  {item.map((cell, idx) => (
-                    <td key={idx}>{cell}</td>
-                  ))}
+              {chungChiList.length > 0 ? (
+                chungChiList.map((cc, index) => (
+                  <tr key={index}>
+                    <td>{cc.ma_chung_chi}</td>
+                    <td>{cc.mon_thi}</td>
+                    <td>{new Date(cc.ngay_cap).toLocaleDateString()}</td>
+                    <td>{cc.ket_qua}</td>
+                    <td>{cc.cccd_thi_sinh}</td>
+                    <td>{cc.ma_nhan_vien_nhap}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">Không có chứng chỉ nào</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
 
         <div className="pagination">
-          <span>Show 1 to 10 of 200 results</span>
+          <span>Show 1 to 10 of {chungChiList.length} results</span>
           <div className="page-numbers">
             {[1, 2, 3, 4, 10, 11].map((p) => (
               <button key={p} className={p === 1 ? 'active' : ''}>{p}</button>
             ))}
           </div>
-        </div>
+      </div>
+      
       </div>
     </div>
   );

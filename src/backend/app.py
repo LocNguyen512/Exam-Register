@@ -2,15 +2,19 @@ from flask import Flask, request, jsonify
 from config import Config  
 from sqlalchemy import text
 from routes.auth import auth_bp
-from routes.nvtn import nvtn_bp
+from routes.chungchi import chungchi_bp
 from extensions import db
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"]) # Thay doi tuy vao localhost cua mn
+
 app.config.from_object(Config)
 
 db.init_app(app)
 
 app.register_blueprint(auth_bp, url_prefix="/auth")
+app.register_blueprint(chungchi_bp, url_prefix="/chungchi")
 @app.route('/')
 def index():
     return "Hello, World!"
