@@ -24,10 +24,6 @@ BEGIN
 END;
 GO
 
-select * from users
--- NHÂN VIÊN TIẾP NHẬN
--- HIỂN THỊ DANH SÁCH THÔNG TIN KHÁCH HÀNG
--- THÊM KHÁCH HÀNG
 
 CREATE PROCEDURE sp_get_all_khach_hang
 AS
@@ -71,13 +67,6 @@ BEGIN
 		AND lt.NgayThi > CAST(GETDATE() AS DATE)
         AND (@TenLoai IS NULL OR ld.TenLoai = @TenLoai)
     ORDER BY 
-<<<<<<< Updated upstream
-        ngay_thi ASC, gio_thi ASC;
-END
-
--- LICHTHI_DAO
-CREATE PROCEDURE SP_LayDSLichThi
-=======
         lt.NgayThi ASC, lt.GioThi ASC, ctl.MA_PHONG ASC;
 END
 GO
@@ -87,28 +76,10 @@ CREATE PROCEDURE SP_ThemKhachHangTuDo
     @HoTen NVARCHAR(50),
     @SDT CHAR(10),
     @Email VARCHAR(50)
->>>>>>> Stashed changes
 AS
 BEGIN
     SET NOCOUNT ON;
 
-<<<<<<< Updated upstream
-    SELECT 
-        lt.MaLichThi,
-        lt.NgayThi,
-        lt.GioThi,
-        ctl.MaPhong,
-        ctl.SoGheTrong
-    FROM 
-        LichThi lt
-    INNER JOIN 
-        ChiTietLichThi ctl ON lt.MaLichThi = ctl.MaLichThi
-    WHERE 
-        ctl.SoGheTrong > 0  -- chỉ lấy những lịch thi còn ghế trống
-    ORDER BY 
-        lt.NgayThi ASC, lt.GioThi ASC, ctl.MaPhong ASC;
-END
-=======
     DECLARE @NewMaKH CHAR(6);
 
     -- Sinh mã khách hàng mới
@@ -227,4 +198,3 @@ BEGIN
     -- Không cần trả ra gì, hoặc có thể trả 1 message nếu bạn muốn
 END
 GO
->>>>>>> Stashed changes

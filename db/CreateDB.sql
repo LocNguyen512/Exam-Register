@@ -104,7 +104,7 @@ CREATE TABLE CHI_TIET_DANG_KY(
 	SOBAODANH CHAR(6),
 	MA_PHONG CHAR(6),
 	MA_LICH CHAR(6),
-	CONSTRAINT PK_CHI_TIET_DANG_KY PRIMARY KEY (MA_PDK, MA_TS) -- KHÓA NGOẠI
+	CONSTRAINT PK_CHI_TIET_DANG_KY PRIMARY KEY (MA_PDK, MA_TS, MA_LICH) -- KHÓA NGOẠI
 )
 GO
 
@@ -238,3 +238,155 @@ ALTER TABLE LICH_THI
 ADD 
 CONSTRAINT FK_LICHTHI_LOAIDGNL FOREIGN KEY (MA_LOAI) REFERENCES LOAI_DGNL(MA_LOAI)
 GO
+<<<<<<< Updated upstream:db/CreateDB.sql
+=======
+
+---------------------------- Import data--------------------------
+-- Hướng dẫn import từng máy:
+
+-- B1: copy đường dẫn chứa thư mục SampleData 
+-- (ví dụ như của bạn là: D:\KHTN\SampleData thì copy lại )
+
+-- B2: sau đó thay thế đường dẫn của tui thành của bạn
+-- -> Bôi đen đoạn "D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData"
+-- -> Sau đó nhấn ctrl + F để tìm kiếm toàn bộ đường dẫn
+-- -> Sau đó paste cái đường dẫn của bạn vào ô Replace with (ví dụ: D:\KHTN\SampleData)
+-- -> chọn Replace All
+
+-- B3: chạy đoạn code xóa database ở trên đã comment, sau đó chạy toàn bộ lại code là xong: có database + data
+BULK INSERT NHAN_VIEN
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\danh_sach_nhan_vien.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--2
+BULK INSERT THI_SINH
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\thi_sinh.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--3
+BULK INSERT KHACH_HANG
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+
+--4
+BULK INSERT KHACH_HANG_TUDO
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang_tudo.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+-- 5
+BULK INSERT KHACH_HANG_DONVI
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang_donvi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--6
+BULK INSERT PHIEU_GIA_HAN
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_gia_han.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+-- 7
+BULK INSERT PHIEU_DANG_KY
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_dang_ky.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+-- 8
+BULK INSERT CHI_TIET_DANG_KY
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chi_tiet_dang_ky.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+-- 9
+BULK INSERT PHIEU_THANH_TOAN
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_thanh_toan.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+-- 10
+BULK INSERT CHUNG_CHI
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chung_chi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--11
+BULK INSERT PHONG_THI
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phong_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--12
+BULK INSERT LICH_THI
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\lich_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--13
+BULK INSERT CHI_TIET_LICH_THI
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chi_tiet_lich_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--14
+BULK INSERT LOAI_DGNL
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\loai_dgnl.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+--15
+BULK INSERT USERS
+FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\USERS.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
+);
+>>>>>>> Stashed changes:db/CreateDB_ImportData.sql
