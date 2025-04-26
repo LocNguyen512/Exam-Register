@@ -120,3 +120,25 @@ BEGIN
     ORDER BY 
         ngay_thi ASC, gio_thi ASC;
 END
+
+-- LICHTHI_DAO
+CREATE PROCEDURE SP_LayDSLichThi
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        lt.MaLichThi,
+        lt.NgayThi,
+        lt.GioThi,
+        ctl.MaPhong,
+        ctl.SoGheTrong
+    FROM 
+        LichThi lt
+    INNER JOIN 
+        ChiTietLichThi ctl ON lt.MaLichThi = ctl.MaLichThi
+    WHERE 
+        ctl.SoGheTrong > 0  -- chỉ lấy những lịch thi còn ghế trống
+    ORDER BY 
+        lt.NgayThi ASC, lt.GioThi ASC, ctl.MaPhong ASC;
+END
