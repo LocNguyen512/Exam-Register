@@ -257,7 +257,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\d
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --2
 BULK INSERT THI_SINH
@@ -265,7 +266,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\t
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --3
 BULK INSERT KHACH_HANG
@@ -273,7 +275,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\k
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 
 --4
@@ -282,7 +285,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\k
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 -- 5
 BULK INSERT KHACH_HANG_DONVI
@@ -290,7 +294,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\k
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --6
 BULK INSERT PHIEU_GIA_HAN
@@ -298,7 +303,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\p
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 -- 7
 BULK INSERT PHIEU_DANG_KY
@@ -306,7 +312,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\p
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 -- 8
 BULK INSERT CHI_TIET_DANG_KY
@@ -314,7 +321,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\c
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 -- 9
 BULK INSERT PHIEU_THANH_TOAN
@@ -322,7 +330,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\p
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 -- 10
 BULK INSERT CHUNG_CHI
@@ -330,7 +339,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\c
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --11
 BULK INSERT PHONG_THI
@@ -338,7 +348,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\p
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --12
 BULK INSERT LICH_THI
@@ -346,7 +357,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\l
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --13
 BULK INSERT CHI_TIET_LICH_THI
@@ -354,7 +366,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\c
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --14
 BULK INSERT LOAI_DGNL
@@ -362,7 +375,8 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\l
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
 --15
 BULK INSERT USERS
@@ -370,5 +384,6 @@ FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\U
 WITH (
     FIELDTERMINATOR = ',', 
     ROWTERMINATOR = '\n',
-    FIRSTROW = 2
+    FIRSTROW = 2,
+	CODEPAGE = '65001'
 );
