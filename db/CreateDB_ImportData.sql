@@ -48,7 +48,7 @@ CREATE TABLE KHACH_HANG(
 	MA_KH CHAR(6), --KH0001
 	SDT CHAR(10) UNIQUE NOT NULL,
 	EMAIL VARCHAR(50) NOT NULL,
-	LOAIKH NCHAR(7) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị'))
+	LOAIKH NVARCHAR(10) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị')),
 	CONSTRAINT PK_KHACH_HANG PRIMARY KEY (MA_KH)
 )
 GO
@@ -64,7 +64,7 @@ GO
 -- 5
 CREATE TABLE KHACH_HANG_DONVI(
 	MA_KHDV CHAR(6), --KH0001
-	TENDONVI NVARCHAR(50) NOT NULL,
+	TENDONVI NVARCHAR(200) NOT NULL,
 	DIACHI NVARCHAR(100) NOT NULL,
 	CONSTRAINT PK_KHACH_HANG_DONVI PRIMARY KEY (MA_KHDV)
 )
@@ -164,7 +164,7 @@ GO
 -- 14
 CREATE TABLE LOAI_DGNL (
     MA_LOAI CHAR(6),
-	TENLOAI VARCHAR(20) NOT NULL,
+	TENLOAI NVARCHAR(50) NOT NULL,
 	GIATIEN INT NOT NULL CHECK(GIATIEN > 0),
 	CONSTRAINT PK_LOAI_DGNL PRIMARY KEY (MA_LOAI)
 )
@@ -238,3 +238,137 @@ ALTER TABLE LICH_THI
 ADD 
 CONSTRAINT FK_LICHTHI_LOAIDGNL FOREIGN KEY (MA_LOAI) REFERENCES LOAI_DGNL(MA_LOAI)
 GO
+
+---------------------------- Import data--------------------------
+-- Hướng dẫn import từng máy:
+
+-- B1: copy đường dẫn chứa thư mục SampleData 
+-- (ví dụ như của bạn là: D:\KHTN\SampleData thì copy lại )
+
+-- B2: sau đó thay thế đường dẫn của tui thành của bạn
+-- -> Bôi đen đoạn "D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData"
+-- -> Sau đó nhấn ctrl + F để tìm kiếm toàn bộ đường dẫn
+-- -> Sau đó paste cái đường dẫn của bạn vào ô Replace with (ví dụ: D:\KHTN\SampleData)
+-- -> chọn Replace All
+
+-- B3: chạy đoạn code xóa database ở trên đã comment, sau đó chạy toàn bộ lại code là xong: có database + data
+BULK INSERT NHAN_VIEN
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\danh_sach_nhan_vien.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--2
+BULK INSERT THI_SINH
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\thi_sinh.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--3
+BULK INSERT KHACH_HANG
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\khach_hang.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+
+--4
+BULK INSERT KHACH_HANG_TUDO
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\khach_hang_tudo.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+-- 5
+BULK INSERT KHACH_HANG_DONVI
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\khach_hang_donvi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--6
+BULK INSERT PHIEU_GIA_HAN
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\phieu_gia_han.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+-- 7
+BULK INSERT PHIEU_DANG_KY
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\phieu_dang_ky.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+-- 8
+BULK INSERT CHI_TIET_DANG_KY
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\chi_tiet_dang_ky.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+-- 9
+BULK INSERT PHIEU_THANH_TOAN
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\phieu_thanh_toan.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+-- 10
+BULK INSERT CHUNG_CHI
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\chung_chi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--11
+BULK INSERT PHONG_THI
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\phong_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--12
+BULK INSERT LICH_THI
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\lich_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--13
+BULK INSERT CHI_TIET_LICH_THI
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\chi_tiet_lich_thi.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--14
+BULK INSERT LOAI_DGNL
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\loai_dgnl.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
+--15
+BULK INSERT USERS
+FROM 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\USERS.csv'
+WITH (
+    FIELDTERMINATOR = ',', 
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2
+);
