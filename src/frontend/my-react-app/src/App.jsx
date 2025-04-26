@@ -29,7 +29,6 @@ function App() {
   return (
     <Router>
         <Routes>
-          {/* User */}
           <Route path="/" element={<Home />} />
           <Route path="/BangGia" element={<BangGia />} />
           <Route path="/LichThi" element={<LichThi />} />
