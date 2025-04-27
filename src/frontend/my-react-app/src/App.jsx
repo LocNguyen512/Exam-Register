@@ -45,7 +45,7 @@ function App() {
           <Route path="/DangNhap" element={<DangNhap />} />
         
           {/* Nhân viên tiếp nhận */}
-          <Route path="/Homepage/NVTN" element={<Homepage_TiepNhan />} />
+          <Route path="/HomepageNVTN" element={<Homepage_TiepNhan />} />
           <Route path="/GiaHan" element={<GiaHan />} />
           <Route path="/GiaHan/:cccd" element={<GiaHanDetail />} />
           <Route path="/GiaHan/:cccd/:monThi" element={<ChonLichThi />} />
