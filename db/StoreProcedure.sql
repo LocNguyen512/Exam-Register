@@ -72,12 +72,15 @@ BEGIN
         AND (@TenLoai IS NULL OR ld.TenLoai = @TenLoai)
     ORDER BY 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ngay_thi ASC, gio_thi ASC;
 END
 
 -- LICHTHI_DAO
 CREATE PROCEDURE SP_LayDSLichThi
 =======
+=======
+>>>>>>> Stashed changes
         lt.NgayThi ASC, lt.GioThi ASC, ctl.MA_PHONG ASC;
 END
 GO
@@ -87,11 +90,15 @@ CREATE PROCEDURE SP_ThemKhachHangTuDo
     @HoTen NVARCHAR(50),
     @SDT CHAR(10),
     @Email VARCHAR(50)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 AS
 BEGIN
     SET NOCOUNT ON;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     SELECT 
         lt.MaLichThi,
@@ -109,6 +116,8 @@ BEGIN
         lt.NgayThi ASC, lt.GioThi ASC, ctl.MaPhong ASC;
 END
 =======
+=======
+>>>>>>> Stashed changes
     DECLARE @NewMaKH CHAR(6);
 
     -- Sinh mã khách hàng mới
@@ -227,4 +236,7 @@ BEGIN
     -- Không cần trả ra gì, hoặc có thể trả 1 message nếu bạn muốn
 END
 GO
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
