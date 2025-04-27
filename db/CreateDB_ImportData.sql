@@ -48,7 +48,7 @@ CREATE TABLE KHACH_HANG(
 	MA_KH CHAR(6), --KH0001
 	SDT CHAR(10) UNIQUE NOT NULL,
 	EMAIL VARCHAR(50) NOT NULL,
-	LOAIKH NCHAR(7) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị'))
+	LOAIKH NVARCHAR(10) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị')),
 	CONSTRAINT PK_KHACH_HANG PRIMARY KEY (MA_KH)
 )
 GO
@@ -64,7 +64,7 @@ GO
 -- 5
 CREATE TABLE KHACH_HANG_DONVI(
 	MA_KHDV CHAR(6), --KH0001
-	TENDONVI NVARCHAR(50) NOT NULL,
+	TENDONVI NVARCHAR(200) NOT NULL,
 	DIACHI NVARCHAR(100) NOT NULL,
 	CONSTRAINT PK_KHACH_HANG_DONVI PRIMARY KEY (MA_KHDV)
 )
@@ -105,6 +105,7 @@ CREATE TABLE CHI_TIET_DANG_KY(
 	MA_PHONG CHAR(6),
 	MA_LICH CHAR(6),
 	CONSTRAINT PK_CHI_TIET_DANG_KY PRIMARY KEY (MA_PDK, MA_TS, MA_LICH) -- KHÓA NGOẠI
+
 )
 GO
 
@@ -164,7 +165,7 @@ GO
 -- 14
 CREATE TABLE LOAI_DGNL (
     MA_LOAI CHAR(6),
-	TENLOAI VARCHAR(20) NOT NULL,
+	TENLOAI NVARCHAR(50) NOT NULL,
 	GIATIEN INT NOT NULL CHECK(GIATIEN > 0),
 	CONSTRAINT PK_LOAI_DGNL PRIMARY KEY (MA_LOAI)
 )
@@ -238,8 +239,7 @@ ALTER TABLE LICH_THI
 ADD 
 CONSTRAINT FK_LICHTHI_LOAIDGNL FOREIGN KEY (MA_LOAI) REFERENCES LOAI_DGNL(MA_LOAI)
 GO
-<<<<<<< Updated upstream:db/CreateDB.sql
-=======
+
 
 ---------------------------- Import data--------------------------
 -- Hướng dẫn import từng máy:
@@ -254,139 +254,42 @@ GO
 -- -> chọn Replace All
 
 -- B3: chạy đoạn code xóa database ở trên đã comment, sau đó chạy toàn bộ lại code là xong: có database + data
-BULK INSERT NHAN_VIEN
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\danh_sach_nhan_vien.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---2
-BULK INSERT THI_SINH
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\thi_sinh.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---3
-BULK INSERT KHACH_HANG
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
 
---4
-BULK INSERT KHACH_HANG_TUDO
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang_tudo.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
--- 5
-BULK INSERT KHACH_HANG_DONVI
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\khach_hang_donvi.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---6
-BULK INSERT PHIEU_GIA_HAN
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_gia_han.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
--- 7
-BULK INSERT PHIEU_DANG_KY
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_dang_ky.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
--- 8
-BULK INSERT CHI_TIET_DANG_KY
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chi_tiet_dang_ky.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
--- 9
-BULK INSERT PHIEU_THANH_TOAN
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phieu_thanh_toan.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
--- 10
-BULK INSERT CHUNG_CHI
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chung_chi.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---11
-BULK INSERT PHONG_THI
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\phong_thi.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---12
-BULK INSERT LICH_THI
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\lich_thi.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---13
-BULK INSERT CHI_TIET_LICH_THI
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\chi_tiet_lich_thi.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---14
-BULK INSERT LOAI_DGNL
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\loai_dgnl.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
---15
-BULK INSERT USERS
-FROM 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\USERS.csv'
-WITH (
-    FIELDTERMINATOR = ',', 
-    ROWTERMINATOR = '\n',
-    FIRSTROW = 2,
-	CODEPAGE = '65001'
-);
->>>>>>> Stashed changes:db/CreateDB_ImportData.sql
+CREATE PROCEDURE BulkInsertFromCsv
+    @tableName NVARCHAR(MAX),
+    @fileName NVARCHAR(MAX),
+    @basePath NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(MAX);
+    SET @sql = '
+    BULK INSERT ' + @tableName + '
+    FROM ''' + @basePath + @fileName + '''
+    WITH (
+        FIELDTERMINATOR = '','',
+        ROWTERMINATOR = ''\n'',
+        FIRSTROW = 2,
+        CODEPAGE = ''65001''
+    );';
+    EXEC(@sql);
+END;
+GO
+
+-- Gọi thủ tục
+DECLARE @basePath NVARCHAR(MAX) = 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\';
+
+EXEC BulkInsertFromCsv 'NHAN_VIEN', 'danh_sach_nhan_vien.csv', @basePath;
+EXEC BulkInsertFromCsv 'THI_SINH', 'thi_sinh.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG', 'khach_hang.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG_TUDO', 'khach_hang_tudo.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG_DONVI', 'khach_hang_donvi.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_GIA_HAN', 'phieu_gia_han.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_DANG_KY', 'phieu_dang_ky.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHI_TIET_DANG_KY', 'chi_tiet_dang_ky.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_THANH_TOAN', 'phieu_thanh_toan.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHUNG_CHI', 'chung_chi.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHONG_THI', 'phong_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'LICH_THI', 'lich_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHI_TIET_LICH_THI', 'chi_tiet_lich_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'LOAI_DGNL', 'loai_dgnl.csv', @basePath;
+EXEC BulkInsertFromCsv 'USERS', 'USERS.csv', @basePath;
