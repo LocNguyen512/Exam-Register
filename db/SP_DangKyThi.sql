@@ -25,16 +25,6 @@ END;
 GO
 
 
-CREATE PROCEDURE sp_get_all_khach_hang
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT *
-    FROM KHACH_HANG;
-END;
-GO
-
 
 -- LOAIDGNL_DAO
 CREATE PROCEDURE SP_LayDSChungChi
