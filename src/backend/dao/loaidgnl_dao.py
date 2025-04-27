@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 class LoaiDGNLDAO:
     @staticmethod
-    def doc_danh_sach_loai():
+    def DocDSLoai():
         """
         Gọi stored procedure SP_LayDSChungChi để đọc danh sách loại chứng chỉ.
         Trả về danh sách dict {'id': ..., 'name': ...}.

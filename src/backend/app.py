@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from config import Config  
 from sqlalchemy import text
-from routes.user import user_bp
-from routes.thisinh import thisinh_bp
-from routes.loaidgnl import loaidgnl_bp 
+from routes.MH_DangNhap import dangnhap_bp
+from routes.MH_ThemKhachHangTuDo import dangKyThi_bp
+from routes.MH_ThongBao import thongbao_bp
 from extensions import db
 from flask_cors import CORS
 
@@ -13,9 +13,9 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
-app.register_blueprint(user_bp, url_prefix="/user")
-app.register_blueprint(thisinh_bp, url_prefix="/thisinh")
-app.register_blueprint(loaidgnl_bp, url_prefix="/loaidgnl")
+app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
+app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
+app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
 
 @app.route('/')
 def index():
