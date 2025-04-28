@@ -6,7 +6,6 @@
 
 1. Tạo môi trường ảo  
    Chỉ tạo lần đầu.
-
    Di chuyển vào thư mục backend và chạy:
    `python -m venv env-er`
 

@@ -1,21 +1,76 @@
-import Header from '../../component/Header/NVNhapLieu/Header';
+import React, { useState, useEffect } from 'react';
+import Header from '../../component/Header/NVNhapLieu/HeaderNoBack';
 import { useNavigate } from 'react-router-dom';
 import './QuanLy.css';
 
 function Layout() {
-    const navigate = useNavigate();
-    const handleCreateCertificate = () => {
-        navigate('/XuLyChungChi/LapChungChi'); // Đường dẫn tới trang mới
-    };
-return (
+  const [chungChiList, setChungChiList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);  
+  const itemsPerPage = 10; 
+  const [inputPage, setInputPage] = useState('1');     
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:5000/QLchungchi/laychungchi")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setChungChiList(data.data);
+        } else {
+          console.error("Không lấy được dữ liệu chứng chỉ");
+        }
+      })
+      .catch(err => {
+        console.error("Lỗi khi gọi API:", err);
+      });
+  }, []);
+
+  const handleCreateCertificate = () => {
+    navigate('/XuLyChungChi/LapChungChi');
+  };
+
+  const handleSearch = () => {
+    console.log("Tìm kiếm với CCCD:", searchTerm);
+  };
+
+  const handleJumpPage = () => {
+    let page = Number(inputPage);
+    if (!page || page < 1) {
+      page = 1;
+    } else if (page > totalPages) {
+      page = totalPages;
+    }
+    setCurrentPage(page);
+    setInputPage(String(page)); // Update input luôn đúng trang
+    setInputPage('');
+  };
+
+  // Tính toán các item cần hiển thị theo trang
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = chungChiList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  return (
     <div className="layout">
       <Header />
-
       <div className="certificate-container">
         <div className="certificate-actions">
-            <h2>Danh sách chứng chỉ</h2>
-          <input type="text" placeholder="🔍 CCCD thí sinh" />
-          <button className="search-btn">Tìm kiếm</button>
+          <h2>Danh sách chứng chỉ</h2>
+          <input
+            type="text"
+            placeholder="🔍 CCCD thí sinh"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button className="search-btn" onClick={handleSearch}>Tìm kiếm</button>
           <button className="create-btn" onClick={handleCreateCertificate}>+ Lập chứng chỉ mới</button>
         </div>
 
@@ -32,36 +87,101 @@ return (
               </tr>
             </thead>
             <tbody>
-              {[
-                ['CC0001', 'IELTS', '01/01/2025', 80, '000000000001', 'NV0001'],
-                ['CC0002', 'TOEIC', '01/01/2025', 90, '000000000001', 'NV0001'],
-                ['CC0003', 'MOS', '01/01/2025', 75, '000000000001', 'NV0001'],
-                ['CC0004', 'TOÁN', '01/01/2025', 50, '000000000001', 'NV0001'],
-                ['CC0005', 'VĂN', '01/01/2025', 100, '000000000002', 'NV0002'],
-                ['CC0006', 'ANH', '01/01/2025', 70, '000000000002', 'NV0002'],
-                ['CC0007', 'TIN HỌC', '01/01/2025', 90, '000000000002', 'NV0002'],
-                ['CC0008', 'SỬ', '01/01/2025', 100, '000000000002', 'NV0002'],
-                ['CC0009', 'ĐỊA', '01/01/2025', 70, '000000000002', 'NV0002'],
-                ['CC0010', 'HÓA', '01/01/2025', 80, '000000000002', 'NV0002']
-              ].map((item, index) => (
-                <tr key={index}>
-                  {item.map((cell, idx) => (
-                    <td key={idx}>{cell}</td>
-                  ))}
+              {currentItems.length > 0 ? (
+                currentItems.map((cc, index) => (
+                  <tr key={index}>
+                    <td>{cc.ma_chung_chi}</td>
+                    <td>{cc.mon_thi}</td>
+                    <td>{new Date(cc.ngay_cap).toLocaleDateString()}</td>
+                    <td>{cc.ket_qua}</td>
+                    <td>{cc.cccd_thi_sinh}</td>
+                    <td>{cc.ma_nhan_vien_nhap}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">Không có chứng chỉ nào</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
 
         <div className="pagination">
-          <span>Show 1 to 10 of 200 results</span>
-          <div className="page-numbers">
-            {[1, 2, 3, 4, 10, 11].map((p) => (
-              <button key={p} className={p === 1 ? 'active' : ''}>{p}</button>
-            ))}
-          </div>
-        </div>
+  <span>Hiển thị {indexOfFirstItem + 1} đến {Math.min(indexOfLastItem, chungChiList.length)} trong tổng {chungChiList.length} kết quả</span>
+
+  <div className="page-numbers">
+    {/* Prev button */}
+    <button
+      onClick={() => handlePageChange(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      {'<'}
+    </button>
+
+    {/* Trang số đầu tiên */}
+    {Array.from({ length: totalPages }).map((_, idx) => {
+      const page = idx + 1;
+
+      // Chỉ hiện trang 1, 2, 3 hoặc trang cuối và cận cuối
+      if (
+        page === 1 || 
+        page === totalPages || 
+        (page >= currentPage - 1 && page <= currentPage + 1)
+      ) {
+        return (
+          <button
+            key={page}
+            className={page === currentPage ? 'active' : ''}
+            onClick={() => handlePageChange(page)}
+          >
+            {page}
+          </button>
+        );
+      }
+
+      // Thêm "..." chỉ 1 lần
+      if (
+        (page === 2 && currentPage > 4) || 
+        (page === totalPages - 1 && currentPage < totalPages - 3)
+      ) {
+        return <span key={page}>...</span>;
+      }
+
+      return null;
+    })}
+
+    {/* Next button */}
+    <button
+      onClick={() => handlePageChange(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      {'>'}
+    </button>
+
+    {/* Input để nhập số trang */}
+    <div style={{ display: 'inline-block', marginLeft: '10px' }}>
+    <input
+  type="text"
+  value={inputPage}
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Chỉ nhận số
+    setInputPage(value);
+  }}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') {
+      handleJumpPage();
+    }
+  }}
+  onBlur={handleJumpPage}
+  placeholder="Trang"
+  style={{ width: '50px', textAlign: 'center' }}
+/>
+
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   );

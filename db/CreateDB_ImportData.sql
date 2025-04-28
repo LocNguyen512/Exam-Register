@@ -264,7 +264,7 @@ GO
 
 -- Gọi thủ tục
 -- Thay thế đường dẫn đến thư mục SampleData
-DECLARE @basePath NVARCHAR(MAX) = 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\'; 
+DECLARE @basePath NVARCHAR(MAX) = 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\'; 
 
 EXEC BulkInsertFromCsv 'NHAN_VIEN', 'danh_sach_nhan_vien.csv', @basePath;
 EXEC BulkInsertFromCsv 'THI_SINH', 'thi_sinh.csv', @basePath;
