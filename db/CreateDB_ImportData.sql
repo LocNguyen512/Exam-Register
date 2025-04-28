@@ -48,7 +48,7 @@ CREATE TABLE KHACH_HANG(
 	MA_KH CHAR(6), --KH0001
 	SDT CHAR(10) UNIQUE NOT NULL,
 	EMAIL VARCHAR(50) NOT NULL,
-	LOAIKH NCHAR(7) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị'))
+	LOAIKH NVARCHAR(10) CHECK (LOAIKH IN (N'Tự do', N'Đơn vị')),
 	CONSTRAINT PK_KHACH_HANG PRIMARY KEY (MA_KH)
 )
 GO
@@ -64,7 +64,7 @@ GO
 -- 5
 CREATE TABLE KHACH_HANG_DONVI(
 	MA_KHDV CHAR(6), --KH0001
-	TENDONVI NVARCHAR(50) NOT NULL,
+	TENDONVI NVARCHAR(200) NOT NULL,
 	DIACHI NVARCHAR(100) NOT NULL,
 	CONSTRAINT PK_KHACH_HANG_DONVI PRIMARY KEY (MA_KHDV)
 )
@@ -104,7 +104,8 @@ CREATE TABLE CHI_TIET_DANG_KY(
 	SOBAODANH CHAR(6),
 	MA_PHONG CHAR(6),
 	MA_LICH CHAR(6),
-	CONSTRAINT PK_CHI_TIET_DANG_KY PRIMARY KEY (MA_PDK, MA_TS) -- KHÓA NGOẠI
+	CONSTRAINT PK_CHI_TIET_DANG_KY PRIMARY KEY (MA_PDK, MA_TS, MA_LICH) -- KHÓA NGOẠI
+
 )
 GO
 
@@ -164,7 +165,7 @@ GO
 -- 14
 CREATE TABLE LOAI_DGNL (
     MA_LOAI CHAR(6),
-	TENLOAI VARCHAR(20) NOT NULL,
+	TENLOAI NVARCHAR(50) NOT NULL,
 	GIATIEN INT NOT NULL CHECK(GIATIEN > 0),
 	CONSTRAINT PK_LOAI_DGNL PRIMARY KEY (MA_LOAI)
 )
@@ -240,4 +241,43 @@ CONSTRAINT FK_LICHTHI_LOAIDGNL FOREIGN KEY (MA_LOAI) REFERENCES LOAI_DGNL(MA_LOA
 GO
 
 
+---------------------------- Import data--------------------------
+CREATE PROCEDURE BulkInsertFromCsv
+    @tableName NVARCHAR(MAX),
+    @fileName NVARCHAR(MAX),
+    @basePath NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(MAX);
+    SET @sql = '
+    BULK INSERT ' + @tableName + '
+    FROM ''' + @basePath + @fileName + '''
+    WITH (
+        FIELDTERMINATOR = '','',
+        ROWTERMINATOR = ''\n'',
+        FIRSTROW = 2,
+        CODEPAGE = ''65001''
+    );';
+    EXEC(@sql);
+END;
+GO
 
+-- Gọi thủ tục
+-- Thay thế đường dẫn đến thư mục SampleData
+DECLARE @basePath NVARCHAR(MAX) = 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\'; 
+
+EXEC BulkInsertFromCsv 'NHAN_VIEN', 'danh_sach_nhan_vien.csv', @basePath;
+EXEC BulkInsertFromCsv 'THI_SINH', 'thi_sinh.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG', 'khach_hang.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG_TUDO', 'khach_hang_tudo.csv', @basePath;
+EXEC BulkInsertFromCsv 'KHACH_HANG_DONVI', 'khach_hang_donvi.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_GIA_HAN', 'phieu_gia_han.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_DANG_KY', 'phieu_dang_ky.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHI_TIET_DANG_KY', 'chi_tiet_dang_ky.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHIEU_THANH_TOAN', 'phieu_thanh_toan.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHUNG_CHI', 'chung_chi.csv', @basePath;
+EXEC BulkInsertFromCsv 'PHONG_THI', 'phong_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'LICH_THI', 'lich_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'CHI_TIET_LICH_THI', 'chi_tiet_lich_thi.csv', @basePath;
+EXEC BulkInsertFromCsv 'LOAI_DGNL', 'loai_dgnl.csv', @basePath;
+EXEC BulkInsertFromCsv 'USERS', 'USERS.csv', @basePath;
