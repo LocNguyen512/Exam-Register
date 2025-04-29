@@ -30,7 +30,7 @@ class ChungChiDAO:
     def TimChungChiTheoCCCD(cccd):
         try:
             # Thực thi stored procedure với tham số CCCD
-            sql = text("EXEC SP_LAY_CHUNGCHI_THEO_CCCD :cccd")
+            sql = text("EXEC SP_LAY_CHUNGCHI_THEO_CCCD @cccd=:cccd")
             result = db.session.execute(sql, {"cccd": cccd})
             rows = result.fetchall()
 
@@ -51,3 +51,28 @@ class ChungChiDAO:
             db.session.rollback()
             print(f"Lỗi khi tìm chứng chỉ theo CCCD: {e}")
             return None
+        
+    @staticmethod
+    def ThemChungChi(mon_thi, ngay_cap, ket_qua, cccd_thi_sinh, ma_nhan_vien):
+        try:
+            sql = text("""
+                EXEC SP_THEM_CHUNGCHI 
+                    @MONTHI = :mon_thi,
+                    @NGAYCAP = :ngay_cap,
+                    @KETQUA = :ket_qua,
+                    @CCCD = :cccd,
+                    @MA_NV = :ma_nv
+            """)
+            db.session.execute(sql, {
+                "mon_thi": mon_thi,
+                "ngay_cap": ngay_cap,
+                "ket_qua": ket_qua,
+                "cccd": cccd_thi_sinh,
+                "ma_nv": ma_nhan_vien
+            })
+            db.session.commit()
+            return True  # Thêm thành công
+        except Exception as e:
+            db.session.rollback()
+            print(f"Lỗi khi thêm chứng chỉ: {e}")
+            return False
