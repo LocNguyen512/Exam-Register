@@ -1,5 +1,4 @@
 ﻿
-
 --Sp tìm kiếm ở trang của nhân viên kế toán - khách hàng tự do 
 use EXAM_REGISTER
 go 
@@ -16,7 +15,8 @@ BEGIN
         TS.CCCD,
         KH_TD.HOTEN AS NguoiDangKy,
         SUM(LD.GIATIEN) AS SoTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        MAX(PTT.MA_PTT) AS MA_PTT  -- thêm MA_PTT
     FROM THI_SINH TS
     JOIN CHI_TIET_DANG_KY CTDK ON TS.MA_TS = CTDK.MA_TS
     JOIN PHIEU_DANG_KY PDK ON CTDK.MA_PDK = PDK.MA_PDK
@@ -32,7 +32,7 @@ END
 EXEC SP_NVKT_TimKiemKHTD_Theo_CCCD @CCCD='226997273935'
 
 -- Tìm danh sách thí sinh theo mã thí sinh
-Create PROCEDURE SP_NVKT_TimKiemKHTD_Theo_MA_TS
+CREATE PROCEDURE SP_NVKT_TimKiemKHTD_Theo_MA_TS
     @MA_TS CHAR(6)
 AS
 BEGIN
@@ -43,7 +43,8 @@ BEGIN
         TS.CCCD,
         KH_TD.HOTEN AS NguoiDangKy,
         SUM(LD.GIATIEN) AS SoTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        MAX(PTT.MA_PTT) AS MA_PTT  -- thêm MA_PTT
     FROM THI_SINH TS
     JOIN CHI_TIET_DANG_KY CTDK ON TS.MA_TS = CTDK.MA_TS
     JOIN PHIEU_DANG_KY PDK ON CTDK.MA_PDK = PDK.MA_PDK
@@ -55,6 +56,7 @@ BEGIN
     WHERE TS.MA_TS = @MA_TS
     GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN
 END
+
 
 EXEC SP_NVKT_TimKiemKHTD_Theo_MA_TS @MA_TS='TS0001'
 
@@ -70,7 +72,8 @@ BEGIN
         TS.CCCD,
         KH_TD.HOTEN AS NguoiDangKy,
         SUM(LD.GIATIEN) AS SoTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        MAX(PTT.MA_PTT) AS MA_PTT  -- thêm MA_PTT
     FROM THI_SINH TS
     JOIN CHI_TIET_DANG_KY CTDK ON TS.MA_TS = CTDK.MA_TS
     JOIN PHIEU_DANG_KY PDK ON CTDK.MA_PDK = PDK.MA_PDK
@@ -83,6 +86,8 @@ BEGIN
     GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN
 END
 
+
+EXEC SP_NVKT_TimKiemKHTD_Theo_Ten_TS @HOTEN=N'Yến Đặng'
 -- Tìm danh sách thí sinh theo mã thanh toán
 CREATE PROCEDURE SP_NVKT_TimKiemKHTD_Theo_MA_PTT
     @MA_PTT CHAR(6)
@@ -95,7 +100,8 @@ BEGIN
         TS.CCCD,
         KH_TD.HOTEN AS NguoiDangKy,
         SUM(LD.GIATIEN) AS SoTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        PTT.MA_PTT  -- thêm MA_PTT vào kết quả trả về
     FROM PHIEU_THANH_TOAN PTT
     JOIN PHIEU_DANG_KY PDK ON PTT.MA_PDK = PDK.MA_PDK
     JOIN CHI_TIET_DANG_KY CTDK ON CTDK.MA_PDK = PDK.MA_PDK
@@ -105,11 +111,11 @@ BEGIN
     JOIN LICH_THI LT ON LT.MA_LICH = CTDK.MA_LICH
     JOIN LOAI_DGNL LD ON LD.MA_LOAI = LT.MA_LOAI
     WHERE PTT.MA_PTT = @MA_PTT
-    GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN
+    GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN, PTT.MA_PTT
 END
+
 EXEC SP_NVKT_TimKiemKHTD_Theo_MA_PTT @MA_PTT='TT0001'
 
-EXEC SP_NVKT_TimKiemKHTD_Theo_Ten_TS @HOTEN=N'Yến Đặng'
 
 -- Tìm danh sách chứng chỉ của khách hàng tự do theo CCCD
 Create PROCEDURE SP_NVKT_TimChungChiKHTD_Theo_CCCD
@@ -200,7 +206,7 @@ EXEC SP_NVKT_TimChungChiKHTD_Theo_MA_PTT @MA_PTT='TT0001'
 
 --Tìm kiếm ở trang nhân viên kế toán - khách hàng đơn vị
 -- Tìm kiếm khách hàng đơn vị theo tên
-CREATE PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ten
+ALTER PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ten
     @TENDONVI NVARCHAR(50)
 AS
 BEGIN
@@ -212,7 +218,8 @@ BEGIN
             WHEN MAX(PTT.TINHTRANG) = N'Đã thanh toán' THEN 0
             ELSE SUM(LD.GIATIEN)
         END AS TongTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM KHACH_HANG_DONVI KHDV
     JOIN KHACH_HANG KH ON KHDV.MA_KHDV = KH.MA_KH
     JOIN PHIEU_DANG_KY PDK ON KH.MA_KH = PDK.MA_KH
@@ -221,8 +228,9 @@ BEGIN
     JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
     LEFT JOIN PHIEU_THANH_TOAN PTT ON PDK.MA_PDK = PTT.MA_PDK
     WHERE KHDV.TENDONVI LIKE N'%' + @TENDONVI + '%'
-    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK
+    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, PTT.MA_PTT -- thêm PTT.MA_PTT vào GROUP BY
 END
+
 GO
 EXEC SP_NVKT_TimKiemKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
 
@@ -239,7 +247,8 @@ BEGIN
             WHEN MAX(PTT.TINHTRANG) = N'Đã thanh toán' THEN 0
             ELSE SUM(LD.GIATIEN)
         END AS TongTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM KHACH_HANG_DONVI KHDV
     JOIN KHACH_HANG KH ON KHDV.MA_KHDV = KH.MA_KH
     JOIN PHIEU_DANG_KY PDK ON KH.MA_KH = PDK.MA_KH
@@ -248,8 +257,9 @@ BEGIN
     JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
     LEFT JOIN PHIEU_THANH_TOAN PTT ON PDK.MA_PDK = PTT.MA_PDK
     WHERE KH.MA_KH = @MA_KH
-    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK
+    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, PTT.MA_PTT -- thêm PTT.MA_PTT vào GROUP BY
 END
+
 GO
 EXEC SP_NVKT_TimKiemKHDV_Theo_Ma_DV @MA_KH='KH0401'
 
@@ -266,7 +276,8 @@ BEGIN
             WHEN MAX(PTT.TINHTRANG) = N'Đã thanh toán' THEN 0
             ELSE SUM(LD.GIATIEN)
         END AS TongTienCanTra,
-        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan
+        MAX(PTT.TINHTRANG) AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM KHACH_HANG_DONVI KHDV
     JOIN KHACH_HANG KH ON KHDV.MA_KHDV = KH.MA_KH
     JOIN PHIEU_DANG_KY PDK ON KH.MA_KH = PDK.MA_KH
@@ -274,9 +285,10 @@ BEGIN
     JOIN LICH_THI LT ON CTDK.MA_LICH = LT.MA_LICH
     JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
     LEFT JOIN PHIEU_THANH_TOAN PTT ON PDK.MA_PDK = PTT.MA_PDK
-    WHERE PTT.MA_PTT = @MA_PTT  -- Điều kiện tìm kiếm theo MA_PTT
-    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK
+    WHERE PTT.MA_PTT = @MA_PTT
+    GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, PTT.MA_PTT
 END
+
 EXEC SP_NVKT_TimKiemKHDV_Theo_MA_PTT @MA_PTT='TT0401' 
 
 -- Tìm kiếm danh sách chứng chỉ của đơn vị theo mã đơn vị
@@ -285,7 +297,7 @@ CREATE PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ma_DV
 AS
 BEGIN
     SELECT 
-        Distinct(PDK.MA_PDK),
+        DISTINCT PDK.MA_PDK,
         LD.TENLOAI AS TenChungChi,
         PDK.SOLUONG,
         LT.NGAYTHI,
@@ -293,7 +305,8 @@ BEGIN
             WHEN PTT.TINHTRANG = N'Đã thanh toán' THEN 0
             ELSE LD.GIATIEN
         END AS SoTienCanTra,
-        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan
+        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM PHIEU_DANG_KY PDK
     JOIN KHACH_HANG KH ON KH.MA_KH = PDK.MA_KH
     JOIN KHACH_HANG_DONVI KHDV ON KHDV.MA_KHDV = KH.MA_KH
@@ -305,15 +318,16 @@ BEGIN
       AND KH.MA_KH = @MA_KH
 END
 
+
 EXEC SP_NVKT_TimChungChiKHDV_Theo_Ma_DV @MA_KH='KH0401'
 
 --Tìm kiếm danh sách chứng chỉ của đơn vị theo tên
-Create PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ten
+CREATE PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ten
     @TENDONVI NVARCHAR(50)
 AS
 BEGIN
     SELECT 
-        Distinct(PDK.MA_PDK),
+        DISTINCT PDK.MA_PDK,
         LD.TENLOAI AS TenChungChi,
         PDK.SOLUONG,
         LT.NGAYTHI,
@@ -321,7 +335,8 @@ BEGIN
             WHEN PTT.TINHTRANG = N'Đã thanh toán' THEN 0
             ELSE LD.GIATIEN
         END AS SoTienCanTra,
-        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan
+        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM PHIEU_DANG_KY PDK
     JOIN KHACH_HANG KH ON KH.MA_KH = PDK.MA_KH
     JOIN KHACH_HANG_DONVI KHDV ON KHDV.MA_KHDV = KH.MA_KH
@@ -331,6 +346,7 @@ BEGIN
     LEFT JOIN PHIEU_THANH_TOAN PTT ON PDK.MA_PDK = PTT.MA_PDK
     WHERE KHDV.TENDONVI LIKE N'%' + @TENDONVI + '%'
 END
+
 go
 EXEC SP_NVKT_TimChungChiKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
 
@@ -348,7 +364,8 @@ BEGIN
             WHEN PTT.TINHTRANG = N'Đã thanh toán' THEN 0
             ELSE LD.GIATIEN
         END AS SoTienCanTra,
-        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan
+        ISNULL(PTT.TINHTRANG, N'Chưa thanh toán') AS TinhTrangThanhToan,
+        PTT.MA_PTT -- thêm dòng này
     FROM PHIEU_DANG_KY PDK
     JOIN KHACH_HANG KH ON KH.MA_KH = PDK.MA_KH
     JOIN KHACH_HANG_DONVI KHDV ON KHDV.MA_KHDV = KH.MA_KH
@@ -358,5 +375,18 @@ BEGIN
     LEFT JOIN PHIEU_THANH_TOAN PTT ON PDK.MA_PDK = PTT.MA_PDK
     WHERE PTT.MA_PTT = @MA_PTT
 END
+
 EXEC SP_NVKT_TimChungChiKHDV_Theo_MA_PTT @MA_PTT='TT0401'
 
+-- Cập nhật tình trạng thanh toán
+CREATE PROCEDURE SP_NVKT_CapNhat_TinhTrangThanhToan
+    @MA_PTT CHAR(6),
+    @TINHTRANG NVARCHAR(20)
+AS
+BEGIN
+    UPDATE PHIEU_THANH_TOAN
+    SET TINHTRANG = @TINHTRANG
+    WHERE MA_PTT = @MA_PTT
+END
+
+--EXEC SP_NVKT_CapNhat_TinhTrangThanhToan @MA_PTT='TT0001', @TINHTRANG=N'Đã thanh toán'
