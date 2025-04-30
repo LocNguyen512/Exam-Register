@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../component/Header/NVNhapLieu/HeaderBack";
 import "./LapChungChi.css";
 
@@ -11,6 +11,9 @@ function TaoChungChi() {
     const [error, setError] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errors, setErrors] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false); // Trạng thái kiểm tra form hợp lệ
+    const [showCertificateModal, setShowCertificateModal] = useState(false); // Trạng thái hiển thị modal danh sách chứng chỉ
+    const [availableCertificates, setAvailableCertificates] = useState([]);
 
     const validateField = (name, value) => {
         let message = "";
@@ -38,77 +41,116 @@ function TaoChungChi() {
                     message = "CCCD phải gồm đúng 12 chữ số.";
                 break;
             case "maNhanVien":
-                if (!value.trim()) message = "Vui lòng nhập mã nhân viên. (Mẫu: NV0001)";
+                if (!value.trim()) {
+                    message = "Vui lòng nhập mã nhân viên. (Mẫu: NV0001)";
+                } else if (!/^NV\d{4}$/.test(value)) {
+                    message =
+                        "Mã nhân viên phải theo mẫu: NV0001 (2 ký tự 'NV' và 4 chữ số).";
+                }
                 break;
             default:
                 break;
         }
 
         setErrors((prev) => ({ ...prev, [name]: message }));
+        return message === ""; // Trả về true nếu không có lỗi, false nếu có lỗi
     };
 
     const validateInputs = () => {
-        validateField("monThi", monThi);
-        validateField("ketQua", ketQua);
-        validateField("ngayCap", ngayCap);
-        validateField("cccdThiSinh", cccdThiSinh);
-        validateField("maNhanVien", maNhanVien);
+        const monThiValid = validateField("monThi", monThi);
+        const ketQuaValid = validateField("ketQua", ketQua);
+        const ngayCapValid = validateField("ngayCap", ngayCap);
+        const cccdThiSinhValid = validateField("cccdThiSinh", cccdThiSinh);
+        const maNhanVienValid = validateField("maNhanVien", maNhanVien);
 
         return (
-            monThi.trim() &&
-            ketQua.trim() &&
-            !isNaN(ketQua) &&
-            ketQua >= 0 &&
-            ketQua <= 100 &&
-            ngayCap.trim() &&
-            /^\d{12}$/.test(cccdThiSinh) &&
-            maNhanVien.trim()
+            monThiValid &&
+            ketQuaValid &&
+            ngayCapValid &&
+            cccdThiSinhValid &&
+            maNhanVienValid
         );
     };
 
+    useEffect(() => {
+        // Gọi API danh sách chứng chỉ
+        const fetchCertificates = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/QLchungchi/docds_dgnl"
+                );
+                const data = await response.json();
+
+                if (Array.isArray(data)) {
+                    // Lưu toàn bộ object để sử dụng name sau
+                    setAvailableCertificates(data);
+                } else {
+                    console.error("API trả về không đúng định dạng:", data);
+                }
+            } catch (err) {
+                console.error("Lỗi khi gọi API chứng chỉ:", err);
+            }
+        };
+
+        fetchCertificates();
+    }, []); // chỉ gọi một lần khi component mount
+
+    useEffect(() => {
+        setIsFormValid(validateInputs()); // kiểm tra form
+    }, [monThi, ketQua, ngayCap, cccdThiSinh, maNhanVien]);
+
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      setError(false);
-      setSuccessMsg('');
-      if (!validateInputs()) return;
-    
-      try {
-        const response = await fetch('http://localhost:5000/QLchungchi/themChungChi', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            mon_thi: monThi,
-            ket_qua: parseInt(ketQua),
-            ngay_cap: ngayCap,
-            cccd_thi_sinh: cccdThiSinh,
-            ma_nhan_vien: maNhanVien,
-          }),
-        });
-    
-        const data = await response.json();
-    
-        if (data.success) {
-          setSuccessMsg('LẬP CHỨNG CHỈ THÀNH CÔNG!');
-          setMonThi('');
-          setKetQua('');
-          setNgayCap('');
-          setCccdThiSinh('');
-          setMaNhanVien('');
-          setErrors({});
-        } else {
-          if (data.message && data.message.includes("không tìm thấy")) {
-            setSuccessMsg('');
-            setError(data.message);
-          } else {
-            setError("LỖI: KHÔNG THỂ LẬP CHỨNG CHỈ. VUI LÒNG KIỂM TRA DỮ LIỆU.");
-          }
+        e.preventDefault();
+        setError(false);
+        setSuccessMsg("");
+
+        // Kiểm tra lại tính hợp lệ của form ngay trước khi submit
+        if (!isFormValid) {
+            setError("Vui lòng kiểm tra lại thông tin.");
+            return;
         }
-      } catch (err) {
-        console.error('Lỗi khi gửi yêu cầu:', err);
-        setError("LỖI HỆ THỐNG: KHÔNG THỂ KẾT NỐI MÁY CHỦ.");
-      }
+
+        try {
+            const response = await fetch(
+                "http://localhost:5000/QLchungchi/themChungChi",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        mon_thi: monThi,
+                        ket_qua: parseInt(ketQua),
+                        ngay_cap: ngayCap,
+                        cccd_thi_sinh: cccdThiSinh,
+                        ma_nhan_vien: maNhanVien,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+                setSuccessMsg("LẬP CHỨNG CHỈ THÀNH CÔNG!");
+                setMonThi("");
+                setKetQua("");
+                setNgayCap("");
+                setCccdThiSinh("");
+                setMaNhanVien("");
+                setErrors({});
+            } else {
+                if (data.message && data.message.includes("không tìm thấy")) {
+                    setSuccessMsg("");
+                    setError(data.message);
+                } else {
+                    setError(
+                        "LỖI: KHÔNG THỂ LẬP CHỨNG CHỈ. VUI LÒNG KIỂM TRA DỮ LIỆU."
+                    );
+                }
+            }
+        } catch (err) {
+            console.error("Lỗi khi gửi yêu cầu:", err);
+            setError("LỖI HỆ THỐNG: KHÔNG THỂ KẾT NỐI MÁY CHỦ.");
+        }
     };
-    
 
     return (
         <div className="layout">
@@ -129,7 +171,57 @@ function TaoChungChi() {
                         {errors.monThi && (
                             <p className="error-msg">{errors.monThi}</p>
                         )}
+                        <button
+                            type="button"
+                            onClick={() => setShowCertificateModal(true)}
+                        >
+                            Chọn chứng chỉ
+                        </button>
                     </div>
+
+                    {/* Modal hiển thị danh sách chứng chỉ */}
+                    {/* Modal hiển thị danh sách chứng chỉ */}
+                    {showCertificateModal && (
+                        <div
+                            className="modal"
+                            style={{
+                                position: "fixed",
+                                top: "20%",
+                                left: "70%",
+                            }}
+                        >
+                            <div className="modal-content">
+                                <span
+                                    className="close-btn"
+                                    onClick={() =>
+                                        setShowCertificateModal(false)
+                                    }
+                                >
+                                    &times;
+                                </span>
+                                <h3>Chọn chứng chỉ</h3>
+                                <ul className="certificate-list">
+                                    {availableCertificates.map(
+                                        (certificate, index) => (
+                                            <li
+                                                key={index}
+                                                className="certificate-item"
+                                                onClick={() => {
+                                                    setMonThi(certificate.name);
+                                                    setShowCertificateModal(
+                                                        false
+                                                    );
+                                                }}
+                                            >
+                                                {certificate.name}
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="input-group">
                         <input
                             type="number"
@@ -190,19 +282,26 @@ function TaoChungChi() {
                             <p className="error-msg">{errors.maNhanVien}</p>
                         )}
                     </div>
-                    <button type="submit" className="submit-btn">
-                        LẬP CHỨNG CHỈ
+                    <button
+                        type="submit"
+                        className="submit-btn"
+                        disabled={!isFormValid}
+                    >
+                        Lập chứng chỉ
                     </button>
                 </form>
+                {(successMsg || error) && (
+                    <div
+                        className={`toast ${successMsg ? "success" : "error"}`}
+                    >
+                        {successMsg || error}
+                    </div>
+                )}
             </div>
-            {(successMsg || error) && (
-              <div className={`toast ${successMsg ? 'success' : 'error'}`}>
-                {successMsg || error}
-              </div>
-            )}
-
         </div>
     );
 }
 
 export default TaoChungChi;
+
+// Kiểm tra mã thí sinh và mã nhân viên có tồn tại trong database

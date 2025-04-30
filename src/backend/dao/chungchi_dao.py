@@ -1,5 +1,6 @@
 from sqlalchemy import text
 from extensions import db
+from sqlalchemy.exc import SQLAlchemyError
 
 class ChungChiDAO:
     @staticmethod
@@ -53,26 +54,29 @@ class ChungChiDAO:
             return None
         
     @staticmethod
-    def ThemChungChi(mon_thi, ngay_cap, ket_qua, cccd_thi_sinh, ma_nhan_vien):
+    def ThemChungChi(mon_thi, ngay_cap, ket_qua, cccd, ma_nv):
         try:
             sql = text("""
                 EXEC SP_THEM_CHUNGCHI 
-                    @MONTHI = :mon_thi,
-                    @NGAYCAP = :ngay_cap,
-                    @KETQUA = :ket_qua,
-                    @CCCD = :cccd,
+                    @MONTHI = :mon_thi, 
+                    @NGAYCAP = :ngay_cap, 
+                    @KETQUA = :ket_qua, 
+                    @CCCD = :cccd, 
                     @MA_NV = :ma_nv
             """)
             db.session.execute(sql, {
                 "mon_thi": mon_thi,
                 "ngay_cap": ngay_cap,
                 "ket_qua": ket_qua,
-                "cccd": cccd_thi_sinh,
-                "ma_nv": ma_nhan_vien
+                "cccd": cccd,
+                "ma_nv": ma_nv
             })
             db.session.commit()
-            return True  # Thêm thành công
-        except Exception as e:
+            return True
+
+        except SQLAlchemyError as e:
             db.session.rollback()
-            print(f"Lỗi khi thêm chứng chỉ: {e}")
-            return False
+            # e.orig chứa lỗi gốc từ database, có thể chứa thông điệp RAISERROR
+            error_msg = str(e.orig) if hasattr(e, 'orig') else str(e)
+            print(f"[DAO] Lỗi khi thêm chứng chỉ: {error_msg}")
+            return error_msg

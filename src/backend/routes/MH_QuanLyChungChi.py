@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from services.chungchi_bus import ChungChiService
+import traceback
+from services.loaidgnl_bus import LoaiDGNLBUS
 
 chungchi_bp = Blueprint('QLchungchi', __name__)
 
@@ -58,3 +60,17 @@ def them_chung_chi():
     except Exception as e:
         print(f"Lỗi khi thêm chứng chỉ: {e}")
         return jsonify({"success": False, "message": "Lỗi hệ thống khi thêm chứng chỉ."}), 500
+    
+    
+
+@chungchi_bp.route("/docds_dgnl", methods=["GET"])
+def cbbMonThi():
+    """
+    API lấy danh sách loại đánh giá năng lực (DGNL).
+    """
+    try:
+        certificates = LoaiDGNLBUS.LayDSLoaiDGNL()
+        return jsonify(certificates)
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500

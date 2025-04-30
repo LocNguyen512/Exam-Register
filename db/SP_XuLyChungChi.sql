@@ -62,11 +62,12 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_THEM_CHUNG_CHI')
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_THEM_CHUNGCHI')
 BEGIN
-    DROP PROCEDURE SP_THEM_CHUNG_CHI
+    DROP PROCEDURE SP_THEM_CHUNGCHI
 END
 GO
+
 -- Tạo stored procedure để thêm chứng chỉ
 CREATE PROCEDURE SP_THEM_CHUNGCHI
     @MONTHI NVARCHAR(50),
@@ -83,24 +84,29 @@ BEGIN
     DECLARE @MAX_ID INT;
 
     BEGIN TRY
-        -- 1. Lấy mã thí sinh từ CCCD
-        SELECT @MA_TS = MA_TS
-        FROM THI_SINH
-        WHERE CCCD = @CCCD;
-
-        IF @MA_TS IS NULL
+        -- 1. Kiểm tra CCCD có tồn tại trong bảng THI_SINH không
+        IF NOT EXISTS (SELECT 1 FROM THI_SINH WHERE CCCD = @CCCD)
         BEGIN
-            RAISERROR(N'Không tìm thấy thí sinh với CCCD đã nhập.', 16, 1);
+            RAISERROR(N'CCCD không tồn tại trong danh sách thí sinh.', 16, 1);
             RETURN;
         END
 
-        -- 2. Tạo mã chứng chỉ mới: CC0001, CC0002,...
+        -- 2. Kiểm tra mã nhân viên có tồn tại trong bảng NHAN_VIEN không
+        IF NOT EXISTS (SELECT 1 FROM NHAN_VIEN WHERE MA_NV = @MA_NV)
+        BEGIN
+            RAISERROR(N'Mã nhân viên không tồn tại.', 16, 1);
+            RETURN;
+        END
+
+        -- 3. Lấy mã thí sinh từ bảng THI_SINH
+        SELECT @MA_TS = MA_TS FROM THI_SINH WHERE CCCD = @CCCD;
+
+        -- 4. Sinh mã chứng chỉ mới (ví dụ: CC0001, CC0002, ...)
         SELECT @MAX_ID = MAX(CAST(SUBSTRING(MA_CC, 3, 4) AS INT)) FROM CHUNG_CHI;
         SET @MAX_ID = ISNULL(@MAX_ID, 0) + 1;
-
         SET @MA_CC = 'CC' + RIGHT('0000' + CAST(@MAX_ID AS VARCHAR), 4);
 
-        -- 3. Thêm chứng chỉ mới
+        -- 5. Thêm chứng chỉ
         INSERT INTO CHUNG_CHI (MA_CC, NGAYCAP, MONTHI, KETQUA, TRANGTHAI, MA_TS, MA_NV)
         VALUES (@MA_CC, @NGAYCAP, @MONTHI, @KETQUA, N'Chưa nhận', @MA_TS, @MA_NV);
     END TRY
@@ -112,9 +118,42 @@ END
 GO
 
 
-EXEC SP_THEM_CHUNGCHI 
-    @MONTHI = N'Tin học A',
-    @NGAYCAP = '2025-04-29',
-    @KETQUA = 85,
-    @CCCD = '503215968712',
-    @MA_NV = 'NV0001';
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_LayDSChungChi')
+BEGIN
+    DROP PROCEDURE SP_LayDSChungChi
+END
+GO
+
+CREATE PROCEDURE SP_LayDSChungChi
+AS
+BEGIN
+    SELECT MA_LOAI, TENLOAI
+    FROM LOAI_DGNL;
+END 
+GO
+
+CREATE PROCEDURE SP_LayDSLichThi
+    @TenLoai NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        lt.MA_LICH,
+        lt.NgayThi,
+        ctl.MA_PHONG,
+        ctl.SoGheTrong
+    FROM 
+        LICH_THI lt
+    INNER JOIN 
+        CHI_TIET_LICH_THI ctl ON lt.MA_LICH = ctl.MA_LICH
+    INNER JOIN 
+        Loai_DGNL ld ON lt.MA_LOAI = ld.MA_LOAI
+    WHERE 
+        ctl.SoGheTrong > 0
+		AND lt.NgayThi > CAST(GETDATE() AS DATE)
+        AND (@TenLoai IS NULL OR ld.TenLoai = @TenLoai)
+    ORDER BY 
+        lt.NgayThi ASC, lt.GioThi ASC, ctl.MA_PHONG ASC;
+END
+GO
