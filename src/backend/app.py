@@ -1,8 +1,17 @@
 from flask import Flask, request, jsonify
 from config import Config  
 from sqlalchemy import text
+<<<<<<< Updated upstream
 from routes.auth import auth_bp
 from routes.nvtn import nvtn_bp
+=======
+from routes.MH_DangNhap import dangnhap_bp
+from routes.MH_ThemKhachHangTuDo import dangKyThi_bp
+from routes.MH_ThongBao import thongbao_bp
+from routes.MH_QuanLyChungChi import chungchi_bp
+from routes.MH_ChiTietGiaHan import giahan_bp
+from routes.MH_ChonLichThi import loadlichthi_bp
+>>>>>>> Stashed changes
 from extensions import db
 
 app = Flask(__name__)
@@ -10,7 +19,17 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
+<<<<<<< Updated upstream
 app.register_blueprint(auth_bp, url_prefix="/auth")
+=======
+app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
+app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
+app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
+app.register_blueprint(chungchi_bp, url_prefix="/QLchungchi")
+app.register_blueprint(giahan_bp, url_prefix="/QLgiahan" )
+app.register_blueprint(loadlichthi_bp, url_prefix="/Chonlichthi")
+
+>>>>>>> Stashed changes
 @app.route('/')
 def index():
     return "Hello, World!"

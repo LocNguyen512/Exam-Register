@@ -45,10 +45,14 @@ function App() {
           <Route path="/DangNhap" element={<DangNhap />} />
         
           {/* Nhân viên tiếp nhận */}
+<<<<<<< Updated upstream
           <Route path="/HomepageNVTN" element={<Homepage_TiepNhan />} />
+=======
+          <Route path="/NVTN" element={<Homepage_TiepNhan />} />
+>>>>>>> Stashed changes
           <Route path="/GiaHan" element={<GiaHan />} />
-          <Route path="/GiaHan/:cccd" element={<GiaHanDetail />} />
-          <Route path="/GiaHan/:cccd/:monThi" element={<ChonLichThi />} />
+          <Route path="/GiaHan/:sobaodanh" element={<GiaHanDetail />} />
+          <Route path="/GiaHan/:sobaodanh/:monThi" element={<ChonLichThi />} />
           <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
           <Route path="/capChungChi" element={<TraCuuChungChi />} />
 
