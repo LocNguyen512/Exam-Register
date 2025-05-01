@@ -8,6 +8,9 @@ from routes.MH_QuanLyChungChi import chungchi_bp
 from extensions import db
 from flask_cors import CORS
 
+# Linh them
+from routes.MH_ThanhToanDonVi import thanhtoandonvi_bp
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config.from_object(Config)
@@ -18,6 +21,8 @@ app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
 app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
 app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
 app.register_blueprint(chungchi_bp, url_prefix="/QLchungchi")
+# Linh them
+app.register_blueprint(thanhtoandonvi_bp, url_prefix="/thanhtoandonvi")
 
 @app.route('/')
 def index():
