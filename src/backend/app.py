@@ -5,6 +5,7 @@ from routes.MH_DangNhap import dangnhap_bp
 from routes.MH_ThemKhachHangTuDo import dangKyThi_bp
 from routes.MH_ThongBao import thongbao_bp
 from routes.MH_QuanLyChungChi import chungchi_bp
+from routes.MH_CapChungChi import capchungchi_bp
 from extensions import db
 from flask_cors import CORS
 
@@ -18,6 +19,7 @@ app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
 app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
 app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
 app.register_blueprint(chungchi_bp, url_prefix="/QLchungchi")
+app.register_blueprint(capchungchi_bp, url_prefix="/Capchungchi")
 
 @app.route('/')
 def index():

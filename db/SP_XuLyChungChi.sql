@@ -18,7 +18,9 @@ BEGIN
         CONVERT(VARCHAR(10), cc.NGAYCAP, 103) AS [Ngày cấp],
         CC.KETQUA AS [Kết quả],
         TS.CCCD AS [CCCD thí sinh],
-        CC.MA_NV AS [Mã nhân viên nhập]
+        CC.MA_NV AS [Mã nhân viên nhập],
+		CC.TRANGTHAI AS [Trạng thái],
+		CC.GHICHU AS [Ghi chú]
     FROM 
         CHUNG_CHI CC
     INNER JOIN 
@@ -84,29 +86,16 @@ BEGIN
     DECLARE @MAX_ID INT;
 
     BEGIN TRY
-        -- 1. Kiểm tra CCCD có tồn tại trong bảng THI_SINH không
-        IF NOT EXISTS (SELECT 1 FROM THI_SINH WHERE CCCD = @CCCD)
-        BEGIN
-            RAISERROR(N'CCCD không tồn tại trong danh sách thí sinh.', 16, 1);
-            RETURN;
-        END
 
-        -- 2. Kiểm tra mã nhân viên có tồn tại trong bảng NHAN_VIEN không
-        IF NOT EXISTS (SELECT 1 FROM NHAN_VIEN WHERE MA_NV = @MA_NV)
-        BEGIN
-            RAISERROR(N'Mã nhân viên không tồn tại.', 16, 1);
-            RETURN;
-        END
-
-        -- 3. Lấy mã thí sinh từ bảng THI_SINH
+        
         SELECT @MA_TS = MA_TS FROM THI_SINH WHERE CCCD = @CCCD;
 
-        -- 4. Sinh mã chứng chỉ mới (ví dụ: CC0001, CC0002, ...)
+        
         SELECT @MAX_ID = MAX(CAST(SUBSTRING(MA_CC, 3, 4) AS INT)) FROM CHUNG_CHI;
         SET @MAX_ID = ISNULL(@MAX_ID, 0) + 1;
         SET @MA_CC = 'CC' + RIGHT('0000' + CAST(@MAX_ID AS VARCHAR), 4);
 
-        -- 5. Thêm chứng chỉ
+        
         INSERT INTO CHUNG_CHI (MA_CC, NGAYCAP, MONTHI, KETQUA, TRANGTHAI, MA_TS, MA_NV)
         VALUES (@MA_CC, @NGAYCAP, @MONTHI, @KETQUA, N'Chưa nhận', @MA_TS, @MA_NV);
     END TRY
@@ -118,20 +107,34 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_LayDSChungChi')
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_LayLoaiDGNL_ChuaCapChungChi')
 BEGIN
-    DROP PROCEDURE SP_LayDSChungChi
+    DROP PROCEDURE SP_LayLoaiDGNL_ChuaCapChungChi
 END
 GO
 
-CREATE PROCEDURE SP_LayDSChungChi
+CREATE PROCEDURE SP_LayLoaiDGNL_ChuaCapChungChi
+    @CCCD CHAR(12)
 AS
 BEGIN
-    SELECT MA_LOAI, TENLOAI
-    FROM LOAI_DGNL;
-END 
+    SELECT DISTINCT ld.MA_LOAI, ld.TENLOAI
+    FROM THI_SINH ts
+    JOIN CHI_TIET_DANG_KY ctdk ON ts.MA_TS = ctdk.MA_TS
+    JOIN LICH_THI lt ON ctdk.MA_LICH = lt.MA_LICH
+    JOIN LOAI_DGNL ld ON lt.MA_LOAI = ld.MA_LOAI
+    WHERE ts.CCCD = @CCCD
+    AND NOT EXISTS (
+        SELECT 1
+        FROM CHUNG_CHI cc
+        WHERE cc.MA_TS = ts.MA_TS
+        AND cc.MONTHI = ld.TENLOAI -- mapping tên môn thi với loại DGNL
+    );
+END
 GO
 
+
+
+/*
 CREATE PROCEDURE SP_LayDSLichThi
     @TenLoai NVARCHAR(50)
 AS
@@ -157,3 +160,70 @@ BEGIN
         lt.NgayThi ASC, lt.GioThi ASC, ctl.MA_PHONG ASC;
 END
 GO
+*/
+
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'sp_CapNhatTrangThaiChungChi')
+BEGIN
+    DROP PROCEDURE sp_CapNhatTrangThaiChungChi
+END
+GO
+
+CREATE PROCEDURE sp_CapNhatTrangThaiChungChi
+    @MaCC CHAR(6),
+    @TrangThaiMoi NVARCHAR(20)
+AS
+BEGIN
+    -- Kiểm tra chứng chỉ có tồn tại không
+    IF NOT EXISTS (SELECT 1 FROM CHUNG_CHI WHERE MA_CC = @MaCC)
+    BEGIN
+        RAISERROR(N'Mã chứng chỉ không tồn tại.', 16, 1);
+        RETURN;
+    END
+
+    -- Kiểm tra trạng thái hợp lệ
+    IF @TrangThaiMoi NOT IN (N'Đã nhận', N'Chưa nhận', N'-')
+    BEGIN
+        RAISERROR(N'Trạng thái không hợp lệ. Chỉ chấp nhận các giá trị: "Đã nhận", "Chưa nhận", "-".', 16, 1);
+        RETURN;
+    END
+
+    -- Thực hiện cập nhật trạng thái
+    UPDATE CHUNG_CHI
+    SET TRANGTHAI = @TrangThaiMoi
+    WHERE MA_CC = @MaCC;
+
+    -- Trả về thông báo thành công
+    PRINT N'Cập nhật trạng thái chứng chỉ thành công.';
+END
+GO
+
+
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'sp_CapNhatGhiChuChungChi')
+BEGIN
+    DROP PROCEDURE sp_CapNhatGhiChuChungChi
+END
+GO
+CREATE PROCEDURE sp_CapNhatGhiChuChungChi
+    @MA_CC CHAR(6),
+    @GHICHU NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM CHUNG_CHI WHERE MA_CC = @MA_CC)
+    BEGIN
+        UPDATE CHUNG_CHI
+        SET GHICHU = @GHICHU
+        WHERE MA_CC = @MA_CC;
+
+        SELECT N'Cập nhật ghi chú thành công' AS message, 1 AS success;
+    END
+    ELSE
+    BEGIN
+        SELECT N'Không tìm thấy chứng chỉ với mã đã cung cấp' AS message, 0 AS success;
+    END
+END;
+GO
+
+
+

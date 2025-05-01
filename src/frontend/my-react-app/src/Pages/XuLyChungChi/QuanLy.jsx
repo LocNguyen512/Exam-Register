@@ -3,7 +3,7 @@ import Header from "../../component/Header/NVNhapLieu/HeaderNoBack";
 import { useNavigate } from "react-router-dom";
 import "./QuanLy.css";
 
-function Layout() {
+function QuanLyCC() {
     const [chungChiList, setChungChiList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -101,7 +101,7 @@ function Layout() {
     return (
         <div className="layout">
             <Header />
-            <div className="certificate-container">
+            <div className="certificate-container" style={{ overflowY: 'hidden' }}>
                 <div className="certificate-actions">
                     <h2>Danh sách chứng chỉ</h2>
                     <input
@@ -253,4 +253,4 @@ function Layout() {
     );
 }
 
-export default Layout;
+export default QuanLyCC;
