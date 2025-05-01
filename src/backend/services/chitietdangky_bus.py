@@ -32,7 +32,7 @@ class ChiTietDangKyBUS:
         return results
 
     @staticmethod
-    def tim_chungchi_theo_ma_ptt(ma_ptt):
+    def tim_chungchicanhan_theo_ma_ptt(ma_ptt):
         # Gọi DAO để lấy danh sách chứng chỉ theo mã phiếu thanh toán
         results = ChiTietDangKyDAO.tim_chungchi_theo_ma_ptt(ma_ptt)
         if not results:

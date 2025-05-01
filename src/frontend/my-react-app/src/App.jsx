@@ -58,7 +58,7 @@ function App() {
           {/* Nhân viên kế toán */}
           <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
           <Route path="/BangGia" element={<BangGia_thanhtoan />} />
-          <Route path="/ThanhToan" element={<ThanhToan />} />
+          <Route path="/Homepage/ThanhToan" element={<ThanhToan />} />
         </Routes>
     </Router>
   );

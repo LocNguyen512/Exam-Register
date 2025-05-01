@@ -66,7 +66,7 @@ class ChiTietDangKyDAO:
         return [dict(zip(columns, row)) for row in rows]
 
     @staticmethod
-    def tim_chungchi_theo_ma_ptt(ma_ptt):
+    def tim_chungchicanhan_theo_ma_ptt(ma_ptt):
         query = text("EXEC SP_NVKT_TimChungChiKHDV_Theo_MA_PTT :MA_PTT")
         result = db.session.execute(query, {'MA_PTT': ma_ptt})
         rows = result.fetchall()

@@ -1,136 +1,134 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function DonVi() {
-  const [searchTerm, setSearchTerm] = useState('');  // Từ khóa tìm kiếm
-  const [searchType, setSearchType] = useState('ten_don_vi');  // Loại tìm kiếm
-  const [customerData, setCustomerData] = useState(null);  // Dữ liệu khách hàng
-  const [certificateData, setCertificateData] = useState(null);  // Dữ liệu chứng chỉ
-  const [loading, setLoading] = useState(false);  // Trạng thái tìm kiếm
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchType, setSearchType] = useState('ten_don_vi');
+  const [customerData, setCustomerData] = useState(null);
+  const [certificateData, setCertificateData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
-  // Xử lý sự kiện nhấn nút tìm kiếm
   const handleSearch = async () => {
-    let url = '';  // Biến để chứa URL của API
-    const params = { [searchType]: searchTerm };  // Tạo đối tượng chứa tham số gửi đi
+    let url = '';
+    const params = { [searchType]: searchTerm };
 
-    // Chọn URL API dựa vào loại tìm kiếm
     if (searchType === 'ten_don_vi') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ten_don_vi';  // API tìm theo tên đơn vị
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ten_don_vi';
     } else if (searchType === 'ma_kh') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ma_kh';  // API tìm theo mã khách hàng
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ma_kh';
     } else if (searchType === 'ma_ptt') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ma_ptt';  // API tìm theo mã phiếu thanh toán
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ma_ptt';
     }
 
-    // Tạo URL với tham số query string
     const urlWithParams = new URL(url, window.location.origin);
-    urlWithParams.search = new URLSearchParams(params).toString();  // Tạo query string từ params
+    urlWithParams.search = new URLSearchParams(params).toString();
 
-    setLoading(true);  // Đặt trạng thái loading khi bắt đầu tìm kiếm
+    setLoading(true);
+    setNotFound(false);
 
     try {
-      // Gửi yêu cầu GET với query string
-      const customerResponse = await fetch(urlWithParams, {
-        method: 'GET',  // Dùng GET
-        headers: {
-          'Content-Type': 'application/json',  // Nội dung là JSON
-        },
-      });
+      const customerResponse = await fetch(urlWithParams);
+      const rawData = await customerResponse.json();
+      console.log('📦 Kết quả trả về từ API khách hàng:', rawData);
 
-      const customerData = await customerResponse.json();  // Nhận kết quả trả về từ API
-      console.log('Kết quả tìm kiếm khách hàng:', customerData);
+      let customer = null;
+      if (Array.isArray(rawData) && rawData.length > 0) {
+        customer = rawData[0];
+      } else if (rawData && typeof rawData === 'object') {
+        customer = rawData;
+      }
 
-      if (customerData) {
-        setCustomerData(customerData);  // Lưu dữ liệu khách hàng vào state
-        fetchCertificates(customerData.ma_kh);  // Tìm chứng chỉ liên quan đến khách hàng
+      if (customer) {
+        setCustomerData(customer);
+        if (searchType === 'ma_ptt') {
+          fetchCertificates(null, customer.ma_ptt);
+        } else {
+          fetchCertificates(customer.ma_kh);
+        }
       } else {
-        setCustomerData(null);  // Nếu không có dữ liệu, reset state
+        setCustomerData(null);
+        setCertificateData(null);
+        setNotFound(true);
       }
     } catch (error) {
-      console.error('Lỗi khi tìm kiếm khách hàng:', error);  // Log lỗi nếu có
+      console.error('❌ Lỗi khi tìm kiếm khách hàng:', error);
     } finally {
-      setLoading(false);  // Kết thúc trạng thái loading
+      setLoading(false);
     }
   };
 
-  // Lấy danh sách chứng chỉ
-  const fetchCertificates = async (ma_kh) => {
+  const fetchCertificates = async (ma_kh = null, ma_ptt = null) => {
     let url = '';
-    const params = { ma_kh };
+    let params = {};
 
-    // Chọn URL API tìm chứng chỉ theo loại tìm kiếm
     if (searchType === 'ten_don_vi') {
-      url = '/timkiem_cc_theo_ten_don_vi';
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ten_don_vi';
+      params = { ten_don_vi: searchTerm };
     } else if (searchType === 'ma_kh') {
-      url = '/timkiem_cc_theo_ma_kh';
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ma_dv';
+      params = { ma_kh: searchTerm };
     } else if (searchType === 'ma_ptt') {
-      url = '/timkiem_cc_theo_ma_ptt';
+      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ma_ptt';
+      params = { ma_ptt: searchTerm };
     }
 
-    // Tạo URL với tham số query string
     const urlWithParams = new URL(url, window.location.origin);
     urlWithParams.search = new URLSearchParams(params).toString();
 
     try {
-      // Gửi yêu cầu GET với query string
-      const certificateResponse = await fetch(urlWithParams, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',  // Nội dung là JSON
-        },
-      });
+      const response = await fetch(urlWithParams);
+      const data = await response.json();
+      console.log('📄 Danh sách chứng chỉ:', data);
 
-      const certificateData = await certificateResponse.json();  // Nhận kết quả trả về từ API
-      console.log('Danh sách chứng chỉ:', certificateData);
-
-      if (certificateData) {
-        setCertificateData(certificateData);  // Lưu danh sách chứng chỉ vào state
+      if (Array.isArray(data) && data.length > 0) {
+        setCertificateData(data);
       } else {
-        setCertificateData(null);  // Nếu không có chứng chỉ, reset state
+        setCertificateData([]);
       }
     } catch (error) {
-      console.error('Lỗi khi tìm chứng chỉ:', error);  // Log lỗi nếu có
+      console.error('❌ Lỗi khi tìm chứng chỉ:', error);
     }
   };
 
-  // Hàm xử lý xác nhận thanh toán
   const handleConfirmPayment = async () => {
-    // Hiển thị hộp thoại xác nhận
     const isConfirmed = window.confirm('Bạn có chắc chắn muốn thanh toán cho khách hàng này không?');
-    
-    if (isConfirmed) {
-      const ma_ptt = customerData?.ma_ptt;  // Lấy mã phiếu thanh toán từ dữ liệu khách hàng
-      const tinh_trang = 'Đã thanh toán';  // Trạng thái thanh toán
 
-      // Gửi yêu cầu API cập nhật tình trạng thanh toán
+    if (isConfirmed) {
+      const ma_ptt = searchTerm;
       try {
-        const response = await fetch('/capnhat_trangthai_thanhtoan', {
+        const response = await fetch('http://127.0.0.1:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',  // Nội dung là JSON
-          },
-          body: JSON.stringify({ ma_ptt, tinh_trang }),  // Gửi mã phiếu thanh toán và trạng thái
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ma_ptt })
         });
 
         const result = await response.json();
+
         if (result.success) {
-          alert('Thanh toán thành công!');
-          // Cập nhật lại trạng thái của khách hàng
-          setCustomerData((prevData) => ({ ...prevData, tinhTrangThanhToan: tinh_trang }));
+          alert('✅ Thanh toán thành công!');
+          setCustomerData((prev) => ({ ...prev }));
         } else {
-          alert('Có lỗi khi thanh toán. Vui lòng thử lại!');
+          alert('⚠️ Có lỗi khi thanh toán. Vui lòng thử lại!');
         }
       } catch (error) {
-        console.error('Lỗi khi cập nhật trạng thái thanh toán:', error);  // Log lỗi nếu có
+        console.error('❌ Lỗi khi cập nhật trạng thái thanh toán:', error);
         alert('Lỗi hệ thống. Vui lòng thử lại sau.');
       }
     }
+  };
+
+  // Tính tổng tiền
+  const calculateTotalAmount = () => {
+    if (!certificateData) return 0;
+    return certificateData.reduce((total, item) => {
+      return total + (item.SOLUONG * item.TongTienCanTra);
+    }, 0);
   };
 
   return (
     <div className="payment-form">
       <h2>🔍 Tìm kiếm khách hàng</h2>
 
-      {/* Lựa chọn loại tìm kiếm */}
       <div>
         <label>Chọn loại tìm kiếm</label>
         <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
@@ -140,7 +138,6 @@ function DonVi() {
         </select>
       </div>
 
-      {/* Input cho từ khóa tìm kiếm */}
       <input
         type="text"
         placeholder="Nhập từ khóa..."
@@ -148,46 +145,70 @@ function DonVi() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      {/* Nút tìm kiếm */}
-      <button onClick={handleSearch}>Tìm kiếm</button>
+      <button onClick={handleSearch} disabled={loading}>
+        {loading ? 'Đang tìm...' : 'Tìm kiếm'}
+      </button>
 
-      {/* Hiển thị thông báo khi đang tìm kiếm */}
-      {loading && <p>🔄 Đang tìm kiếm...</p>}
+      {notFound && <p style={{ color: 'red' }}>❌ Không tìm thấy khách hàng phù hợp.</p>}
 
-      {/* Hiển thị thông tin khách hàng và chứng chỉ nếu có */}
       {customerData && !loading && (
         <div>
-          <h3>Thông tin khách hàng</h3>
-          <div>Tên đơn vị: {customerData.tenDonVi}</div>
-          <div>Email: {customerData.email}</div>
+          <h3>📋 Thông tin khách hàng</h3>
+          <div>
+            <label>Tên đơn vị</label>
+            <input type="text" value={customerData.TENDONVI} readOnly />
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="text" value={customerData.EMAIL} readOnly />
+          </div>
+          <div>
+            <label>Trạng thái thanh toán</label>
+            <input type="text" value={customerData.TinhTrangThanhToan} readOnly />
+          </div>
 
-          <h3>Danh sách chứng chỉ</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Tên chứng chỉ</th>
-                <th>Số lượng</th>
-                <th>Ngày thi</th>
-                <th>Đơn giá</th>
-              </tr>
-            </thead>
-            <tbody>
-              {certificateData && certificateData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.ten}</td>
-                  <td>{item.soLuong}</td>
-                  <td>{item.ngayThi}</td>
-                  <td>{item.donGia}</td>
+          <h3>📚 Danh sách chứng chỉ</h3>
+          {certificateData && certificateData.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Tên chứng chỉ</th>
+                  <th>Số lượng</th>
+                  <th>Ngày thi</th>
+                  <th>Đơn giá</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {certificateData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.TenChungChi}</td>
+                    <td>{item.SOLUONG}</td>
+                    <td>{item.NGAYTHI}</td>
+                    <td>{item.TongTienCanTra}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>Không có chứng chỉ nào.</p>
+          )}
 
-      {/* Nút xác nhận thanh toán */}
-      {customerData && !loading && (
-        <button onClick={handleConfirmPayment}>Xác nhận thanh toán</button>
+          {/*Tổng số tiền cần thanh toán */}
+          <div>
+            <label>Số tiền cần trả</label>
+            <input type="text" value={calculateTotalAmount() + ' VNĐ'} readOnly />
+          </div>
+
+          {/* Trạng thái thanh toán */}
+          <div>
+            <label>Tình trạng thanh toán</label>
+            <input type="text" value={customerData.TinhTrangThanhToan} readOnly />
+          </div>
+
+          <button style={{ marginTop: '16px' }} onClick={handleConfirmPayment}>
+            Xác nhận thanh toán
+          </button>
+        </div>
       )}
     </div>
   );
