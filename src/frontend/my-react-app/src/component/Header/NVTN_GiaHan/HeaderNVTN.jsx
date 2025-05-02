@@ -9,7 +9,7 @@ function HeaderNVTN() {
                 <ul>
                     <li><a href="/"> Home </a></li>
                     <li><a href="LichThi"> Lịch thi </a></li>
-                    <li><a href="LapPhieuDangKy"> Lập phiếu đăng ký </a></li>
+                    <li><a href="DangKy/DangKyCaNhan"> Lập phiếu đăng ký </a></li>
                     <li><a href="GiaHan"> Xử lý gia hạn </a></li>
                     <li><a href="CapChungChi"> Cấp chứng chỉ </a></li>
                 </ul>

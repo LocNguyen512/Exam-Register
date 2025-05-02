@@ -29,7 +29,6 @@ function App() {
   return (
     <Router>
         <Routes>
-          {/* User */}
           <Route path="/" element={<Home />} />
           <Route path="/BangGia" element={<BangGia />} />
           <Route path="/LichThi" element={<LichThi />} />
@@ -56,14 +55,14 @@ function App() {
           <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
           <Route path="/capChungChi" element={<TraCuuChungChi />} />
 
-          <Route path="/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
+          <Route path="/Homepage/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
         
           <Route path="/XuLyChungChi/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
         
           {/* Nhân viên kế toán */}
           <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
           <Route path="/BangGia" element={<BangGia_thanhtoan />} />
-          <Route path="/ThanhToan" element={<ThanhToan />} />
+          <Route path="/Homepage/ThanhToan" element={<ThanhToan />} />
         </Routes>
     </Router>
   );

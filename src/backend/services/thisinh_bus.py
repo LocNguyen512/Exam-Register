@@ -14,9 +14,6 @@ def calculate_age(dob_str):
         return -1  # sai format ngày
     
 
-
-
-
 class ThiSinhBUS:
     @staticmethod
     def ThemThiSinh(ho_ten, cccd, ngay_sinh, sdt, email):
@@ -119,3 +116,29 @@ class ThiSinhBUS:
         except Exception as e:
             print("Lỗi kiểm tra điều kiện gia hạn:", str(e))
             raise e
+    
+    
+    
+
+    
+    @staticmethod
+    def lay_loai_dgnl_chua_cap_chung_chi(cccd):
+        if not cccd or len(cccd) != 12:
+            return {
+                "success": False,
+                "message": "CCCD không hợp lệ. Vui lòng kiểm tra lại."
+            }
+        
+        data = ThiSinhDAO.LayLoaiDGNLChuaCapChungChi(cccd)
+
+        if data is None:
+            return {
+                "success": False,
+                "message": "Đã xảy ra lỗi khi truy vấn loại DGNL chưa cấp chứng chỉ."
+            }
+        
+        return {
+            "success": True,
+            "data": data
+        }
+

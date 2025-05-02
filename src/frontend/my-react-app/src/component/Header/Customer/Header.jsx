@@ -1,5 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import './Header.css';
 function Header() {
+    const navigate = useNavigate();
+
+    const handleLoginClick = () => {
+        navigate("/DangNhap");
+    }
     return (
         <header>
             <div className="logo">
@@ -13,7 +19,7 @@ function Header() {
                     <li><a href="ChungChi"> Tra cứu chứng chỉ </a></li>
                 </ul>
             </nav>
-            <button className="login-button">Đăng nhập</button>
+            <button className="login-button" onClick={handleLoginClick}>Đăng nhập</button>
         </header>
     )
 }
