@@ -46,7 +46,7 @@ function App() {
           <Route path="/NVTN/GiaHan" element={<GiaHan />} />
           <Route path="/NVTN/GiaHan/:sobaodanh" element={<GiaHanDetail />} />
           <Route path="/NVTN/GiaHan/:sobaodanh/:monThi" element={<ChonLichThi />} />
-          <Route path="/NVTN/PhieuGiaHan" element={<PhieuGiaHan />} />
+          
 
           <Route path="/NVTN/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
         
@@ -56,6 +56,7 @@ function App() {
           <Route path="/NVKT" element={<Home_thanhtoan />} />
           <Route path="/NVKT/BangGia" element={<BangGia_thanhtoan />} />
           <Route path="/NVKT/ThanhToan" element={<ThanhToan />} />
+          <Route path="/NVKT/ThanhToanGiaHan" element={<PhieuGiaHan />} />
         </Routes>
     </Router>
   );

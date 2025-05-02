@@ -9,7 +9,8 @@ function HeaderKT() {
                 <ul>
                     <li><a href="/NVKT"> Home </a></li>
                     <li><a href="/NVKT/BangGia"> Bảng giá </a></li>
-                    <li><a href="/NVKT/ThanhToan"> Thanh toán </a></li>
+                    <li><a href="/NVKT/ThanhToan"> Thanh toán đăng ký </a></li>
+                    <li><a href="/NVKT/ThanhToanGiaHan"> Thanh toán gia hạn </a></li>
                 </ul>
             </nav>
             <button className="login-button">Đăng xuất</button>
