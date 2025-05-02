@@ -6,17 +6,30 @@ const PhieuGiaHan = () => {
   const [cccd, setCccd] = useState("");
   const [phieu, setPhieu] = useState(null);
 
-  const handleSearch = () => {
-    // Giả lập fetch dữ liệu phiếu từ database
-    setPhieu({
-      maPhieu: "GH0001",
-      mon: "TOEIC",
-      truongHop: "Không đặc biệt",
-      phi: "200,000",
-      tinhTrang: "Chưa thanh toán",
-      ngayLap: "10:51 AM 27/3/2025"
-    });
+  const handleSearch = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/phieugiahan/lay-phieu", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cccd })
+      });
+  
+      const result = await res.json();
+      if (res.ok) {
+        setPhieu(result);
+      } else {
+        alert(result.message || result.error || "Không tìm thấy phiếu");
+        setPhieu(null);
+      }
+    } catch (err) {
+      alert("Lỗi gọi API: " + err.message);
+    }
   };
+  
+  const handlePrint = () => {
+    alert("✅ In phiếu gia hạn thành công!");
+  };
+  
 
   return (
     <div className="giahan-layout">
@@ -70,7 +83,7 @@ const PhieuGiaHan = () => {
             </div>
 
             <div className="print-center">
-              <button className="btn-confirm">In phiếu</button>
+              <button className="btn-confirm" onClick={handlePrint}>In phiếu</button>
             </div>
           </div>
         )}

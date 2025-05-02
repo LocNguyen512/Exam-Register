@@ -42,43 +42,20 @@ nav ul li a:hover {
     background-color: rgba(26, 35, 126, 0.1);
 }
 
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  
-.logout-button {
-    padding: 6px 16px;
-    border-radius: 24px;
-    border: 1px solid #ccc;
-    background: white;
-    font-size: 14px;
-    font-weight: 600;
-    color: #000;
+.login-button {
+    background: #6366F1;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
-  
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-  
-.user-icon {
-    width: 32px;
-    height: 32px;
-    background-color: #6366f1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-  
-.user-name {
-    font-weight: 600;
-    font-size: 14px;
-    color: #000;
+
+.login-button:hover {
+    background: #4F46E5;
+    transform: translateY(-2px);
 }
 
 /* Responsive design */

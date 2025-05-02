@@ -70,6 +70,29 @@ class ThiSinhBUS:
             return "CCCD phải đủ 12 chữ số."
 
         return None  # ✅ Hợp lệ
+    
+    
+    @staticmethod
+    def lay_loai_dgnl_chua_cap_chung_chi(cccd):
+        if not cccd or len(cccd) != 12:
+            return {
+                "success": False,
+                "message": "CCCD không hợp lệ. Vui lòng kiểm tra lại."
+            }
+        
+        data = ThiSinhDAO.LayLoaiDGNLChuaCapChungChi(cccd)
+
+        if data is None:
+            return {
+                "success": False,
+                "message": "Đã xảy ra lỗi khi truy vấn loại DGNL chưa cấp chứng chỉ."
+            }
+        
+        return {
+            "success": True,
+            "data": data
+        }
+
     @staticmethod
     def LayThongTinThiSinhVaChungChiTheoSBD(sobaodanh):
         try:
@@ -116,29 +139,5 @@ class ThiSinhBUS:
         except Exception as e:
             print("Lỗi kiểm tra điều kiện gia hạn:", str(e))
             raise e
-    
-    
-    
 
     
-    @staticmethod
-    def lay_loai_dgnl_chua_cap_chung_chi(cccd):
-        if not cccd or len(cccd) != 12:
-            return {
-                "success": False,
-                "message": "CCCD không hợp lệ. Vui lòng kiểm tra lại."
-            }
-        
-        data = ThiSinhDAO.LayLoaiDGNLChuaCapChungChi(cccd)
-
-        if data is None:
-            return {
-                "success": False,
-                "message": "Đã xảy ra lỗi khi truy vấn loại DGNL chưa cấp chứng chỉ."
-            }
-        
-        return {
-            "success": True,
-            "data": data
-        }
-

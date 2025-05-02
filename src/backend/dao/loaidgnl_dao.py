@@ -18,26 +18,3 @@ class LoaiDGNLDAO:
         except Exception as e:
             print("Lỗi khi đọc danh sách chứng chỉ:", str(e))
             raise e
-        
-    @staticmethod
-    def LayTTChiTiet():
-        """
-        Gọi sp_LayDanhSachBangGia để lấy loại DGNL, lệ phí thi, phí gia hạn, ngày thi mới nhất
-        Trả về: list of dicts
-        """
-        try:
-            sql = text("EXEC sp_LayDanhSachBangGia")
-            result = db.session.execute(sql).fetchall()
-            return [
-                {
-                    "MaLoai": row[0],
-                    "TenLoai": row[1],
-                    "LePhiThi": row[2],
-                    "PhiGiaHan": row[3],
-                    "NgayThiMoiNhat": row[4]
-                }
-                for row in result
-            ]
-        except Exception as e:
-            print("Lỗi khi lấy bảng giá:", str(e))
-            raise

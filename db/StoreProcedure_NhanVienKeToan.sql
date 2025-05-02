@@ -29,8 +29,8 @@ BEGIN
     GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN, LD.GIATIEN, PTT.TINHTRANG, PTT.MA_PTT
 END
 
+EXEC SP_NVKT_TimKiemKHTD_Theo_CCCD @CCCD='226997273935'
 
-GO
 -- Tìm danh sách thí sinh theo mã thí sinh
 CREATE PROCEDURE SP_NVKT_TimKiemKHTD_Theo_MA_TS
     @MA_TS CHAR(6)
@@ -58,8 +58,8 @@ BEGIN
 END
 
 
+EXEC SP_NVKT_TimKiemKHTD_Theo_MA_TS @MA_TS='TS0001'
 
-GO
 -- Tìm danh sách thí sinh theo tên
 CREATE PROCEDURE SP_NVKT_TimKiemKHTD_Theo_Ten_TS
     @HOTEN NVARCHAR(50)
@@ -87,7 +87,7 @@ BEGIN
 END
 
 
-GO
+EXEC SP_NVKT_TimKiemKHTD_Theo_Ten_TS @HOTEN=N'Yến Đặng'
 -- Tìm danh sách thí sinh theo mã thanh toán
 CREATE PROCEDURE SP_NVKT_TimKiemKHTD_Theo_MA_PTT
     @MA_PTT CHAR(6)
@@ -114,7 +114,9 @@ BEGIN
     GROUP BY TS.MA_TS, TS.HOTEN, TS.NGAYSINH, TS.CCCD, KH_TD.HOTEN, LD.GIATIEN, PTT.TINHTRANG, PTT.MA_PTT
 END
 
-GO
+EXEC SP_NVKT_TimKiemKHTD_Theo_MA_PTT @MA_PTT='TT0001'
+
+
 -- Tìm danh sách chứng chỉ của khách hàng tự do theo CCCD
 CREATE PROCEDURE SP_NVKT_TimChungChiKHTD_Theo_CCCD
     @CCCD CHAR(12)
@@ -134,8 +136,8 @@ BEGIN
     WHERE TS.CCCD = @CCCD
 END
 
+Exec SP_NVKT_TimChungChiKHTD_Theo_CCCD @CCCD='226997273935'
 
-GO
 -- Tìm danh sách chứng chỉ của khách hàng tự do theo mã thí sinh
 CREATE PROCEDURE SP_NVKT_TimChungChiKHTD_Theo_Ma_TS
     @MA_TS CHAR(6)
@@ -155,7 +157,8 @@ BEGIN
     WHERE TS.MA_TS = @MA_TS
 END
 
-GO
+EXEC SP_NVKT_TimChungChiKHTD_Theo_MA_TS @MA_TS='TS0001'
+
 -- Tìm danh sách chứng chỉ của khách hàng tự do theo tên
 CREATE PROCEDURE SP_NVKT_TimChungChiKHTD_Theo_Ten
     @HOTEN NVARCHAR(50)
@@ -175,7 +178,8 @@ BEGIN
     WHERE TS.HOTEN LIKE N'%' + @HOTEN + '%'
 END
 
-GO
+EXEC SP_NVKT_TimChungChiKHTD_Theo_Ten @HOTEN=N'Nguyễn Quang D'
+
 -- Tìm danh sách chứng chỉ của khách hàng tự do theo phiếu thanh toán
 CREATE PROCEDURE SP_NVKT_TimChungChiKHTD_Theo_MA_PTT
     @MA_PTT CHAR(6)
@@ -198,7 +202,6 @@ BEGIN
 END
 EXEC SP_NVKT_TimChungChiKHTD_Theo_MA_PTT @MA_PTT='TT0001'
 
-GO
 --Tìm kiếm ở trang nhân viên kế toán - khách hàng đơn vị
 -- Tìm kiếm khách hàng đơn vị theo tên
 CREATE PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ten
@@ -224,6 +227,8 @@ BEGIN
 END
 
 GO
+EXEC SP_NVKT_TimKiemKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
+
 -- Tìm kiếm khách hàng đơn vị theo mã đơn vị
 ALTER PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ma_DV
     @MA_KH CHAR(6)
@@ -248,6 +253,8 @@ BEGIN
 END
 
 GO
+EXEC SP_NVKT_TimKiemKHDV_Theo_Ma_DV @MA_KH='KH0401'
+
 -- Tìm kiếm khách hàng đơn vị theo mã phiếu thanh toán
 CREATE PROCEDURE SP_NVKT_TimKiemKHDV_Theo_MA_PTT
     @MA_PTT CHAR(6)
@@ -271,8 +278,8 @@ BEGIN
     GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, LD.GIATIEN, PTT.TINHTRANG, PTT.MA_PTT
 END
 
+EXEC SP_NVKT_TimKiemKHDV_Theo_MA_PTT @MA_PTT='TT0401' 
 
-GO
 -- Tìm kiếm danh sách chứng chỉ của đơn vị theo mã đơn vị
 ALTER PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ma_DV
     @MA_KH CHAR(6)
@@ -298,8 +305,8 @@ BEGIN
 END
 
 
+EXEC SP_NVKT_TimChungChiKHDV_Theo_Ma_DV @MA_KH='KH0401'
 
-GO
 --Tìm kiếm danh sách chứng chỉ của đơn vị theo tên
 CREATE PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ten
     @TENDONVI NVARCHAR(50)
@@ -323,7 +330,9 @@ BEGIN
     WHERE KHDV.TENDONVI LIKE N'%' + @TENDONVI + '%'
 END
 
-GO
+go
+EXEC SP_NVKT_TimChungChiKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
+
 -- Tìm kiếm danh sách chứng chỉ của đơn vị theo mã phiếu thanh toán
 CREATE PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_MA_PTT
     @MA_PTT CHAR(6)
@@ -347,8 +356,8 @@ BEGIN
     WHERE PTT.MA_PTT = @MA_PTT
 END
 
+EXEC SP_NVKT_TimChungChiKHDV_Theo_MA_PTT @MA_PTT='TT0401'
 
-GO
 -- Cập nhật tình trạng thanh toán
 CREATE PROCEDURE SP_NVKT_CapNhat_TinhTrangThanhToan
     @MA_PTT CHAR(6)

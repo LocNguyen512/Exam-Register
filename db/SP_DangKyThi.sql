@@ -171,7 +171,7 @@ BEGIN
     END
 END
 GO
-EXEC SP_LayDSChungChi 
+
 CREATE PROCEDURE SP_ThemChiTietDangKy
     @MaPDK CHAR(6),
     @MaTS CHAR(6),

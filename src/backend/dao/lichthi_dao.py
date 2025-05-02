@@ -29,7 +29,7 @@ class LichThiDAO:
         except Exception as e:
             print("Lỗi khi đọc danh sách lịch thi:", str(e))
             raise e
-        
+    
     @staticmethod
     def lay_ngay_thi_con_trong(monThi):
         try:
@@ -44,4 +44,5 @@ class LichThiDAO:
         except Exception as e:
             print("Lỗi DAO lấy ngày thi:", str(e))
             raise e
+        
         

@@ -2,7 +2,7 @@ import React from 'react';
 import './HeaderBack.css';
 
 function HeaderGiaHan() {
-  const goHome = () => window.location.href = '/HomepageNVTN'; //doi thanh link trang home muon qua ve (homepageNVTN,...)
+  const goHome = () => window.location.href = '/';
   const goBack = () => window.history.back();
 
   return (
