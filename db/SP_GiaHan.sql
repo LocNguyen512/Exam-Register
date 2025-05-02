@@ -181,61 +181,6 @@ END
 
 GO
 
-CREATE PROCEDURE SP_KIEM_TRA_GIA_HAN_THEO_SBD 
-	@SOBAODANH CHAR(6) 
-AS 
-BEGIN 
-	SET NOCOUNT ON;
-	DECLARE @SO_LAN_GIA_HAN INT,
-        @NGAY_THI DATE;
-
-	-- Kiểm tra tồn tại số báo danh
-	IF NOT EXISTS (
-		SELECT 1
-		FROM CHI_TIET_DANG_KY
-		WHERE SOBAODANH = @SOBAODANH
-	)
-	BEGIN
-		RAISERROR(N'Không tìm thấy số báo danh', 16, 1);
-		RETURN;
-	END
-
-	-- Lấy số lần gia hạn
-	SELECT @SO_LAN_GIA_HAN = ISNULL(SOLANGIAHAN, 0)
-	FROM CHI_TIET_DANG_KY
-	WHERE SOBAODANH = @SOBAODANH;
-
-	IF @SO_LAN_GIA_HAN >= 2
-	BEGIN
-		RAISERROR(N'Thí sinh đã gia hạn tối đa 2 lần', 16, 1);
-		RETURN;
-	END
-
-	-- Lấy ngày thi từ bảng LICH_THI
-	SELECT @NGAY_THI = LT.NGAYTHI
-	FROM CHI_TIET_DANG_KY CT
-	JOIN LICH_THI LT ON CT.MA_LICH = LT.MA_LICH
-	WHERE CT.SOBAODANH = @SOBAODANH;
-
-	IF @NGAY_THI IS NULL
-	BEGIN
-		RAISERROR(N'Không tìm thấy ngày thi', 16, 1);
-		RETURN;
-	END
-
-	-- Kiểm tra số ngày còn lại trước ngày thi
-	IF DATEDIFF(DAY, GETDATE(), @NGAY_THI) < 2
-	BEGIN
-		RAISERROR(N'Không được gia hạn trong vòng 2 ngày trước ngày thi', 16, 1);
-		RETURN;
-	END
-
-	-- Nếu hợp lệ
-	SELECT 1 AS KetQua, N'Đủ điều kiện gia hạn' AS ThongBao;
-END
-
-GO
-
 CREATE OR ALTER PROCEDURE sp_xoa_sbd_cu
     @SOBAODANH CHAR(6)
 AS
@@ -281,9 +226,35 @@ BEGIN
 END
 
 
-EXEC SP_KIEM_TRA_GIA_HAN_THEO_SBD @SOBAODANH = 'BD0001'
-SELECT * FROM THI_SINH WHERE CCCD = '226997273935'
+CREATE OR ALTER PROCEDURE SP_LAY_SO_LAN_GIA_HAN_THEO_SBD
+    @SOBAODANH CHAR(6)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-drop proc sp_update_lich_thi_gia_han
-EXEC sp_get_thi_sinh_theo_sbd @sbd = 'BD0001'
-EXEC sp_get_chung_chi_dang_ky @sbd = 'BD0001'
+    IF NOT EXISTS (
+        SELECT 1
+        FROM CHI_TIET_DANG_KY
+        WHERE SOBAODANH = @SOBAODANH
+    )
+    BEGIN
+        RAISERROR(N'Không tìm thấy số báo danh', 16, 1);
+        RETURN;
+    END
+
+    SELECT ISNULL(SOLANGIAHAN, 0) AS SoLanGiaHan
+    FROM CHI_TIET_DANG_KY
+    WHERE SOBAODANH = @SOBAODANH;
+END
+
+CREATE OR ALTER PROCEDURE SP_LAY_NGAY_THI_THEO_SBD
+    @SOBAODANH CHAR(6)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1 LT.NGAYTHI
+    FROM CHI_TIET_DANG_KY CT
+    JOIN LICH_THI LT ON CT.MA_LICH = LT.MA_LICH
+    WHERE CT.SOBAODANH = @SOBAODANH;
+END

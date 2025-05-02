@@ -233,11 +233,9 @@ BEGIN
     GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, LD.GIATIEN, PTT.TINHTRANG, PTT.MA_PTT -- thêm PTT.MA_PTT vào GROUP BY
 END
 
-GO
-EXEC SP_NVKT_TimKiemKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
 
 GO
-ALTER PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ma_DV
+CREATE PROCEDURE SP_NVKT_TimKiemKHDV_Theo_Ma_DV
     @MA_KH CHAR(6)
 AS
 BEGIN
@@ -259,8 +257,7 @@ BEGIN
     GROUP BY KHDV.TENDONVI, KH.EMAIL, PDK.MA_PDK, LD.GIATIEN, PTT.TINHTRANG, PTT.MA_PTT -- thêm PTT.MA_PTT vào GROUP BY
 END
 
-GO
-EXEC SP_NVKT_TimKiemKHDV_Theo_Ma_DV @MA_KH='KH0401'
+
 
 -- Tìm kiếm khách hàng đơn vị theo mã phiếu thanh toán
 GO
@@ -289,7 +286,7 @@ END
 GO
 
 -- Tìm kiếm danh sách chứng chỉ của đơn vị theo mã đơn vị
-ALTER PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ma_DV
+CREATE PROCEDURE SP_NVKT_TimChungChiKHDV_Theo_Ma_DV
     @MA_KH CHAR(6)
 AS
 BEGIN
@@ -313,7 +310,6 @@ BEGIN
 END
 
 
-EXEC SP_NVKT_TimChungChiKHDV_Theo_Ma_DV @MA_KH='KH0401'
 
 --Tìm kiếm danh sách chứng chỉ của đơn vị theo tên
 GO
@@ -339,8 +335,7 @@ BEGIN
     WHERE KHDV.TENDONVI LIKE N'%' + @TENDONVI + '%'
 END
 
-go
-EXEC SP_NVKT_TimChungChiKHDV_Theo_Ten @TENDONVI=N'Công ty Bùi Tập Đoàn'
+
 
 -- Tìm kiếm danh sách chứng chỉ của đơn vị theo mã phiếu thanh toán
 GO
@@ -366,7 +361,6 @@ BEGIN
     WHERE PTT.MA_PTT = @MA_PTT
 END
 
-EXEC SP_NVKT_TimChungChiKHDV_Theo_MA_PTT @MA_PTT='TT0401'
 
 -- Cập nhật tình trạng thanh toán
 GO

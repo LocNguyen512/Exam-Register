@@ -1,5 +1,5 @@
 import './Header.css';
-function Header() {
+function HeaderNL() {
     return (
         <header>
             <div className="logo">
@@ -7,13 +7,13 @@ function Header() {
             </div>
             <nav>
                 <ul>
-                    <li><a href="/XuLyChungChi/Home"> Home </a></li>
-                    <li><a href="/XuLyChungChi/QuanLy"> Quản lý chứng chỉ </a></li>
-                    <li><a href="/XuLyChungChi/CapChungChi"> Cấp chứng chỉ </a></li>
+                    <li><a href="/NVNL"> Home </a></li>
+                    <li><a href="/NVNL/XuLyChungChi/QuanLy"> Quản lý chứng chỉ </a></li>
+                    <li><a href="/NVNL/XuLyChungChi/CapChungChi"> Cấp chứng chỉ </a></li>
                 </ul>
             </nav>
             <button className="login-button">Đăng xuất</button>
         </header>
     )
 }
-export default Header 
+export default HeaderNL

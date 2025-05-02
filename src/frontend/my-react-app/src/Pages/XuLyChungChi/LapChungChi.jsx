@@ -360,7 +360,7 @@ function TaoChungChi() {
                         )}
                     </div>
 
-                    {/* <div className="input-group">
+                    <div className="input-group">
                         <input
                             type="text"
                             id="maNhanVien"
@@ -375,11 +375,11 @@ function TaoChungChi() {
                         {errors.maNhanVien && (
                             <p className="error-msg">{errors.maNhanVien}</p>
                         )}
-                    </div> */}
+                    </div>
                     <button
                         type="submit"
                         className="submit-btn"
-                        disabled={!isFormValid}
+                        //disabled={!isFormValid}
                     >
                         Lập chứng chỉ
                     </button>

@@ -3,7 +3,7 @@ from services.khachhangdonvi_bus import KhachHangDonViBUS
 from services.phieuthanhtoan_bus import PhieuThanhToanBUS
 from services.chitietdangky_bus import ChiTietDangKyBUS
 
-thanhtoandonvi_bp = Blueprint('thanh_toan_don_vi', __name__)
+thanhtoandonvi_bp = Blueprint('thanhtoandonvi', __name__)
 
 class MH_ThanhToanDonVi:
     @thanhtoandonvi_bp.route('/timkiem_theo_ten_don_vi', methods=['GET'])

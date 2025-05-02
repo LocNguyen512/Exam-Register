@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeaderGiaHan from '../../component/Header/HeaderBack';
+import HeaderGiaHan from '../../component/Header/NVTiepNhan/HeaderNoBack';
 import Footer from '../../component/Footer/Footer';
 import './GiaHan.css';
 
@@ -10,7 +10,7 @@ function GiaHan() {
 
   const handleSearch = () => {
     if (sobaodanh.trim()) {
-      navigate(`/GiaHan/${sobaodanh}`);
+      navigate(`/NVTN/GiaHan/${sobaodanh}`);
     }
   };
 

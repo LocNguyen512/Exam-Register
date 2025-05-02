@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CaNhan from './CaNhan';
 import DonVi from './DonVi';
 import GiaHan from './GiaHan';
-import Header from '../../component/Header/ThanhToan/Header_thanhtoanback';
+import Header from '../../component/Header/NVKeToan/HeaderNoBack';
 import Footer from '../../component/Footer/Footer';
 import './ThanhToan.css';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './GiaHanDetail.css';
-import HeaderGiaHan from '../../component/Header/HeaderBack';
+import HeaderGiaHan from '../../component/Header/NVTiepNhan/HeaderBack';
 
 function GiaHanDetail() {
   const { sobaodanh } = useParams();
@@ -13,7 +13,7 @@ function GiaHanDetail() {
 
   useEffect(() => {
     if (!sobaodanh) {
-      navigate('/');
+      navigate('/NVTN');
       return;
     }
 
@@ -115,6 +115,7 @@ function GiaHanDetail() {
       const result = await res.json();
       if (res.ok) {
         alert("✅ " + result.message);
+        navigate('/NVTN/GiaHan');
         setGiaHanData(null);
       } else {
         alert("❌ Lỗi: " + (result.error || "Không rõ lỗi"));
@@ -183,7 +184,7 @@ function GiaHanDetail() {
                     readOnly
                     value={giaHanData.ngayGiaHan || "Chọn ngày"}
                     onClick={() =>
-                      navigate(`/GiaHan/${sobaodanh}/${giaHanData.monThi}`, {
+                      navigate(`/NVTN/GiaHan/${sobaodanh}/${giaHanData.monThi}`, {
                         state: { autoOpenDetail: true }
                       })
                     }

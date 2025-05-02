@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header from "../../component/Header/NVNhapLieu/HeaderNoBack";
+import Header from "../../component/Header/NVTiepNhan/HeaderNoBack";
 import { useNavigate } from "react-router-dom";
 import "./CapChungChi.css";
 

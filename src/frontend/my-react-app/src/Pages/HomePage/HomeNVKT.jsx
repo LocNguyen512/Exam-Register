@@ -1,7 +1,7 @@
-import Header from '../../component/Header/ThanhToan/Header_thanhtoan';
+import Header from '../../component/Header/NVKeToan/Header';
 import Footer from '../../component/Footer/Footer';
 import Body from '../../component/Body/Body';
-import './Home_thanhtoan.css';
+import './HomeNVKT.css';
 
 function Layout({ children }) {
     return (

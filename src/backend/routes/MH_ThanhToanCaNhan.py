@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from services.khachhangtudo_bus import KhachHangTuDoBUS
 from services.chitietdangky_bus import ChiTietDangKyBUS
 
-thanhtoancanhan_bp = Blueprint('thanh_toan_ca_nhan', __name__)
+thanhtoancanhan_bp = Blueprint('thanhtoancanhan', __name__)
 
 class MH_ThanhToanCaNhan:
     @thanhtoancanhan_bp.route('/timkiem_theo_cccd', methods=['GET'])

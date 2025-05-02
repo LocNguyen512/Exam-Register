@@ -1,5 +1,5 @@
 import './DKCN.css';
-import Header from '../../component/Header/Header';
+import Header from '../../component/Header/NVTiepNhan/HeaderNoBack';
 import { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 

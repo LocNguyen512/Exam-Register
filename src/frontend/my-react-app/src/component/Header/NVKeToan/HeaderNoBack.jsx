@@ -1,7 +1,7 @@
-import './Header_thanhtoanback.css';
-function Header() {
+import './HeaderBack.css';
+function HeaderKTNoBack() {
  
-    const goHome = () => window.location.href = '/Homepage/NVKT';
+    const goHome = () => window.location.href = '/NVKT';
 
     return (
         <header className="header-giahan">
@@ -30,4 +30,4 @@ function Header() {
         </header>
     );
 }
-export default Header 
+export default HeaderKTNoBack 

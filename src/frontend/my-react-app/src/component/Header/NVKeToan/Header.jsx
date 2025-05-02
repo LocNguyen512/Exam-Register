@@ -1,5 +1,5 @@
-import './Header_thanhtoan.css';
-function Header() {
+import './Header.css';
+function HeaderKT() {
     return (
         <header>
             <div className="logo">
@@ -7,13 +7,13 @@ function Header() {
             </div>
             <nav>
                 <ul>
-                    <li><a href="/"> Home </a></li>
-                    <li><a href="BangGia"> Bảng giá </a></li>
-                    <li><a href="ThanhToan"> Thanh toán </a></li>
+                    <li><a href="/NVKT"> Home </a></li>
+                    <li><a href="/NVKT/BangGia"> Bảng giá </a></li>
+                    <li><a href="/NVKT/ThanhToan"> Thanh toán </a></li>
                 </ul>
             </nav>
             <button className="login-button">Đăng xuất</button>
         </header>
     )
 }
-export default Header 
+export default HeaderKT 

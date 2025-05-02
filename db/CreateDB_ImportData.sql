@@ -283,3 +283,12 @@ EXEC BulkInsertFromCsv 'LICH_THI', 'lich_thi.csv', @basePath;
 EXEC BulkInsertFromCsv 'CHI_TIET_LICH_THI', 'chi_tiet_lich_thi.csv', @basePath;
 EXEC BulkInsertFromCsv 'LOAI_DGNL', 'loai_dgnl.csv', @basePath;
 EXEC BulkInsertFromCsv 'USERS', 'USERS.csv', @basePath;
+
+
+
+
+SELECT * FROM THI_SINH
+
+
+SELECT * FROm NHAN_VIEN
+SELECT * FROM CHUNG_CHI WHERE MA_CC ='CC0001'

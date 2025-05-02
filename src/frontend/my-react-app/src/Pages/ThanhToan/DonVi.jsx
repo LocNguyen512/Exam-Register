@@ -13,11 +13,11 @@ function DonVi() {
     const params = { [searchType]: searchTerm };
 
     if (searchType === 'ten_don_vi') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ten_don_vi';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_theo_ten_don_vi';
     } else if (searchType === 'ma_kh') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ma_kh';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_theo_ma_kh';
     } else if (searchType === 'ma_ptt') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_theo_ma_ptt';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_theo_ma_ptt';
     }
 
     const urlWithParams = new URL(url, window.location.origin);
@@ -62,13 +62,13 @@ function DonVi() {
     let params = {};
 
     if (searchType === 'ten_don_vi') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ten_don_vi';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_cc_theo_ten_don_vi';
       params = { ten_don_vi: searchTerm };
     } else if (searchType === 'ma_kh') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ma_dv';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_cc_theo_ma_dv';
       params = { ma_kh: searchTerm };
     } else if (searchType === 'ma_ptt') {
-      url = 'http://127.0.0.1:5000/thanhtoandonvi/timkiem_cc_theo_ma_ptt';
+      url = 'http://localhost:5000/thanhtoandonvi/timkiem_cc_theo_ma_ptt';
       params = { ma_ptt: searchTerm };
     }
 
@@ -96,7 +96,7 @@ function DonVi() {
     if (isConfirmed) {
       const ma_ptt = searchTerm;
       try {
-        const response = await fetch('http://127.0.0.1:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
+        const response = await fetch('http://localhost:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ma_ptt })

@@ -1,8 +1,8 @@
 import React from 'react';
 import './HeaderBack.css';
 
-function HeaderNLBack() {
-  const goHome = () => window.location.href = '/NVNL';
+function HeaderTNBack() {
+  const goHome = () => window.location.href = '/NVTN';
   const goBack = () => window.history.back();
 
   return (
@@ -41,4 +41,4 @@ function HeaderNLBack() {
   );
 }
 
-export default HeaderNLBack;
+export default HeaderTNBack;

@@ -1,6 +1,6 @@
 import React from 'react';
 import './BangGia.css';
-import Header from '../../component/Header/ThanhToan/Header_thanhtoan';
+import Header from '../../component/Header/NVKeToan/HeaderBack';
 import Footer from '../../component/Footer/Footer';
 
 function BlankPage() {

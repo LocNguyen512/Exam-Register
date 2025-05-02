@@ -20,16 +20,16 @@ function CaNhan() {
     let params = {};
 
     if (searchType === 'cccd') {
-      urlInfo = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_theo_cccd';
-      urlCert = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_cc_theo_cccd';
+      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_cccd';
+      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_cccd';
       params = { cccd: searchTerm };
     } else if (searchType === 'ma_ts') {
-      urlInfo = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_theo_ma_ts';
-      urlCert = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_cc_theo_ma_ts';
+      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_ma_ts';
+      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_ma_ts';
       params = { ma_ts: searchTerm };
     } else if (searchType === 'ma_ptt') {
-      urlInfo = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_theo_ma_ptt';
-      urlCert = 'http://127.0.0.1:5000/thanhtoancanhan/timkiem_cc_theo_ma_ptt';
+      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_ma_ptt';
+      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_ma_ptt';
       params = { ma_ptt: searchTerm };
     }
 
@@ -55,13 +55,13 @@ function CaNhan() {
       const certRes = await fetch(certUrl);
       const certData = await certRes.json();
 
-      console.log("📥 Dữ liệu chứng chỉ:", certData);
+      console.log("Dữ liệu chứng chỉ:", certData);
 
       if (Array.isArray(certData)) {
         setCertificateData(certData);
       }
     } catch (err) {
-      console.error('❌ Lỗi khi tìm kiếm:', err);
+      console.error('Lỗi khi tìm kiếm:', err);
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ function CaNhan() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
+      const res = await fetch('http://localhost:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

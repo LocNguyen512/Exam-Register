@@ -18,7 +18,7 @@ function Login() {
     setErrorMsg('');
     try {
       const response = await axios.post(
-        'http://localhost:5000/user/login',
+        'http://localhost:5000/dangnhap/login',
         { email, password },
         { withCredentials: true } // 👈 bắt buộc để gửi cookie session
       );
@@ -29,12 +29,12 @@ function Login() {
         alert('Đăng nhập thành công!');
 
         // 👉 Chuyển hướng theo VaiTro
-        if (vaiTro === 'Tiếp nhận') {
-          navigate('/Homepage/NVTN');
-        } else if (vaiTro === 'Kế toán') {
-          navigate('/Homepage/NVKT');
-        } else if (vaiTro === 'Nhập liệu') { 
-          navigate('/Homepage/NVNL');
+        if (vaiTro === 'Nhân viên tiếp nhận') {
+          navigate('/NVTN');
+        } else if (vaiTro === 'Nhân viên kế toán') {
+          navigate('/NVKT');
+        } else if (vaiTro === 'Nhân viên nhập liệu') { 
+          navigate('/NVNL');
         }
       } else {
         setErrorMsg(response.data.message || 'Email hoặc mật khẩu không đúng');

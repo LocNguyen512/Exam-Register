@@ -5,9 +5,8 @@ from datetime import timedelta
 load_dotenv()  
 
 class Config:
-    
     SQLALCHEMY_DATABASE_URI = (
-    "mssql+pyodbc://DESKTOP-LIF9UJQ/EXAM_REGISTER"
+    "mssql+pyodbc://localhost/Exam_Register"
     "?driver=ODBC+Driver+17+for+SQL+Server"
     "&trusted_connection=yes"
     )

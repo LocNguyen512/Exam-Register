@@ -3,8 +3,6 @@ import Home from './Pages/HomePage/Home';
 import LichThi from './Pages/LichThi/LichThi';
 import BangGia from './Pages/BangGia/BangGia';
 
-
-
 import XuLyChungChi_Home from './Pages/XuLyChungChi/Homepage';
 import XuLyChungChi_QuanLy from './Pages/XuLyChungChi/QuanLy';
 import XuLyChungChi_LapChungChi from './Pages/XuLyChungChi/LapChungChi';
@@ -22,7 +20,7 @@ import TraCuuChungChi from './Pages/TraCuuChungChi/TraCuuChungChi';
 import Homepage_TiepNhan from './Pages/HomePage/HomeNVTN';
 
 import ThanhToan from './Pages/ThanhToan/ThanhToan'
-import Home_thanhtoan from './Pages/HomePage/Home_thanhtoan'
+import Home_thanhtoan from './Pages/HomePage/HomeNVKT'
 import BangGia_thanhtoan from './Pages/BangGia/BangGia'
 
 function App() {
@@ -35,9 +33,9 @@ function App() {
           <Route path="/ChungChi" element={<TraCuuChungChi />} />
 
           {/* Nhân viên nhập liệu */}
-          <Route path="/Homepage/NVNL" element={<XuLyChungChi_Home />} />
-          <Route path="/XuLyChungChi/QuanLy" element={<XuLyChungChi_QuanLy />} />
-          <Route path="/XuLyChungChi/LapChungChi" element={<XuLyChungChi_LapChungChi />} />
+          <Route path="/NVNL" element={<XuLyChungChi_Home />} />
+          <Route path="/NVNL/XuLyChungChi/QuanLy" element={<XuLyChungChi_QuanLy />} />
+          <Route path="/NVNL/XuLyChungChi/QuanLy/LapChungChi" element={<XuLyChungChi_LapChungChi />} />
           
 
           {/* Đăng nhập */}
@@ -45,20 +43,19 @@ function App() {
         
           {/* Nhân viên tiếp nhận */}
           <Route path="/NVTN" element={<Homepage_TiepNhan />} />
-          <Route path="/GiaHan" element={<GiaHan />} />
-          <Route path="/GiaHan/:cccd" element={<GiaHanDetail />} />
-          <Route path="/GiaHan/:cccd/:monThi" element={<ChonLichThi />} />
-          <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
-          <Route path="/capChungChi" element={<TraCuuChungChi />} />
+          <Route path="/NVTN/GiaHan" element={<GiaHan />} />
+          <Route path="/NVTN/GiaHan/:sobaodanh" element={<GiaHanDetail />} />
+          <Route path="/NVTN/GiaHan/:sobaodanh/:monThi" element={<ChonLichThi />} />
+          <Route path="/NVTN/PhieuGiaHan" element={<PhieuGiaHan />} />
 
-          <Route path="/Homepage/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
+          <Route path="/NVTN/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
         
-          <Route path="/XuLyChungChi/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
+          <Route path="/NVTN/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
         
           {/* Nhân viên kế toán */}
-          <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
-          <Route path="/BangGia" element={<BangGia_thanhtoan />} />
-          <Route path="/Homepage/ThanhToan" element={<ThanhToan />} />
+          <Route path="/NVKT" element={<Home_thanhtoan />} />
+          <Route path="/NVKT/BangGia" element={<BangGia_thanhtoan />} />
+          <Route path="/NVKT/ThanhToan" element={<ThanhToan />} />
         </Routes>
     </Router>
   );

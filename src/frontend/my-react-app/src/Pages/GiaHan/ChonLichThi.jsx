@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import Header from "../../component/Header/HeaderBack";
+import Header from "../../component/Header/NVTiepNhan/HeaderBack";
 import "./ChonLichThi.css";
 
 const ChonLichThi = () => {
@@ -36,7 +36,7 @@ const ChonLichThi = () => {
 
   const handleConfirm = () => {
     if (selectedDate) {
-      navigate(`/GiaHan/${sobaodanh}`, {
+      navigate(`/NVTN/GiaHan/${sobaodanh}`, {
         state: {
           newDate: selectedDate,
           monThi: monThi,

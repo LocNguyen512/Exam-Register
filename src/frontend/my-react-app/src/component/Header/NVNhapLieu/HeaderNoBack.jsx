@@ -1,8 +1,8 @@
 import React from 'react';
 import './HeaderBack.css';
 
-function HeaderGiaHan() {
-  const goHome = () => window.location.href = '/Homepage/NVNL';
+function HeaderNLNoBack() {
+  const goHome = () => window.location.href = '/NVNL';
 
   return (
     <header className="header-giahan">
@@ -32,4 +32,4 @@ function HeaderGiaHan() {
   );
 }
 
-export default HeaderGiaHan;
+export default HeaderNLNoBack;

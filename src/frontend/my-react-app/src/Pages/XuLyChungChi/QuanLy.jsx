@@ -28,7 +28,7 @@ function QuanLyCC() {
     }, []);
 
     const handleCreateCertificate = () => {
-        navigate("/XuLyChungChi/LapChungChi");
+        navigate("LapChungChi");
     };
 
     const handleSearch = () => {

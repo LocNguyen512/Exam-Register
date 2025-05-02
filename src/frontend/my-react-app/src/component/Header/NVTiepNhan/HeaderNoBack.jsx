@@ -1,9 +1,8 @@
 import React from 'react';
-import './HeaderBack.css';
+import './HeaderNoBack.css';
 
-function HeaderGiaHan() {
-  const goHome = () => window.location.href = '/';
-  const goBack = () => window.history.back();
+function HeaderTN() {
+  const goHome = () => window.location.href = '/NVTN';
 
   return (
     <header className="header-giahan">
@@ -15,14 +14,6 @@ function HeaderGiaHan() {
           width="24" height="24" viewBox="0 0 24 24" fill="none"
           stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
-        </svg>
-
-        {/* Icon Back */}
-        <svg className="svg-icon" onClick={goBack} xmlns="http://www.w3.org/2000/svg"
-          width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 16l-4-4 4-4" />
-          <path d="M5 12h14" />
         </svg>
       </div>
 
@@ -41,4 +32,4 @@ function HeaderGiaHan() {
   );
 }
 
-export default HeaderGiaHan;
+export default HeaderTN;
