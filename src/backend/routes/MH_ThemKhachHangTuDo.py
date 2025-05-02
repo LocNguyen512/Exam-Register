@@ -9,7 +9,7 @@ from services.khachhang_bus import  KhachHangBUS
 from services.chitietlichthi_bus import ChiTietLichThiBUS
 from services.loaidgnl_bus import LoaiDGNLBUS   
 
-dangKyThi_bp = Blueprint('DangKyThi', __name__)
+dangKyThi_bp = Blueprint('dangKyThi', __name__)
 
 class MH_ThemKhachHangTuDo:
     @staticmethod
@@ -137,6 +137,3 @@ class MH_ThemKhachHangTuDo:
         except Exception as e:
             traceback.print_exc()
             return jsonify({"error": str(e)}), 500
-
-     
-        

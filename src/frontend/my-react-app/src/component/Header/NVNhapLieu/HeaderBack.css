@@ -1,0 +1,71 @@
+.header-giahan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    padding: 0 24px;
+    padding-left: 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 0;
+    margin-left: -30px;
+}
+
+.svg-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    stroke: #333;
+    fill: none;
+    transition: stroke 0.2s;
+}
+
+.svg-icon:hover {
+    stroke: #6366f1;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logout-button {
+    padding: 6px 16px;
+    border-radius: 24px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #6366f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+}

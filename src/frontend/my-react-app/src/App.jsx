@@ -44,10 +44,11 @@ function App() {
           <Route path="/DangNhap" element={<DangNhap />} />
         
           {/* Nhân viên tiếp nhận */}
-          <Route path="/Homepage/NVTN" element={<Homepage_TiepNhan />} />
+          <Route path="/HomepageNVTN" element={<Homepage_TiepNhan />} />
+          <Route path="/NVTN" element={<Homepage_TiepNhan />} />
           <Route path="/GiaHan" element={<GiaHan />} />
-          <Route path="/GiaHan/:cccd" element={<GiaHanDetail />} />
-          <Route path="/GiaHan/:cccd/:monThi" element={<ChonLichThi />} />
+          <Route path="/GiaHan/:sobaodanh" element={<GiaHanDetail />} />
+          <Route path="/GiaHan/:sobaodanh/:monThi" element={<ChonLichThi />} />
           <Route path="/PhieuGiaHan" element={<PhieuGiaHan />} />
           <Route path="/capChungChi" element={<TraCuuChungChi />} />
 
@@ -58,7 +59,7 @@ function App() {
           {/* Nhân viên kế toán */}
           <Route path="/Homepage/NVKT" element={<Home_thanhtoan />} />
           <Route path="/BangGia" element={<BangGia_thanhtoan />} />
-          <Route path="/ThanhToan" element={<ThanhToan />} />
+          <Route path="/Homepage/ThanhToan" element={<ThanhToan />} />
         </Routes>
     </Router>
   );

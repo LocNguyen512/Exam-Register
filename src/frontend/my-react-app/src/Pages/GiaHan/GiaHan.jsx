@@ -5,12 +5,12 @@ import Footer from '../../component/Footer/Footer';
 import './GiaHan.css';
 
 function GiaHan() {
-  const [cccd, setCccd] = useState('');
+  const [sobaodanh, setSobaodanh] = useState('');
   const navigate = useNavigate();
 
   const handleSearch = () => {
-    if (cccd.trim()) {
-        navigate(`/GiaHan/${cccd}`);
+    if (sobaodanh.trim()) {
+      navigate(`/GiaHan/${sobaodanh}`);
     }
   };
 
@@ -24,9 +24,9 @@ function GiaHan() {
           <input
             type="text"
             className="giahan-input"
-            placeholder="CCCD thí sinh"
-            value={cccd}
-            onChange={(e) => setCccd(e.target.value)}
+            placeholder="Số báo danh"
+            value={sobaodanh}
+            onChange={(e) => setSobaodanh(e.target.value)}
           />
           <button onClick={handleSearch}>Tìm kiếm</button>
         </div>

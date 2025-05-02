@@ -1,95 +1,94 @@
-.giahan-detail {
-    padding: 24px;
-    background-color: #f7f6fb;
-    min-height: 100vh;
-  }
-  
-  .section {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-  
-  .section-title {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .grid-2col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 40px;   /* khoảng cách giữa 2 cột */
-    row-gap: 16px;
-  }
-  
-  .grid-2col label {
-    font-size: 13px;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 4px;
-  }
-  
-  .grid-2col input {
-    width: 100%;
-    padding: 8px;
-    background-color: #f2f2f2;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th, .table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .table th {
-    background-color: #f1f1f1;
-  }
-  
-  .table input[type="date"],
-  .table input[type="number"] {
-    padding: 4px 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  button {
-    background-color: #6366f1;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 13px;
-  }
-  
-  button:hover {
-    background-color: #4f46e5;
-  }
-  
-  .table label {
-    margin-right: 8px;
-    font-size: 13px;
-  }
-  
-  .center-button {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-  }
-  
+.gh-giahan-detail {
+  padding: 24px;
+  background-color: #f7f6fb;
+  min-height: 100vh;
+}
+
+.gh-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.gh-section-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gh-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+  row-gap: 16px;
+}
+
+.gh-grid-2col label {
+  font-size: 13px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.gh-grid-2col input {
+  width: 100%;
+  padding: 8px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.gh-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gh-table th, .gh-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.gh-table th {
+  background-color: #f1f1f1;
+}
+
+.gh-table input[type="date"],
+.gh-table input[type="number"] {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+button:hover {
+  background-color: #4f46e5;
+}
+
+.gh-table label {
+  margin-right: 8px;
+  font-size: 13px;
+}
+
+.gh-center-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
