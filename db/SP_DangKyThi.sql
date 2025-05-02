@@ -188,3 +188,27 @@ BEGIN
     -- Không cần trả ra gì, hoặc có thể trả 1 message nếu bạn muốn
 END
 GO
+
+CREATE PROCEDURE TaoPhieuThanhToan
+    @MA_NV CHAR(6),
+    @MA_PDK CHAR(6),
+    @MA_PTT CHAR(6) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        DECLARE @SoLuong INT
+        SELECT @SoLuong = COUNT(*) FROM PHIEU_THANH_TOAN
+
+        -- Sinh mã PTT tự động dạng TT0001, TT0002...
+        SET @MA_PTT = 'TT' + RIGHT('0000' + CAST(@SoLuong + 1 AS VARCHAR), 4)
+
+        INSERT INTO PHIEU_THANH_TOAN (MA_PTT, TINHTRANG, NGAYLAP, MA_NV, MA_PDK)
+        VALUES (@MA_PTT, N'Chưa thanh toán', GETDATE(), @MA_NV, @MA_PDK)
+    END TRY
+    BEGIN CATCH
+        THROW
+    END CATCH
+END
+
