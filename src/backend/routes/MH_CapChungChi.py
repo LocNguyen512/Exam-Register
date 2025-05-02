@@ -34,3 +34,9 @@ def cap_nhat_ghi_chu():
     result = ChungChiBUS.CapNhatGhiChuChungChi(ma_cc, ghi_chu)
     return jsonify(result), 200 if result['success'] else 400
 
+
+@capchungchi_bp.route('/kiemTraCCCD', methods=['GET'])
+def kiem_tra_cccd():
+    cccd = request.args.get('cccd')
+    result = ChungChiBUS.KiemTraTonTaiCCCD(cccd)
+    return jsonify(result), 200 if result["success"] else 404

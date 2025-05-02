@@ -14,6 +14,7 @@ function TaoChungChi() {
     const [isFormValid, setIsFormValid] = useState(false); // Trạng thái kiểm tra form hợp lệ
     const [showCertificateModal, setShowCertificateModal] = useState(false); // Trạng thái hiển thị modal danh sách chứng chỉ
     const [availableCertificates, setAvailableCertificates] = useState([]);
+    const [isCCCDValid, setIsCCCDValid] = useState(false);
 
     const validateField = (name, value) => {
         let message = "";
@@ -75,6 +76,17 @@ function TaoChungChi() {
     useEffect(() => {
         setIsFormValid(validateInputs()); // kiểm tra form
     }, [monThi, ketQua, ngayCap, cccdThiSinh, maNhanVien]);
+
+    useEffect(() => {
+        if (successMsg || error) {
+            const timer = setTimeout(() => {
+                setSuccessMsg("");
+                setError(false);
+            }, 3000); // Tự động ẩn sau 3 giây
+
+            return () => clearTimeout(timer); // Xoá timeout nếu component unmount hoặc đổi trạng thái
+        }
+    }, [successMsg, error]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -152,6 +164,39 @@ function TaoChungChi() {
             setError("Lỗi hệ thống khi lấy danh sách chứng chỉ.");
         }
     };
+
+    const handleCCCDBlur = () => {
+        if (!cccdThiSinh.trim()) return;
+
+        fetch(
+            `http://localhost:5000/Capchungchi/kiemTraCCCD?cccd=${encodeURIComponent(
+                cccdThiSinh
+            )}`
+        )
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("CCCD không tồn tại trong hệ thống!");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                if (!data.success) {
+                    setError("CCCD không tồn tại trong hệ thống!");
+                    setSuccessMsg("");
+                    setIsCCCDValid(false); // không hợp lệ
+                } else {
+                    setError("");
+                    setIsCCCDValid(true); // hợp lệ
+                }
+            })
+
+            .catch((err) => {
+                console.error("Lỗi kiểm tra CCCD:", err);
+                setError(err.message || "Lỗi hệ thống khi kiểm tra CCCD.");
+                setIsCCCDValid(false);
+            });
+    };
+
     return (
         <div className="layout">
             <Header />
@@ -164,9 +209,7 @@ function TaoChungChi() {
                             id="cccdThiSinh"
                             value={cccdThiSinh}
                             onChange={(e) => setCccdThiSinh(e.target.value)}
-                            onBlur={() =>
-                                validateField("cccdThiSinh", cccdThiSinh)
-                            }
+                            onBlur={handleCCCDBlur} // Gọi hàm kiểm tra CCCD khi mất focus
                             required
                         />
                         <label htmlFor="cccdThiSinh">CCCD thí sinh</label>
@@ -179,66 +222,114 @@ function TaoChungChi() {
                             type="text"
                             id="monThi"
                             value={monThi}
+                            readOnly
                             onChange={(e) => setMonThi(e.target.value)}
                             onBlur={() => validateField("monThi", monThi)}
                             required
+                            style={{
+                                backgroundColor: "transparent",
+                                border: "none",
+                                color: "#111",
+                            }}
                         />
-                        <label htmlFor="monThi">Chứng chỉ</label>
+                        <label
+                            htmlFor="monThi"
+                            style={{
+                                position: "absolute",
+                                top: "-25px",
+                                left: "8px",
+                                fontSize: "16px",
+                                color: "#4f46e5",
+                            }}
+                        >
+                            Chứng chỉ
+                        </label>
                         {errors.monThi && (
                             <p className="error-msg">{errors.monThi}</p>
                         )}
-                        <button type="button" onClick={fetchCertificatesByCCCD}>
+                        <button
+                            type="button"
+                            onClick={fetchCertificatesByCCCD}
+                            disabled={!isCCCDValid}
+                            className={`choose-btn ${
+                                !isCCCDValid ? "disabled" : ""
+                            }`}
+                        >
                             Chọn chứng chỉ
                         </button>
                     </div>
 
                     {/* Modal hiển thị danh sách chứng chỉ */}
                     {showCertificateModal && (
-  <div
-    className="modal"
-    style={{
-      position: "fixed",
-      top: "20%",
-      left: "70%",
-      background: "white",
-      padding: "20px",
-      border: "1px solid #ccc",
-      borderRadius: "8px",
-      zIndex: 1000,
-    }}
-  >
-    <div className="modal-content">
-      <span
-        className="close-btn"
-        onClick={() => setShowCertificateModal(false)}
-        style={{ cursor: "pointer", fontSize: "20px", float: "right" }}
-      >
-        &times;
-      </span>
-      <h3>Chọn chứng chỉ</h3>
+                        <div
+                            className="modal"
+                            style={{
+                                position: "fixed",
+                                top: "40%",
+                                left: "70%",
+                                background: "white",
+                                padding: "20px",
+                                border: "1px solid #ccc",
+                                borderRadius: "8px",
+                                zIndex: 1000,
+                            }}
+                        >
+                            <div className="modal-content">
+                                <span
+                                    className="close-btn"
+                                    onClick={() =>
+                                        setShowCertificateModal(false)
+                                    }
+                                    style={{
+                                        cursor: "pointer",
+                                        fontSize: "20px",
+                                        float: "right",
+                                    }}
+                                >
+                                    &times;
+                                </span>
+                                <h3>Chọn chứng chỉ</h3>
 
-      {/* In ra dữ liệu của availableCertificates */}
-      {console.log("Danh sách chứng chỉ:", availableCertificates)}
+                                {/* In ra dữ liệu của availableCertificates */}
+                                {console.log(
+                                    "Danh sách chứng chỉ:",
+                                    availableCertificates
+                                )}
 
-      <ul className="certificate-list">
-        {availableCertificates.map((certificate, index) => (
-          <li
-            key={index}
-            className="certificate-item"
-            onClick={() => {
-              setMonThi(certificate.ten_loai);
-              setShowCertificateModal(false);
-            }}
-            style={{ cursor: "pointer", padding: "5px 0" }}
-          >
-            {certificate.ten_loai}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-)}
-
+                                {availableCertificates.length === 0 ? (
+                                    <p style={{ color: "#666" }}>
+                                        Không có chứng chỉ nào của thí sinh này
+                                        cần lập.
+                                    </p>
+                                ) : (
+                                    <ul className="certificate-list">
+                                        {availableCertificates.map(
+                                            (certificate, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="certificate-item"
+                                                    onClick={() => {
+                                                        setMonThi(
+                                                            certificate.ten_loai
+                                                        );
+                                                        setShowCertificateModal(
+                                                            false
+                                                        );
+                                                    }}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                        padding: "5px 0",
+                                                    }}
+                                                >
+                                                    {certificate.ten_loai}
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="input-group">
                         <input
@@ -269,7 +360,7 @@ function TaoChungChi() {
                         )}
                     </div>
 
-                    <div className="input-group">
+                    {/* <div className="input-group">
                         <input
                             type="text"
                             id="maNhanVien"
@@ -284,7 +375,7 @@ function TaoChungChi() {
                         {errors.maNhanVien && (
                             <p className="error-msg">{errors.maNhanVien}</p>
                         )}
-                    </div>
+                    </div> */}
                     <button
                         type="submit"
                         className="submit-btn"

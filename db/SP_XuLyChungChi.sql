@@ -227,3 +227,21 @@ GO
 
 
 
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'SP_LayDSThiSinh')
+BEGIN
+    DROP PROCEDURE SP_LayDSThiSinh
+END
+GO
+CREATE PROCEDURE SP_LayDSThiSinh
+AS
+BEGIN
+    SELECT 
+        MA_TS,
+        HOTEN,
+        CCCD,
+        NGAYSINH,
+        SDT,
+        EMAIL
+    FROM THI_SINH
+END;
+GO

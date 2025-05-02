@@ -128,4 +128,27 @@ class ChungChiDAO:
             return error_msg
 
 
-    
+    @staticmethod
+    def DocDSThiSinh():
+        try:
+            sql = text("EXEC SP_LayDSThiSinh")
+            result = db.session.execute(sql)
+            rows = result.fetchall()
+
+            data = []
+            for row in rows:
+                data.append({
+                    "ma_thi_sinh": row[0],
+                    "ho_ten": row[1],
+                    "cccd": row[2],
+                    "ngay_sinh": row[3],
+                    "sdt": row[4],
+                    "email": row[5]
+                })
+            return data
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            error_msg = str(e.orig) if hasattr(e, 'orig') else str(e)
+            print(f"[DAO] Lỗi khi đọc danh sách thí sinh: {error_msg}")
+            return None

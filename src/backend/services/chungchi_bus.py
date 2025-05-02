@@ -80,3 +80,21 @@ class ChungChiBUS:
             return {"success": True, "message": "Cập nhật ghi chú thành công"}
         else:
             return {"success": False, "message": f"Cập nhật ghi chú thất bại: {ket_qua}"}
+        
+        
+    @staticmethod
+    def KiemTraTonTaiCCCD(cccd):
+        if not cccd:
+            return {"success": False, "message": "CCCD không được để trống."}
+
+        try:
+            danh_sach = ChungChiDAO.DocDSThiSinh()
+            for ts in danh_sach:
+                if ts["cccd"] == cccd:
+                    return {"success": True, "message": "CCCD tồn tại trong hệ thống."}
+            return {"success": False, "message": "Không tìm thấy thí sinh với CCCD này."}
+
+        except Exception as e:
+            print(f"[BUS] Lỗi khi kiểm tra CCCD: {e}")
+            return {"success": False, "message": "Lỗi hệ thống khi kiểm tra CCCD."}
+    

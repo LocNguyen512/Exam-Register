@@ -40,6 +40,12 @@ input {
     padding: 0 4px;
 }
 
+.input-group button{
+  background-color: #4338ca;
+  margin: 0px;
+  align-self: baseline;
+}
+
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown):valid + label {
     top: -25px;
