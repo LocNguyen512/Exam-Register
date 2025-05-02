@@ -7,3 +7,9 @@ class LoaiDGNLBUS:
         Lấy danh sách loại đánh giá năng lực từ DAO.
         """
         return LoaiDGNLDAO.DocDSLoai()
+    
+    def LayBangGia():
+        """
+        Lấy thông tin chi tiết loại đánh giá năng lực từ DAO.
+        """
+        return LoaiDGNLDAO.LayTTChiTiet()

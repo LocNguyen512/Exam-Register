@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.user_bus import UserBus
-
+from flask import session
 dangnhap_bp = Blueprint('dangnhap', __name__)
 
 class MH_DangNhap:
@@ -18,6 +18,7 @@ class MH_DangNhap:
 
             user = UserBus.KiemTraUserPassword(email, password)
             if user:
+                session['ma_nhan_vien'] = user.MaNV # ✅ Lưu mã nhân viên vào session
                 return jsonify({
                     "success": True,
                     "user": user

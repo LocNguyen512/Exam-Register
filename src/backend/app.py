@@ -4,18 +4,20 @@ from sqlalchemy import text
 from routes.MH_DangNhap import dangnhap_bp
 from routes.MH_ThemKhachHangTuDo import dangKyThi_bp
 from routes.MH_ThongBao import thongbao_bp
+from routes.MH_BangGia import banggia_bp
 from extensions import db
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["http://localhost:5174"])
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config.from_object(Config)
-
+app.secret_key = 'your-secret-key'  # Để bảo vệ session
 db.init_app(app)
 
 app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
 app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
 app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
+app.register_blueprint(banggia_bp, url_prefix="/bangGia")
 
 @app.route('/')
 def index():
