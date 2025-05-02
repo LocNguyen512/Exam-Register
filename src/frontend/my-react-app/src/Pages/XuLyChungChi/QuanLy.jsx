@@ -3,7 +3,7 @@ import Header from "../../component/Header/NVNhapLieu/HeaderNoBack";
 import { useNavigate } from "react-router-dom";
 import "./QuanLy.css";
 
-function Layout() {
+function QuanLyCC() {
     const [chungChiList, setChungChiList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -32,49 +32,49 @@ function Layout() {
     };
 
     const handleSearch = () => {
-      if (!searchTerm.trim()) {
-          // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
-          fetch("http://localhost:5000/QLchungchi/laychungchi")
-              .then((res) => res.json())
-              .then((data) => {
-                  if (data.success) {
-                      setChungChiList(data.data);
-                      setCurrentPage(1); // Reset về trang đầu
-                  } else {
-                      console.error("Không lấy được dữ liệu chứng chỉ");
-                      setChungChiList([]);
-                  }
-              })
-              .catch((err) => {
-                  console.error("Lỗi khi gọi API:", err);
-                  setChungChiList([]);
-              });
-          return;
-      }
-  
-      // Gọi API tìm kiếm theo CCCD
-      fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
-          method: "POST", // Gửi POST request
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ cccd: searchTerm }), // Truyền CCCD vào body của yêu cầu
-      })
-          .then((res) => res.json())
-          .then((data) => {
-              if (data.error) {
-                  console.error("Không tìm thấy chứng chỉ:", data.error);
-                  setChungChiList([]); // Nếu không có kết quả, làm rỗng danh sách
-              } else {
-                  setChungChiList(data); // Cập nhật danh sách chứng chỉ tìm được
-                  setCurrentPage(1); // Reset về trang đầu
-              }
-          })
-          .catch((err) => {
-              console.error("Lỗi khi gọi API tìm kiếm:", err);
-              setChungChiList([]); // Xử lý lỗi và làm rỗng danh sách
-          });
-  };
+        if (!searchTerm.trim()) {
+            // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
+            fetch("http://localhost:5000/QLchungchi/laychungchi")
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        setChungChiList(data.data);
+                        setCurrentPage(1); // Reset về trang đầu
+                    } else {
+                        console.error("Không lấy được dữ liệu chứng chỉ");
+                        setChungChiList([]);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Lỗi khi gọi API:", err);
+                    setChungChiList([]);
+                });
+            return;
+        }
+
+        // Gọi API tìm kiếm theo CCCD
+        fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
+            method: "POST", // Gửi POST request
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cccd: searchTerm }), // Truyền CCCD vào body của yêu cầu
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.error) {
+                    console.error("Không tìm thấy chứng chỉ:", data.error);
+                    setChungChiList([]); // Nếu không có kết quả, làm rỗng danh sách
+                } else {
+                    setChungChiList(data); // Cập nhật danh sách chứng chỉ tìm được
+                    setCurrentPage(1); // Reset về trang đầu
+                }
+            })
+            .catch((err) => {
+                console.error("Lỗi khi gọi API tìm kiếm:", err);
+                setChungChiList([]); // Xử lý lỗi và làm rỗng danh sách
+            });
+    };
     const handleJumpPage = () => {
         let page = Number(inputPage);
         if (!page || page < 1) {
@@ -101,7 +101,7 @@ function Layout() {
     return (
         <div className="layout">
             <Header />
-            <div className="certificate-container">
+            <div className="certificate-container" style={{ overflowY: 'hidden' }}>
                 <div className="certificate-actions">
                     <h2>Danh sách chứng chỉ</h2>
                     <input
@@ -134,8 +134,8 @@ function Layout() {
                                 <th>Môn thi</th>
                                 <th>NGÀY CẤP</th>
                                 <th>KẾT QUẢ</th>
-                                <th>CCCD</th>
-                                <th>NHÂN VIÊN NHẬP</th>
+                                <th>CCCD THÍ SINH</th>
+                                <th>MÃ NHÂN VIÊN NHẬP</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -253,4 +253,4 @@ function Layout() {
     );
 }
 
-export default Layout;
+export default QuanLyCC;
