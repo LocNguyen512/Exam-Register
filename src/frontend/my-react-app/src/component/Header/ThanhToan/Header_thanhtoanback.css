@@ -1,86 +1,73 @@
-/* Header Styles */
-header {
-    background: white;
-    padding: 0px 24px;
-    padding-left: 0px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.header-giahan {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-
-.logo {
     height: 80px;
-    width: 200px;
-}
-
-.logo img {
-    height: 100%;
-    width: 200px;
-}
-
-nav ul {
+    padding: 0 24px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .header-left {
     display: flex;
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
-    gap: 32px;
-    text-align: left;
-}
-
-nav ul li a {
-    text-align: left;
-    color: #333;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-nav ul li a:hover {
-    color: #1a237e;
-    background-color: rgba(26, 35, 126, 0.1);
-}
-
-.login-button {
-    background: #6366F1;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 16px;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .logo {
+    height: 80px;
+    width: auto;
+  }
+  
+  .svg-icon {
+    width: 24px;
+    height: 24px;
     cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.login-button:hover {
-    background: #4F46E5;
-    transform: translateY(-2px);
-}
-
-.house ul li {
-    text-align: left;
+    stroke: #333;
+    fill: none;
+    transition: stroke 0.2s;
+  }
+  
+  .svg-icon:hover {
+    stroke: #6366f1;
+  }
+  
+  .header-right {
     display: flex;
-    list-style: none;
-    padding: 0px;
-    margin: 0px;
+    align-items: center;
     gap: 16px;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        gap: 8px;
-        padding: 8px;
-    }
-
-    nav ul {
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-    }
-} 
+  }
+  
+  .logout-button {
+    padding: 6px 16px;
+    border-radius: 24px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .user-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #6366f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .user-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #000;
+  }
+  
