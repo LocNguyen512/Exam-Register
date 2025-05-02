@@ -30,6 +30,15 @@ import axios from 'axios';
     const [selectedRegistrations, setSelectedRegistrations] = useState([]);
 
     useEffect(() => {
+      document.body.classList.add('body-dkcn');
+    
+      // Cleanup khi rời trang
+      return () => {
+        document.body.classList.remove('body-dkcn');
+      };
+    }, []);
+
+    useEffect(() => {
       const fetchCertificates = async () => {
         try {
           const res = await axios.get('http://localhost:5000/dangKyThi/docds_dgnl');
@@ -205,48 +214,48 @@ import axios from 'axios';
     };
 
   return (
-    <div className="layout">
+    <div className="layout-dkcn">
       <Header />
-      <div className="container">
+      <div className="container-dkcn">
         <div className="dkcn-header">
         <h1>Thêm khách hàng</h1>
 
         <div className="alert">🔔 Vui lòng nhập đủ thông tin để tiếp tục</div>
         </div>
 
-        <div className="grid">
-          <div className="sidebar">
+        <div className="grid-dkcn">
+          <div className="sidebar-dkcn">
             <h3>Thông tin khách hàng</h3>
-            <div className="customer-type-selector">
-              <button className="type-btn inactive">
+            <div className="customer-type-selector-dkcn">
+              <button className="type-btn inactive-dkcn">
                 <img src="/building.png" alt="Đơn vị" />
                 Khách hàng đơn vị
               </button>
-              <button className="type-btn active">
+              <button className="type-btn active-dkcn">
                 <img src="/user.png" alt="Tự do" />
                 Khách hàng tự do
               </button>
             </div>
           </div>
 
-          <div className="form-section">
+          <div className="form-section-dkcn">
           <fieldset>
             <legend>
-              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon" />
+              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon-dkcn" />
               Khách hàng tự do
             </legend>
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="cus-full-name">Tên khách hàng</label>
                 <input id="cus-full-name" placeholder="Full name" ref={fullNameRef} onChange={resetValidation}/>
               </div>
-              <div className="form-group">
+              <div className="form-group-dkcn">
                 <label htmlFor="cus-phone">Số điện thoại</label>
                 <input id="cus-phone" placeholder="Phone number" ref={phoneRef} onChange={resetValidation}/>
               </div>
             </div>
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="cus-email">Email</label>
                 <input id="cus-email" placeholder="Email" ref={emailRef} onChange={resetValidation}/>
               </div>
@@ -256,45 +265,45 @@ import axios from 'axios';
 
           <fieldset>
             <legend>
-              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon" />
+              <img src="/field-input-dkcn.png" alt="icon" className="legend-icon-dkcn" />
               Thông tin thí sinh
             </legend>
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="can-name">Họ tên</label>
                 <input id="can-name" placeholder="Name" ref={fullNameTSRef} onChange={resetValidation}/>
               </div>
-              <div className="form-group">
+              <div className="form-group-dkcn">
                 <label htmlFor="can-dob">DOB</label>
                 <input id="can-dob" type="date" ref={dobTSRef} onChange={resetValidation}/>
               </div>
             </div>
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="can-phone">Số điện thoại</label>
                 <input id="can-phone" placeholder="Phone number" ref={sdtTSRef} onChange={resetValidation}/>
               </div>
-              <div className="form-group">
+              <div className="form-group-dkcn">
                 <label htmlFor="can-email">Email</label>
                 <input id="can-email" placeholder="Email" ref={emailTSRef} onChange={resetValidation}/>
               </div>
             </div>
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="can-cccd">Số CCCD</label>
                 <input id="can-cccd" placeholder="CCCD" ref={cccdTSRef} onChange={resetValidation}/>
               </div>
             </div>
-            <button className="btn-blue" onClick={handleCheckCustomer}>Kiểm tra thông tin khách hàng</button>
+            <button className="btn-blue-dkcn" onClick={handleCheckCustomer}>Kiểm tra thông tin khách hàng</button>
           </fieldset> 
             <fieldset>
             <legend>
-              <img src="/field-input-dkcn.png" alt="icon" class="legend-icon" />
+              <img src="/field-input-dkcn.png" alt="icon" class="legend-icon-dkcn" />
               Chứng chỉ đăng ký
             </legend>
 
-            <div className="row">
-              <div className="form-group">
+            <div className="row-dkcn">
+              <div className="form-group-dkcn">
                 <label htmlFor="exam-type">Loại chứng chỉ</label>
                 <select id="exam-type" value={selectedCertificate} onChange={handleCertificateChange}>
                   <option value="">-- Chọn loại chứng chỉ --</option>
@@ -306,7 +315,7 @@ import axios from 'axios';
                 </select>
               </div>
 
-              <div className="form-group">
+              <div className="form-group-dkcn">
                 <label htmlFor="exam-date">Ngày thi</label>
                 <select id="exam-date" value={selectedExam?.maLichThi || ''} onChange={handleExamDateChange}>
                   <option value="">-- Chọn ngày thi --</option>
@@ -319,8 +328,8 @@ import axios from 'axios';
               </div>
             </div>
 
-            <div className="text-right">
-              <button className="btn-blue" onClick={handleAddRegistration}>Thêm</button>
+            <div className="text-right-dkcn">
+              <button className="btn-blue-dkcn" onClick={handleAddRegistration}>Thêm</button>
             </div>
 
             <table>
@@ -338,7 +347,7 @@ import axios from 'axios';
                     <td>{item.ngayThi}</td>
                     <td>
                       <button
-                        className="btn-delete"
+                        className="btn-delete-dkcn"
                         onClick={() => handleDeleteRegistration(index)}
                       >
                         Xóa
@@ -349,8 +358,8 @@ import axios from 'axios';
               </tbody>
             </table>
 
-              <div className="text-right">
-                <button className="btn-purple" onClick={handlePrintRegistration}>In phiếu đăng ký →</button>
+              <div className="text-right-dkcn">
+                <button className="btn-purple-dkcn" onClick={handlePrintRegistration}>In phiếu đăng ký →</button>
               </div>
             </fieldset>
           </div>
