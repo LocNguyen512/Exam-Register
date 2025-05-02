@@ -8,6 +8,7 @@ from services.lichthi_bus import LichThiBUS
 from services.khachhang_bus import  KhachHangBUS
 from services.chitietlichthi_bus import ChiTietLichThiBUS
 from services.loaidgnl_bus import LoaiDGNLBUS   
+from services.phieuthanhtoan_bus import PhieuThanhToanBUS
 
 dangKyThi_bp = Blueprint('dangKyThi', __name__)
 
@@ -100,10 +101,16 @@ class MH_ThemKhachHangTuDo:
                     ma_lich_thi=maLich,
                     ma_phong=maPhong
                 )
+                
+            # 5. Tạo phiếu thanh toán bằng stored procedure
+            maPTT = PhieuThanhToanBUS.TaoPhieuThanhToan(ma_nv=maNV, ma_pdk=maPDK)
+            if not maPTT:
+                raise Exception("Không thể tạo phiếu thanh toán.")
+            
             return jsonify({
             "message": "Thêm phiếu đăng ký thành công!",
             "maPDK": maPDK
-        }), 201
+            }), 201
         except Exception as e:
             traceback.print_exc()
             return jsonify({"error": str(e)}), 500  

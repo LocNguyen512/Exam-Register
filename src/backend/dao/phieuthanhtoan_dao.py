@@ -14,3 +14,28 @@ class PhieuThanhToanDAO:
         except Exception as e:
             db.session.rollback()
             return {"success": False, "message": f"Lỗi: {e}"}
+
+    def them_phieu_thanh_toan(ma_nv, ma_pdk):
+        cursor = db.cursor()
+
+        try:
+            # Gọi stored procedure với OUTPUT
+            cursor.execute("""
+                DECLARE @MA_PTT CHAR(6);
+                EXEC TaoPhieuThanhToan ?, ?, @MA_PTT OUTPUT;
+                SELECT @MA_PTT AS MA_PTT;
+            """, (ma_nv, ma_pdk))
+
+            # Lấy kết quả trả về
+            result = cursor.fetchone()
+            db.commit()
+
+            if result and result.MA_PTT:
+                return result.MA_PTT
+            else:
+                return None
+
+        except Exception as e:
+            db.rollback()
+            print("Lỗi khi gọi SP TaoPhieuThanhToan:", e)
+            return None
