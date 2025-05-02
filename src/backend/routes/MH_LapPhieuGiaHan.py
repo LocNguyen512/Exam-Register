@@ -17,3 +17,14 @@ def lay_phieu():
             return jsonify({"message": "Không có phiếu chưa thanh toán"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@phieugiahan_bp.route("/cap-nhat-thanh-toan", methods=["POST"])
+def cap_nhat_thanh_toan():
+    try:
+        data = request.get_json()
+        ma_phieu = data.get("ma_phieu")
+        phieugiahanBUS.CapNhatThanhToan(ma_phieu)
+        return jsonify({"message": "Cập nhật tình trạng thành công!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+

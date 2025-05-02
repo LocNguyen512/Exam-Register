@@ -26,6 +26,25 @@ const PhieuGiaHan = () => {
     }
   };
   
+  const handleThanhToan = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/phieugiahan/cap-nhat-thanh-toan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ma_phieu: phieu.maPhieu }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        alert("✅ Xác nhận thanh toán thành công!");
+        setPhieu({ ...phieu, tinhTrang: "Đã thanh toán" }); // cập nhật UI
+      } else {
+        alert(result.error || "Cập nhật thất bại");
+      }
+    } catch (err) {
+      alert("Lỗi xác nhận thanh toán: " + err.message);
+    }
+  };
+
   const handlePrint = () => {
     alert("✅ In phiếu gia hạn thành công!");
   };
@@ -83,8 +102,14 @@ const PhieuGiaHan = () => {
             </div>
 
             <div className="print-center">
-              <button className="btn-confirm" onClick={handlePrint}>In phiếu</button>
+              <button className="btn-payment" onClick={handleThanhToan} style={{ marginRight: "12px" }}>
+                Xác nhận thanh toán
+              </button>
+              <button className="btn-confirm" onClick={handlePrint}>
+                In phiếu
+              </button>
             </div>
+
           </div>
         )}
       </div>

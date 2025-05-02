@@ -10,3 +10,10 @@ class phieugiahanBUS:
         if not cccd:
             raise ValueError("Thiếu CCCD")
         return phieugiahanDAO.lay_phieu_gia_han_chua_thanh_toan(cccd)
+    
+    @staticmethod
+    def CapNhatThanhToan(ma_phieu):
+        if not ma_phieu:
+            raise ValueError("Thiếu mã phiếu")
+        phieugiahanDAO.cap_nhat_tinh_trang_thanh_toan(ma_phieu)
+

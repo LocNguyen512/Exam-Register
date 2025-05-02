@@ -225,6 +225,7 @@ BEGIN
     ORDER BY PGH.NGAYLAP DESC;
 END
 
+GO
 
 CREATE OR ALTER PROCEDURE SP_LAY_SO_LAN_GIA_HAN_THEO_SBD
     @SOBAODANH CHAR(6)
@@ -247,6 +248,8 @@ BEGIN
     WHERE SOBAODANH = @SOBAODANH;
 END
 
+GO
+
 CREATE OR ALTER PROCEDURE SP_LAY_NGAY_THI_THEO_SBD
     @SOBAODANH CHAR(6)
 AS
@@ -257,4 +260,24 @@ BEGIN
     FROM CHI_TIET_DANG_KY CT
     JOIN LICH_THI LT ON CT.MA_LICH = LT.MA_LICH
     WHERE CT.SOBAODANH = @SOBAODANH;
+END
+
+GO
+
+CREATE PROCEDURE sp_cap_nhat_tinh_trang_thanh_toan
+    @MA_PGH CHAR(6)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Kiểm tra sự tồn tại của phiếu gia hạn
+    IF NOT EXISTS (SELECT 1 FROM PHIEU_GIA_HAN WHERE MA_PGH = @MA_PGH)
+    BEGIN
+        RAISERROR(N'Không tìm thấy phiếu gia hạn với mã đã cung cấp', 16, 1);
+        RETURN;
+    END
+
+    -- Cập nhật tình trạng sang 'Đã thanh toán'
+    UPDATE PHIEU_GIA_HAN
+    SET TINHTRANG = N'Đã thanh toán'
+    WHERE MA_PGH = @MA_PGH;
 END
