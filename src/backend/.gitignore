@@ -1,3 +1,4 @@
 env-er/
 __pycache__
 /dao/__pycache__
+node_modules/
