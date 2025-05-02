@@ -1,13 +1,17 @@
 from flask import Flask
 from config import Config  
 from sqlalchemy import text
+
 from routes.MH_DangNhap import dangnhap_bp
 from routes.MH_ThemKhachHangTuDo import dangKyThi_bp
 from routes.MH_ThongBao import thongbao_bp
 from routes.MH_QuanLyChungChi import chungchi_bp
+from routes.MH_ChiTietGiaHan import giahan_bp
+from routes.MH_ChonLichThi import loadlichthi_bp
 from routes.MH_CapChungChi import capchungchi_bp
 from routes.MH_ThanhToanDonVi import thanhtoandonvi_bp
 from routes.MH_ThanhToanCaNhan import thanhtoancanhan_bp
+
 from extensions import db
 from flask_cors import CORS
 
@@ -17,6 +21,7 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
+
 app.register_blueprint(dangnhap_bp, url_prefix="/dangnhap")
 app.register_blueprint(dangKyThi_bp, url_prefix="/dangKyThi")  
 app.register_blueprint(thongbao_bp, url_prefix="/Thongbao") 
@@ -24,6 +29,9 @@ app.register_blueprint(chungchi_bp, url_prefix="/QLchungchi")
 app.register_blueprint(thanhtoandonvi_bp, url_prefix="/thanhtoandonvi")
 app.register_blueprint(thanhtoancanhan_bp, url_prefix="/thanhtoancanhan")
 app.register_blueprint(capchungchi_bp, url_prefix="/Capchungchi")
+app.register_blueprint(giahan_bp, url_prefix="/QLgiahan" )
+app.register_blueprint(loadlichthi_bp, url_prefix="/Chonlichthi")
+
 
 
 @app.route('/')

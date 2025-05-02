@@ -4,7 +4,7 @@ import Header from "../../component/Header/HeaderBack";
 import "./ChonLichThi.css";
 
 const ChonLichThi = () => {
-  const { cccd, monThi } = useParams();
+  const { sobaodanh, monThi } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,14 +14,21 @@ const ChonLichThi = () => {
   const [currentYear, setCurrentYear] = useState(2025);
 
   useEffect(() => {
-    // Giả lập lấy ngày thi còn slot từ database
-    setAvailableDates([
-      "2025-03-10",
-      "2025-03-24",
-      "2025-04-07",
-      "2025-04-21"
-    ]);
+    // Gọi API thật để lấy danh sách ngày thi còn trống
+    const fetchAvailableDates = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/Chonlichthi/ngaycontrong?monThi=${monThi}`);
+        if (!res.ok) throw new Error("Không thể lấy danh sách lịch thi");
+        const data = await res.json();
+        setAvailableDates(data); // data là mảng ngày dạng ["2025-03-10", "2025-04-07", ...]
+      } catch (err) {
+        alert("Lỗi khi tải lịch thi: " + err.message);
+      }
+    };
+  
+    fetchAvailableDates();
   }, [monThi]);
+  
 
   const handleDateClick = (dateStr) => {
     setSelectedDate(dateStr);
@@ -29,7 +36,7 @@ const ChonLichThi = () => {
 
   const handleConfirm = () => {
     if (selectedDate) {
-      navigate(`/GiaHan/${cccd}`, {
+      navigate(`/GiaHan/${sobaodanh}`, {
         state: {
           newDate: selectedDate,
           monThi: monThi,

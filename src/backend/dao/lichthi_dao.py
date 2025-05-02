@@ -30,4 +30,18 @@ class LichThiDAO:
             print("Lỗi khi đọc danh sách lịch thi:", str(e))
             raise e
         
+    @staticmethod
+    def lay_ngay_thi_con_trong(monThi):
+        try:
+            sql = text("""
+                EXEC sp_get_ngay_thi_con_ghe_trong :mon_thi
+            """)
+            result = db.session.execute(sql, {"mon_thi": monThi})
+            rows = result.fetchall()
+
+            # Trả về danh sách ngày (giả định cột đầu tiên là ngày)
+            return [str(row[0]) for row in rows]
+        except Exception as e:
+            print("Lỗi DAO lấy ngày thi:", str(e))
+            raise e
         

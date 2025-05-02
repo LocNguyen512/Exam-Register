@@ -70,6 +70,52 @@ class ThiSinhBUS:
             return "CCCD phải đủ 12 chữ số."
 
         return None  # ✅ Hợp lệ
+    @staticmethod
+    def LayThongTinThiSinhVaChungChiTheoSBD(sobaodanh):
+        try:
+            if not sobaodanh:
+                raise ValueError("Thiếu số báo danh")
+
+            info = ThiSinhDAO.get_thong_tin_thi_sinh_theo_sbd(sobaodanh)
+            if not info:
+                return None
+
+            dang_ky = ThiSinhDAO.get_danh_sach_chung_chi_theo_sbd(sobaodanh)
+            return {"info": info, "dangKy": dang_ky}
+        except Exception as e:
+            print("Lỗi khi tra cứu thông tin theo SBD:", str(e))
+            raise e
+    
+    @staticmethod
+    def KiemTraDieuKienGiaHanTheoSBD(sobaodanh):
+        if not sobaodanh:
+            raise ValueError("Thiếu số báo danh")
+
+        try:
+            # ❶ Lấy số lần gia hạn
+            so_lan = ThiSinhDAO.lay_so_lan_gia_han(sobaodanh)
+            if so_lan >= 2:
+                return {"hop_le": 0, "thong_bao": "Thí sinh đã gia hạn tối đa 2 lần"}
+
+            # ❷ Lấy ngày thi
+            ngay_thi = ThiSinhDAO.lay_ngay_thi_theo_sbd(sobaodanh)
+            if not ngay_thi:
+                return {"hop_le": 0, "thong_bao": "Không tìm thấy ngày thi"}
+
+            # ❸ So sánh ngày
+            ngay_thi_dt = datetime.strptime(str(ngay_thi), "%Y-%m-%d").date()
+            hom_nay = datetime.today().date()
+            khoang_cach = (ngay_thi_dt - hom_nay).days
+
+            if khoang_cach < 2:
+                return {"hop_le": 0, "thong_bao": "Không được gia hạn trong vòng 2 ngày trước ngày thi"}
+
+            # ✅ Đủ điều kiện
+            return {"hop_le": 1, "thong_bao": "Đủ điều kiện gia hạn"}
+
+        except Exception as e:
+            print("Lỗi kiểm tra điều kiện gia hạn:", str(e))
+            raise e
     
     
     

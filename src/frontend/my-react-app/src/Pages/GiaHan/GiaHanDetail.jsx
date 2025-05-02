@@ -4,7 +4,7 @@ import './GiaHanDetail.css';
 import HeaderGiaHan from '../../component/Header/HeaderBack';
 
 function GiaHanDetail() {
-  const { cccd } = useParams();
+  const { sobaodanh } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -12,90 +12,139 @@ function GiaHanDetail() {
   const [giaHanData, setGiaHanData] = useState(null);
 
   useEffect(() => {
-    if (!cccd) {
+    if (!sobaodanh) {
       navigate('/');
       return;
     }
 
     // TODO: gọi API thực tế
-    const mockData = {
-      info: {
-        maTS: 'TS0123',
-        tenTS: 'David Smith',
-        baoDanh: '012849343',
-        cccd: cccd,
-        maPhieu: 'DT0123',
-        email: 'BoGia2000@gmail.com',
-        ngaySinh: '20/3/2000',
-        dienThoai: '0835731943',
-      },
-      dangKy: [
-        { monThi: 'MOS', ngayThi: '2025-09-25' },
-        { monThi: 'TOEIC', ngayThi: '2025-01-01' },
-      ]
-    };
+    fetch("http://localhost:5000/QLgiahan/tra-cuu", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sobaodanh }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Không tìm thấy thí sinh");
+        return res.json();
+      })
+      .then((data) => {
+        setInfo(data);
 
-    setInfo(mockData);
-
-    if (
-      location.state &&
-      location.state.autoOpenDetail &&
-      location.state.monThi &&
-      location.state.newDate
-    ) {
-      const selected = mockData.dangKy.find(d => d.monThi === location.state.monThi);
-      if (selected) {
-        setGiaHanData({
-          monThi: selected.monThi,
-          ngayThi: selected.ngayThi,
-          ngayGiaHan: location.state.newDate,
-          lanGiaHan: 1,
-          db: false,
-          kdb: false
-        });
-      }
-    }
-  }, [cccd, navigate, location.state]);
+        if (
+          location.state &&
+          location.state.autoOpenDetail &&
+          location.state.monThi &&
+          location.state.newDate
+        ) {
+          const selected = data.dangKy.find(d => d.monThi === location.state.monThi);
+          if (selected) {
+            setGiaHanData({
+              monThi: selected.monThi,
+              ngayThi: selected.ngayThi,
+              ngayGiaHan: location.state.newDate,
+              lanGiaHan: 1,
+              db: false,
+              kdb: false
+            });
+          }
+        }
+      })
+      .catch((err) => alert(err.message));
+  }, [sobaodanh, navigate, location.state]);
 
   const handleClickGiaHan = (monThi) => {
-    const selected = info.dangKy.find(d => d.monThi === monThi);
-    setGiaHanData({
-      monThi: selected.monThi,
-      ngayThi: selected.ngayThi,
-      ngayGiaHan: '',
-      lanGiaHan: 1,
-      db: false,
-      kdb: false
-    });
+    // Tìm dòng môn thi tương ứng để lấy số báo danh
+    const mon = info.dangKy.find((m) => m.monThi === monThi);
+    if (!mon || !mon.sobaodanh) {
+      alert("Không tìm thấy số báo danh của môn thi này.");
+      return;
+    }
+  
+    // Gọi API kiểm tra điều kiện gia hạn theo SBD
+    fetch("http://localhost:5000/QLgiahan/kiem-tra-gia-han", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sobaodanh: mon.sobaodanh })
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.hop_le) {
+          setGiaHanData({
+            monThi: mon.monThi,
+            ngayThi: mon.ngayThi,
+            ngayGiaHan: '',
+            lanGiaHan: result.lan_gia_han || 0,
+            db: false,
+            kdb: false
+          });
+        } else {
+          alert(result.thong_bao || "Không đủ điều kiện gia hạn.");
+        }
+      })
+      .catch((err) => alert("Lỗi kiểm tra điều kiện gia hạn: " + err.message));
   };
+  
+  const handleXacNhan = async () => {
+    if (!giaHanData || !giaHanData.ngayGiaHan) {
+      alert("Vui lòng chọn ngày gia hạn.");
+      return;
+    }
 
-  const handleXacNhan = () => {
-    alert(`Gia hạn cho môn ${giaHanData.monThi} - ngày thi mới: ${giaHanData.ngayGiaHan}`);
-    // TODO: gửi dữ liệu lên server
+    const truongHop = giaHanData.db ? "Đặc biệt" : giaHanData.kdb ? "Không đặc biệt" : "";
+    if (!truongHop) {
+      alert("Vui lòng chọn trường hợp gia hạn.");
+      return;
+    }
+
+    const payload = {
+      sobaodanh,
+      mon: giaHanData.monThi,
+      ngay_gia_han: giaHanData.ngayGiaHan,
+      truong_hop: truongHop,
+      ma_nvtn: null,
+      ma_nvkt: null
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/QLgiahan/xac-nhan-gia-han", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert("✅ " + result.message);
+        setGiaHanData(null);
+      } else {
+        alert("❌ Lỗi: " + (result.error || "Không rõ lỗi"));
+      }
+    } catch (err) {
+      alert("Lỗi xử lý: " + err.message);
+    }
   };
 
   if (!info) return <div>Đang tải...</div>;
 
   return (
-    <div className="giahan-detail">
+    <div className="gh-giahan-detail">
       <HeaderGiaHan />
-      <div className="section">
-        <div className="section-title">🧾 Thông tin thí sinh</div>
-        <div className="grid-2col">
+      <div className="gh-section">
+        <div className="gh-section-title">🧾 Thông tin thí sinh</div>
+        <div className="gh-grid-2col">
           <div><label>Mã thí sinh</label><input readOnly value={info.info.maTS} /></div>
-          <div><label>Mã phiếu dự thi</label><input readOnly value={info.info.maPhieu} /></div>
           <div><label>Tên thí sinh</label><input readOnly value={info.info.tenTS} /></div>
           <div><label>Email</label><input readOnly value={info.info.email} /></div>
           <div><label>Số báo danh</label><input readOnly value={info.info.baoDanh} /></div>
-          <div><label>Ngày sinh</label><input readOnly value={info.info.ngaySinh} /></div>
+          <div><label>Ngày sinh</label><input readOnly value={new Date(info.info.ngaySinh).toLocaleDateString('vi-VN')} /></div>
           <div><label>CCCD</label><input readOnly value={info.info.cccd} /></div>
           <div><label>Số điện thoại</label><input readOnly value={info.info.dienThoai} /></div>
         </div>
       </div>
 
-      <div className="section">
-        <div className="section-title">📘 Danh sách chứng chỉ đã đăng ký</div>
-        <table className="table">
+      <div className="gh-section">
+        <div className="gh-section-title">📘 Danh sách chứng chỉ đã đăng ký</div>
+        <table className="gh-table">
           <thead>
             <tr><th>Môn thi</th><th>Ngày thi hiện tại</th><th></th></tr>
           </thead>
@@ -103,7 +152,7 @@ function GiaHanDetail() {
             {info.dangKy.map((item) => (
               <tr key={item.monThi}>
                 <td>{item.monThi}</td>
-                <td>{item.ngayThi}</td>
+                <td>{new Date(item.ngayThi).toLocaleDateString("vi-VN")}</td>
                 <td><button onClick={() => handleClickGiaHan(item.monThi)}>Gia hạn</button></td>
               </tr>
             ))}
@@ -112,9 +161,9 @@ function GiaHanDetail() {
       </div>
 
       {giaHanData && (
-        <div className="section">
-          <div className="section-title">📄 Chi tiết gia hạn</div>
-          <table className="table">
+        <div className="gh-section">
+          <div className="gh-section-title">📄 Chi tiết gia hạn</div>
+          <table className="gh-table">
             <thead>
               <tr>
                 <th>Môn thi</th>
@@ -127,14 +176,14 @@ function GiaHanDetail() {
             <tbody>
               <tr>
                 <td>{giaHanData.monThi}</td>
-                <td>{giaHanData.ngayThi}</td>
+                <td>{new Date(giaHanData.ngayThi).toLocaleDateString("vi-VN")}</td>
                 <td>
                   <input
                     type="text"
                     readOnly
                     value={giaHanData.ngayGiaHan || "Chọn ngày"}
                     onClick={() =>
-                      navigate(`/GiaHan/${cccd}/${giaHanData.monThi}`, {
+                      navigate(`/GiaHan/${sobaodanh}/${giaHanData.monThi}`, {
                         state: { autoOpenDetail: true }
                       })
                     }
@@ -150,7 +199,7 @@ function GiaHanDetail() {
                       onChange={(e) =>
                         setGiaHanData(prev => ({ ...prev, db: e.target.checked }))
                       }
-                    /> ĐB
+                    /> Đặc biệt
                   </label>
                   <label>
                     <input
@@ -159,7 +208,7 @@ function GiaHanDetail() {
                       onChange={(e) =>
                         setGiaHanData(prev => ({ ...prev, kdb: e.target.checked }))
                       }
-                    /> KĐB
+                    /> Không đặc biệt
                   </label>
                 </td>
                 <td>
@@ -175,7 +224,7 @@ function GiaHanDetail() {
               </tr>
             </tbody>
           </table>
-          <div className="center-button">
+          <div className="gh-center-button">
             <button onClick={handleXacNhan}>XÁC NHẬN</button>
           </div>
         </div>
