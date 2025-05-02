@@ -127,13 +127,12 @@ function GiaHanDetail() {
   if (!info) return <div>Đang tải...</div>;
 
   return (
-    <div className="giahan-detail">
+    <div className="gh-giahan-detail">
       <HeaderGiaHan />
-      <div className="section">
-        <div className="section-title">🧾 Thông tin thí sinh</div>
-        <div className="grid-2col">
+      <div className="gh-section">
+        <div className="gh-section-title">🧾 Thông tin thí sinh</div>
+        <div className="gh-grid-2col">
           <div><label>Mã thí sinh</label><input readOnly value={info.info.maTS} /></div>
-          <div><label>Mã phiếu dự thi</label><input readOnly value={info.info.maPhieu} /></div>
           <div><label>Tên thí sinh</label><input readOnly value={info.info.tenTS} /></div>
           <div><label>Email</label><input readOnly value={info.info.email} /></div>
           <div><label>Số báo danh</label><input readOnly value={info.info.baoDanh} /></div>
@@ -143,9 +142,9 @@ function GiaHanDetail() {
         </div>
       </div>
 
-      <div className="section">
-        <div className="section-title">📘 Danh sách chứng chỉ đã đăng ký</div>
-        <table className="table">
+      <div className="gh-section">
+        <div className="gh-section-title">📘 Danh sách chứng chỉ đã đăng ký</div>
+        <table className="gh-table">
           <thead>
             <tr><th>Môn thi</th><th>Ngày thi hiện tại</th><th></th></tr>
           </thead>
@@ -162,9 +161,9 @@ function GiaHanDetail() {
       </div>
 
       {giaHanData && (
-        <div className="section">
-          <div className="section-title">📄 Chi tiết gia hạn</div>
-          <table className="table">
+        <div className="gh-section">
+          <div className="gh-section-title">📄 Chi tiết gia hạn</div>
+          <table className="gh-table">
             <thead>
               <tr>
                 <th>Môn thi</th>
@@ -225,7 +224,7 @@ function GiaHanDetail() {
               </tr>
             </tbody>
           </table>
-          <div className="center-button">
+          <div className="gh-center-button">
             <button onClick={handleXacNhan}>XÁC NHẬN</button>
           </div>
         </div>
