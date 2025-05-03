@@ -35,18 +35,30 @@ END
 
 GO
 
-CREATE PROCEDURE sp_get_ngay_thi_con_ghe_trong
-    @MON_THI NVARCHAR(50)
+CREATE OR ALTER PROCEDURE sp_get_ngay_thi_con_ghe_trong
+    @MON_THI NVARCHAR(50),
+	@SBD CHAR(6)
 AS
 BEGIN
-    SELECT DISTINCT
-        LT.NGAYTHI,
-        LT.MA_LICH,
-        CT.MA_PHONG
-    FROM LICH_THI LT
-    JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
-    JOIN CHI_TIET_LICH_THI CT ON CT.MA_LICH = LT.MA_LICH
-    WHERE LD.TENLOAI = @MON_THI AND CT.SOGHETRONG > 0
+    DECLARE @NGAY_THI_HIEN_TAI DATE;
+	-- Lấy ngày thi hiện tại của thí sinh từ số báo danh
+     SELECT @NGAY_THI_HIEN_TAI = LT.NGAYTHI
+	 FROM CHI_TIET_DANG_KY CT
+     JOIN LICH_THI LT ON CT.MA_LICH = LT.MA_LICH
+     JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
+	 WHERE CT.SOBAODANH = @SBD AND LD.TENLOAI = @MON_THI;
+ 
+     -- Truy vấn các lịch thi còn ghế trống và sau ngày thi hiện tại
+	 SELECT DISTINCT
+         LT.NGAYTHI,
+         LT.MA_LICH,
+         CT.MA_PHONG
+     FROM LICH_THI LT
+     JOIN LOAI_DGNL LD ON LT.MA_LOAI = LD.MA_LOAI
+     JOIN CHI_TIET_LICH_THI CT ON CT.MA_LICH = LT.MA_LICH
+     WHERE LD.TENLOAI = @MON_THI
+       AND CT.SOGHETRONG > 0
+       AND LT.NGAYTHI > @NGAY_THI_HIEN_TAI;
 END
 
 GO
@@ -224,9 +236,10 @@ BEGIN
       AND PGH.TINHTRANG = N'Chưa thanh toán'
     ORDER BY PGH.NGAYLAP DESC;
 END
+GO
 
 
-CREATE OR ALTER PROCEDURE SP_LAY_SO_LAN_GIA_HAN_THEO_SBD
+CREATE PROCEDURE SP_LAY_SO_LAN_GIA_HAN_THEO_SBD
     @SOBAODANH CHAR(6)
 AS
 BEGIN
@@ -246,6 +259,7 @@ BEGIN
     FROM CHI_TIET_DANG_KY
     WHERE SOBAODANH = @SOBAODANH;
 END
+GO
 
 CREATE OR ALTER PROCEDURE SP_LAY_NGAY_THI_THEO_SBD
     @SOBAODANH CHAR(6)
@@ -258,3 +272,28 @@ BEGIN
     JOIN LICH_THI LT ON CT.MA_LICH = LT.MA_LICH
     WHERE CT.SOBAODANH = @SOBAODANH;
 END
+GO
+
+
+ 
+CREATE PROCEDURE sp_cap_nhat_tinh_trang_thanh_toan_pgh
+    @MA_PGH CHAR(6),
+    @MA_NVKT CHAR(6)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Kiểm tra sự tồn tại của phiếu gia hạn
+    IF NOT EXISTS (SELECT 1 FROM PHIEU_GIA_HAN WHERE MA_PGH = @MA_PGH)
+    BEGIN
+        RAISERROR(N'Không tìm thấy phiếu gia hạn với mã đã cung cấp', 16, 1);
+        RETURN;
+    END
+
+    -- Cập nhật tình trạng và mã nhân viên kế toán
+    UPDATE PHIEU_GIA_HAN
+    SET TINHTRANG = N'Đã thanh toán',
+        MA_NVKT = @MA_NVKT
+    WHERE MA_PGH = @MA_PGH;
+END
+go

@@ -119,3 +119,18 @@
     background-color: #4f46e5;
   }
   
+  .btn-payment {
+    padding: 10px 20px;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 12px;
+  }
+  
+  .btn-payment:hover {
+    background-color: #4f46e5;
+  }

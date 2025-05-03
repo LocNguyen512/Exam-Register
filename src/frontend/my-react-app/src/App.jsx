@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './component/Header/utils/ProtectedRoute'; // 👈 thêm dòng này
 import Home from './Pages/HomePage/Home';
 import LichThi from './Pages/LichThi/LichThi';
 import BangGia from './Pages/BangGia/BangGia';
@@ -31,33 +32,123 @@ function App() {
           <Route path="/BangGia" element={<BangGia />} />
           <Route path="/LichThi" element={<LichThi />} />
           <Route path="/ChungChi" element={<TraCuuChungChi />} />
-
-          {/* Nhân viên nhập liệu */}
-          <Route path="/NVNL" element={<XuLyChungChi_Home />} />
-          <Route path="/NVNL/XuLyChungChi/QuanLy" element={<XuLyChungChi_QuanLy />} />
-          <Route path="/NVNL/XuLyChungChi/QuanLy/LapChungChi" element={<XuLyChungChi_LapChungChi />} />
-          
-
           {/* Đăng nhập */}
           <Route path="/DangNhap" element={<DangNhap />} />
-        
-          {/* Nhân viên tiếp nhận */}
-          <Route path="/NVTN" element={<Homepage_TiepNhan />} />
-          <Route path="/NVTN/GiaHan" element={<GiaHan />} />
-          <Route path="/NVTN/GiaHan/:sobaodanh" element={<GiaHanDetail />} />
-          <Route path="/NVTN/GiaHan/:sobaodanh/:monThi" element={<ChonLichThi />} />
+
+           {/* Nhân viên nhập liệu */}
+        <Route
+          path="/NVNL"
+          element={
+            <ProtectedRoute>
+              <XuLyChungChi_Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVNL/XuLyChungChi/QuanLy"
+          element={
+            <ProtectedRoute>
+              <XuLyChungChi_QuanLy />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVNL/XuLyChungChi/QuanLy/LapChungChi"
+          element={
+            <ProtectedRoute>
+              <XuLyChungChi_LapChungChi />
+            </ProtectedRoute>
+          }
+        />
+
           
 
-          <Route path="/NVTN/DangKy/DangKyCaNhan" element={<DangKyCaNhan />} />
+          
         
-          <Route path="/NVTN/CapChungChi" element={<XuLyChungChi_CapChungChi />} />
+        {/* Nhân viên tiếp nhận */}
+        <Route
+          path="/NVTN"
+          element={
+            <ProtectedRoute>
+              <Homepage_TiepNhan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVTN/GiaHan"
+          element={
+            <ProtectedRoute>
+              <GiaHan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVTN/GiaHan/:sobaodanh"
+          element={
+            <ProtectedRoute>
+              <GiaHanDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVTN/GiaHan/:sobaodanh/:monThi"
+          element={
+            <ProtectedRoute>
+              <ChonLichThi />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVTN/DangKy/DangKyCaNhan"
+          element={
+            <ProtectedRoute>
+              <DangKyCaNhan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVTN/CapChungChi"
+          element={
+            <ProtectedRoute>
+              <XuLyChungChi_CapChungChi />
+            </ProtectedRoute>
+          }
+        />
         
           {/* Nhân viên kế toán */}
-          <Route path="/NVKT" element={<Home_thanhtoan />} />
-          <Route path="/NVKT/BangGia" element={<BangGia_thanhtoan />} />
-          <Route path="/NVKT/ThanhToan" element={<ThanhToan />} />
-          <Route path="/NVKT/ThanhToanGiaHan" element={<PhieuGiaHan />} />
-        </Routes>
+        <Route
+          path="/NVKT"
+          element={
+            <ProtectedRoute>
+              <Home_thanhtoan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVKT/BangGia"
+          element={
+            <ProtectedRoute>
+              <BangGia_thanhtoan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVKT/ThanhToan"
+          element={
+            <ProtectedRoute>
+              <ThanhToan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/NVKT/ThanhToanGiaHan"
+          element={
+            <ProtectedRoute>
+              <PhieuGiaHan />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

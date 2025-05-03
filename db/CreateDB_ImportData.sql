@@ -267,7 +267,7 @@ GO
 
 
 
-DECLARE @basePath NVARCHAR(MAX) = 'D:\KHTN\NAM3\2nd_Semester\PTTK\GithubProject\Exam-Register\db\SampleData\'; 
+DECLARE @basePath NVARCHAR(MAX) = 'C:\Users\ASUS\Documents\GitHub\Exam-Register\db\SampleData\'; 
 EXEC BulkInsertFromCsv 'NHAN_VIEN', 'danh_sach_nhan_vien.csv', @basePath;
 EXEC BulkInsertFromCsv 'THI_SINH', 'thi_sinh.csv', @basePath;
 EXEC BulkInsertFromCsv 'KHACH_HANG', 'khach_hang.csv', @basePath;
@@ -287,8 +287,3 @@ EXEC BulkInsertFromCsv 'USERS', 'USERS.csv', @basePath;
 
 
 
-SELECT * FROM THI_SINH
-
-
-SELECT * FROm NHAN_VIEN
-SELECT * FROM CHUNG_CHI WHERE MA_CC ='CC0001'

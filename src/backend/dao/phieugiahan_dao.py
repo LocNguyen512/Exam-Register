@@ -27,9 +27,18 @@ class phieugiahanDAO:
                     "truongHop": row.TRUONGHOP,
                     "phi": row.PHI,
                     "tinhTrang": row.TINHTRANG,
-                    "ngayLap": row.NGAYLAP.strftime("%H:%M %p %d/%m/%Y")
+                    "ngayLap": row.NGAYLAP.strftime("%d/%m/%Y")
                 }
             return None
         except Exception as e:
             print("Lỗi khi lấy phiếu gia hạn:", str(e))
+            raise e
+    @staticmethod
+    def cap_nhat_tinh_trang_thanh_toan(ma_phieu, ma_nvkt):
+        try:
+            sql = text("EXEC sp_cap_nhat_tinh_trang_thanh_toan_pgh :ma_phieu, :ma_nvkt")
+            db.session.execute(sql, {"ma_phieu": ma_phieu, "ma_nvkt": ma_nvkt})
+            db.session.commit()
+        except Exception as e:
+            print("Lỗi cập nhật tình trạng thanh toán:", str(e))
             raise e

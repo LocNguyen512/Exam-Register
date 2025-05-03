@@ -31,18 +31,21 @@ class LichThiDAO:
             raise e
     
     @staticmethod
-    def lay_ngay_thi_con_trong(monThi):
+    def lay_ngay_thi_con_trong(mon_thi, sobaodanh):
         try:
             sql = text("""
-                EXEC sp_get_ngay_thi_con_ghe_trong :mon_thi
+                EXEC sp_get_ngay_thi_con_ghe_trong :mon_thi, :sobaodanh
             """)
-            result = db.session.execute(sql, {"mon_thi": monThi})
+            result = db.session.execute(sql, {
+                 "mon_thi": mon_thi,
+                 "sobaodanh": sobaodanh
+            })
             rows = result.fetchall()
 
             # Trả về danh sách ngày (giả định cột đầu tiên là ngày)
             return [str(row[0]) for row in rows]
         except Exception as e:
-            print("Lỗi DAO lấy ngày thi:", str(e))
+            print("Lỗi DAO lấy ngày thi theo SBD:", str(e))
             raise e
         
         

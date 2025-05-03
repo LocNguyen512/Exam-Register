@@ -2,7 +2,8 @@ import './DKCN.css';
 import Header from '../../component/Header/NVTiepNhan/HeaderNoBack';
 import { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import UserContext from '../../component/Header/utils/context';
+import { useContext } from 'react';
 
 
   function Layout() {
@@ -29,10 +30,13 @@ import axios from 'axios';
     const [selectedExam, setSelectedExam] = useState(null); // lưu cả object lịch thi
     const [selectedRegistrations, setSelectedRegistrations] = useState([]);
 
+    const userInfo = useContext(UserContext); // Lấy thông tin nhân viên từ context
     useEffect(() => {
       const fetchCertificates = async () => {
         try {
-          const res = await axios.get('http://localhost:5000/dangKyThi/docds_dgnl');
+          const res = await axios.get('http://localhost:5000/dangKyThi/docds_dgnl', {
+            withCredentials: true // ⚠️ Gửi session cookie đến Flask
+          });
           setCertificates(res.data);  // lưu danh sách vào state
         } catch (error) {
           console.error("Lỗi khi lấy danh sách chứng chỉ:", error);
@@ -47,9 +51,11 @@ import axios from 'axios';
       setSelectedCertificate(selectedName);
     
       try {
-        const res = await axios.post('http://localhost:5000/dangKyThi/dslichthi', {
-          tenloai: selectedName
-        });
+        const res = await axios.post(
+          'http://localhost:5000/dangKyThi/dslichthi',
+          { tenloai: selectedName },
+          { withCredentials: true } // ⚠️ Gửi kèm cookie session đến Flask
+        );
         setExamDates(res.data);
         setSelectedExam(null); // reset selected exam khi đổi chứng chỉ
       } catch (error) {
@@ -83,10 +89,14 @@ import axios from 'axios';
           soGheTrong: selectedExam.soGheTrong
         };
     
-        const res = await axios.post('http://localhost:5000/dangKyThi/themdsthi', {
-          currentItems: selectedRegistrations,
-          newItem: newItem
-        });
+        const res = await axios.post(
+          'http://localhost:5000/dangKyThi/themdsthi',
+          { currentItems: selectedRegistrations,
+            newItem: newItem
+          },
+          {withCredentials: true  // ⚠️ Để gửi session cookie đến Flask
+          }
+        );
     
         if (res.data.message) {
           // ✅ Nếu hợp lệ → thêm vào bảng
@@ -120,7 +130,9 @@ import axios from 'axios';
         const res = await axios.post('http://localhost:5000/dangKyThi/kiemtra', {
           customer,
           candidate,
-        });
+        },
+        { withCredentials: true } // ⚠️ Gửi session cookie đến Flask
+        );
     
         alert(res.data.message); // ✅ Dữ liệu hợp lệ
         setHasCheckedValid(true);
@@ -165,14 +177,20 @@ import axios from 'axios';
         thongTinKhachHang: customer,
         thongTinThiSinh: candidate,
         thongTinPhieu: {
-          maNV: "NV0001", // 🚀 Nếu bạn chưa có login nhân viên thì hardcode tạm
+          maNV: userInfo?.ma_nhan_vien, // 🚀 Nếu bạn chưa có login nhân viên thì hardcode tạm
           danhSachDangKy: danhSachDangKy
         }
       };
     
       try {
         // 2. Gửi lên server
-        const res = await axios.post('http://localhost:5000/dangKyThi/themkhachhangtudo', payload);
+        const res = await axios.post(
+          'http://localhost:5000/dangKyThi/themkhachhangtudo',
+          payload,
+          {
+            withCredentials: true  // ⚠️ gửi session cookie đến Flask
+          }
+        );
     
         if (res.data.maPDK) {
           alert(`✅ Đăng ký thành công! Mã phiếu: ${res.data.maPDK}`);

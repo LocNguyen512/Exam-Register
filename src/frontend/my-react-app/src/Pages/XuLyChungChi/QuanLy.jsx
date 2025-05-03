@@ -9,17 +9,23 @@ function QuanLyCC() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
     const [inputPage, setInputPage] = useState("1");
-
+    const [notFound, setNotFound] = useState(false);
     const navigate = useNavigate();
 
+    
     useEffect(() => {
-        fetch("http://localhost:5000/QLchungchi/laychungchi")
+        fetch("http://localhost:5000/QLchungchi/laychungchi", {
+            method: "GET",
+            credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
+        })
             .then((res) => res.json())
             .then((data) => {
-                if (data.success) {
+                if (data.success && Array.isArray(data.data)) {
                     setChungChiList(data.data);
+                    setNotFound(false);
                 } else {
-                    console.error("Không lấy được dữ liệu chứng chỉ");
+                    setChungChiList([]);
+                    setNotFound(true);
                 }
             })
             .catch((err) => {
@@ -34,15 +40,19 @@ function QuanLyCC() {
     const handleSearch = () => {
         if (!searchTerm.trim()) {
             // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
-            fetch("http://localhost:5000/QLchungchi/laychungchi")
+            fetch("http://localhost:5000/QLchungchi/laychungchi" , {
+                method: "GET",
+                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
+            })
                 .then((res) => res.json())
                 .then((data) => {
-                    if (data.success) {
-                        setChungChiList(data.data);
-                        setCurrentPage(1); // Reset về trang đầu
+                    if (!Array.isArray(data) || data.length === 0) {
+                        setChungChiList([]);      // Đảm bảo là mảng
+                        setNotFound(true);
                     } else {
-                        console.error("Không lấy được dữ liệu chứng chỉ");
-                        setChungChiList([]);
+                        setChungChiList(data);    // Data là mảng hợp lệ
+                        setNotFound(false);
+                        setCurrentPage(1);
                     }
                 })
                 .catch((err) => {
@@ -55,6 +65,7 @@ function QuanLyCC() {
         // Gọi API tìm kiếm theo CCCD
         fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
             method: "POST", // Gửi POST request
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -90,7 +101,9 @@ function QuanLyCC() {
     // Tính toán các item cần hiển thị theo trang
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = chungChiList.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(chungChiList)
+    ? chungChiList.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
 
     const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
 
@@ -126,38 +139,44 @@ function QuanLyCC() {
                     </button>
                 </div>
 
-                <div className="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>MÃ CHỨNG CHỈ</th>
-                                <th>Môn thi</th>
-                                <th>NGÀY CẤP</th>
-                                <th>KẾT QUẢ</th>
-                                <th>CCCD THÍ SINH</th>
-                                <th>MÃ NHÂN VIÊN NHẬP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentItems.length > 0 ? (
-                                currentItems.map((cc, index) => (
-                                    <tr key={index}>
-                                        <td>{cc.ma_chung_chi}</td>
-                                        <td>{cc.mon_thi}</td>
-                                        <td>{cc.ngay_cap}</td>
-                                        <td>{cc.ket_qua}</td>
-                                        <td>{cc.cccd_thi_sinh}</td>
-                                        <td>{cc.ma_nhan_vien_nhap}</td>
-                                    </tr>
-                                ))
-                            ) : (
+                {!notFound ? (
+                    <div className="table-wrapper">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td colSpan="6">Không có chứng chỉ nào</td>
+                                    <th>MÃ CHỨNG CHỈ</th>
+                                    <th>Môn thi</th>
+                                    <th>NGÀY CẤP</th>
+                                    <th>KẾT QUẢ</th>
+                                    <th>CCCD THÍ SINH</th>
+                                    <th>MÃ NHÂN VIÊN NHẬP</th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {currentItems.length > 0 ? (
+                                    currentItems.map((cc, index) => (
+                                        <tr key={index}>
+                                            <td>{cc.ma_chung_chi}</td>
+                                            <td>{cc.mon_thi}</td>
+                                            <td>{cc.ngay_cap}</td>
+                                            <td>{cc.ket_qua}</td>
+                                            <td>{cc.cccd_thi_sinh}</td>
+                                            <td>{cc.ma_nhan_vien_nhap}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6">Không có chứng chỉ nào</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <p style={{ textAlign: "center", marginTop: "20px", color: "red" }}>
+                        ❌ Không tìm thấy chứng chỉ với CCCD này.
+                    </p>
+                )}
 
                 <div className="pagination">
                     <span>

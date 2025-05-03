@@ -13,10 +13,6 @@ function ThanhToan() {
     switch (selectedTab) {
       case 'ca-nhan':
         return <CaNhan />;
-      case 'don-vi':
-        return <DonVi />;
-      case 'gia-han':
-        return <GiaHan />;
       default:
         return <div className="blank-page"><h1>Vui lòng chọn một tab để bắt đầu thanh toán</h1></div>;
     }
@@ -36,18 +32,7 @@ function ThanhToan() {
             >
               🔐 Thanh toán đăng ký cá nhân
             </button>
-            <button
-              className={selectedTab === 'don-vi' ? 'active' : ''}
-              onClick={() => setSelectedTab('don-vi')}
-            >
-              🏢 Thanh toán đăng ký đơn vị
-            </button>
-            <button
-              className={selectedTab === 'gia-han' ? 'active' : ''}
-              onClick={() => setSelectedTab('gia-han')}
-            >
-              ⏳ Thanh toán gia hạn
-            </button>
+           
           </div>
 
           <div className="content">

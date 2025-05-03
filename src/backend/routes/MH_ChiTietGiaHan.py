@@ -3,10 +3,12 @@ from services.thisinh_bus import ThiSinhBUS
 from services.chitietdangky_bus import ChiTietDangKyBUS
 from services.phieugiahan_bus import phieugiahanBUS
 from extensions import db
+from middlewares.auth_decorator import login_required
 
 giahan_bp = Blueprint("QLgiahan", __name__)
 
 @giahan_bp.route("/tra-cuu", methods=["POST"])
+@login_required
 def MH_ChiTietGiaHanLoad():
     try:
         data = request.get_json()
@@ -23,6 +25,7 @@ def MH_ChiTietGiaHanLoad():
         return jsonify({"error": str(e)}), 500
 
 @giahan_bp.route("/kiem-tra-gia-han", methods=["POST"])
+@login_required
 def buttonGiaHanClicked():
     try:
         data = request.get_json()
@@ -36,6 +39,7 @@ def buttonGiaHanClicked():
         return jsonify({"hop_le": 0, "thong_bao": str(e)}), 500
 
 @giahan_bp.route("/xac-nhan-gia-han", methods=["POST"])
+@login_required
 def ButtonGiaHanClicked():
     try:
         data = request.get_json()

@@ -23,7 +23,7 @@ BEGIN
     WHERE NV.EMAIL = @Email AND U.MATKHAU = @Password;
 END;
 GO
-EXEC SP_LOGIN 'chivu78@gmail.com', '12345'
+
 
 
 -- LOAIDGNL_DAO

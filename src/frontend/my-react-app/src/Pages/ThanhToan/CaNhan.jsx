@@ -1,121 +1,105 @@
-import React, { useState } from 'react';
-import './CaNhan.css';
+import React, { useState, useContext } from 'react';
+import UserContext from '../../component/Header/utils/context';
+
 
 function CaNhan() {
+  const userInfo = useContext(UserContext); // Lấy thông tin nhân viên từ context
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState('hoten');
-  const [candidateData, setCandidateData] = useState(null);
-  const [certificateData, setCertificateData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [candidateData, setCandidateData] = useState(null);
+  const [certificateData, setCertificateData] = useState([]);
 
   const handleSearch = async () => {
+    if (!searchTerm.trim()) {
+      alert("⚠️ Vui lòng nhập mã phiếu đăng ký!");
+      return;
+    }
+  
     setLoading(true);
     setNotFound(false);
     setCandidateData(null);
     setCertificateData([]);
-
-    let urlInfo = '';
-    let urlCert = '';
-    let params = {};
-
-    if (searchType === 'cccd') {
-      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_cccd';
-      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_cccd';
-      params = { cccd: searchTerm };
-    } else if (searchType === 'ma_ts') {
-      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_ma_ts';
-      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_ma_ts';
-      params = { ma_ts: searchTerm };
-    } else if (searchType === 'ma_ptt') {
-      urlInfo = 'http://localhost:5000/thanhtoancanhan/timkiem_theo_ma_ptt';
-      urlCert = 'http://localhost:5000/thanhtoancanhan/timkiem_cc_theo_ma_ptt';
-      params = { ma_ptt: searchTerm };
-    }
-
-    const infoUrl = new URL(urlInfo);
-    infoUrl.search = new URLSearchParams(params).toString();
-
-    const certUrl = new URL(urlCert);
-    certUrl.search = new URLSearchParams(params).toString();
-
+  
     try {
-      const infoRes = await fetch(infoUrl);
-      const infoData = await infoRes.json();
-
-      console.log("📥 Dữ liệu thí sinh:", infoData);
-
-      if (!infoData || infoData.error) {
+      const url = new URL('http://localhost:5000/thanhtoancanhan/timkiem_theo_pdk');
+      url.searchParams.append('ma_pdk', searchTerm.trim());
+  
+      const res = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+      });
+  
+      const data = await res.json();
+  
+      if (data.status !== 'success') {
         setNotFound(true);
         return;
       }
-
-      setCandidateData(infoData[0]);
-
-      const certRes = await fetch(certUrl);
-      const certData = await certRes.json();
-
-      console.log("Dữ liệu chứng chỉ:", certData);
-
-      if (Array.isArray(certData)) {
-        setCertificateData(certData);
+  
+      const phieu = data.data.phieu;
+      const chungChiList = data.data.chung_chi || [];
+  
+      if (phieu.NGAYLAP) {
+        phieu.NGAYLAP_FORMATTED = new Date(phieu.NGAYLAP).toLocaleDateString('vi-VN');
       }
+  
+      if (!phieu.TinhTrangThanhToan) {
+        phieu.TinhTrangThanhToan = 'Chưa thanh toán';
+      }
+  
+      setCandidateData(phieu);
+      setCertificateData(chungChiList);
     } catch (err) {
-      console.error('Lỗi khi tìm kiếm:', err);
+      console.error('❌ Lỗi khi fetch:', err);
+      setNotFound(true);
     } finally {
       setLoading(false);
     }
   };
-
-  const handlePayment = async () => {
-    const confirmed = window.confirm('Bạn có chắc chắn muốn thanh toán?');
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch('http://localhost:5000/thanhtoandonvi/capnhat_trangthai_thanhtoan', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ma_ptt: searchTerm }),
-      });
-
-      const result = await res.json();
-      if (result.success) {
-        alert('✅ Thanh toán thành công!');
-        handleSearch(); // Tải lại trạng thái mới
-      } else {
-        alert('⚠️ Có lỗi khi thanh toán.');
-      }
-    } catch (error) {
-      console.error('❌ Lỗi hệ thống:', error);
-      alert('Lỗi hệ thống. Vui lòng thử lại sau.');
-    }
-  };
+  
 
   const calculateTotalAmount = () => {
-    if (!certificateData) return 0;
-    return certificateData.reduce((total, item) => {
-      return total + (item.GIATIEN);
-    }, 0);
+    return certificateData.reduce((sum, item) => sum + (item.GIATIEN || 0), 0);
+  };
+
+  const handlePayment = async () => {
+    if (!candidateData?.MA_PDK) return;
+
+
+    try {
+      const res = await fetch('http://localhost:5000/thanhtoancanhan/xacnhan_thanh_toan_pdk', {
+        method: 'POST',
+        credentials: 'include', // Gửi cookie session đến Flask
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ma_pdk: candidateData.MA_PDK,
+          ma_nv: userInfo?.ma_nhan_vien
+        }),
+      });
+
+      const data = await res.json();
+      if (data.status === 'success') {
+        alert('✅ Thanh toán thành công!');
+        setCandidateData({
+          ...candidateData,
+          TinhTrangThanhToan: 'Đã thanh toán',
+        });
+      } else {
+        alert('❌ Thanh toán thất bại: ' + data.message);
+      }
+    } catch (err) {
+      alert('❌ Lỗi xác nhận thanh toán: ' + err.message);
+    }
   };
 
   return (
     <div className="payment-form">
-      <h2>🔍 Tìm kiếm thí sinh</h2>
-
-      <div>
-        <label>Chọn loại tìm kiếm</label>
-        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
-          <option value="cccd">CCCD</option>
-          <option value="ma_ts">Mã thí sinh</option>
-          <option value="ma_ptt">Mã phiếu thanh toán</option>
-        </select>
-      </div>
+      <h2>🔍 Thanh toán phiếu đăng ký</h2>
 
       <input
         type="text"
-        placeholder="Nhập từ khóa tìm kiếm..."
+        placeholder="Nhập mã phiếu đăng ký (VD: DK0001)"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -124,64 +108,49 @@ function CaNhan() {
         {loading ? 'Đang tìm...' : 'Tìm kiếm'}
       </button>
 
-      {notFound && <p style={{ color: 'red' }}>❌ Không tìm thấy thí sinh phù hợp.</p>}
+      {notFound && <p style={{ color: 'red' }}>❌ Không tìm thấy phiếu đăng ký.</p>}
 
       {candidateData && (
         <>
+          <div><label>Mã phiếu đăng ký</label><input type="text" value={candidateData.MA_PDK} readOnly /></div>
+          <div><label>Ngày lập</label><input type="text" value={candidateData.NGAYLAP_FORMATTED || ''} readOnly /></div>
+          <div><label>Số lượng thí sinh</label><input type="text" value={candidateData.SOLUONG} readOnly /></div>
+          <div><label>Mã khách hàng</label><input type="text" value={candidateData.MA_KH} readOnly /></div>
+          <div><label>Loại khách hàng</label><input type="text" value={candidateData.LOAIKH} readOnly /></div>
+          <div><label>Mã nhân viên lập</label><input type="text" value={candidateData.MA_NV} readOnly /></div>
+
           <div>
-            <label>Tên thí sinh</label>
-            <input type="text" value={candidateData.HOTEN} readOnly />
-          </div>
-          <div>
-            <label>Ngày sinh</label>
-            <input type="text" value={candidateData.NGAYSINH} readOnly />
-          </div>
-          <div>
-            <label>CCCD</label>
-            <input type="text" value={candidateData.CCCD} readOnly />
-          </div>
-          <div>
-            <label>Mã thí sinh</label>
-            <input type="text" value={candidateData.MA_TS} readOnly />
-          </div>  
-          <div>
-            <label>Người đăng ký</label>
-            <input type="text" value={candidateData.NguoiDangKy} readOnly />
+            <label>📜 Chứng chỉ đã đăng ký</label>
+            {certificateData.length > 0 ? (
+              <table>
+                <thead>
+                  <tr><th>Tên chứng chỉ</th><th>Giá tiền</th></tr>
+                </thead>
+                <tbody>
+                  {certificateData.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.TenChungChi}</td>
+                      <td>{item.GIATIEN.toLocaleString('vi-VN')} VNĐ</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : <p>Không có chứng chỉ nào được đăng ký.</p>}
           </div>
 
           <div>
-            <label>Chứng chỉ đăng ký</label>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tên chứng chỉ</th>
-                  <th>Số tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                {certificateData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.TenChungChi}</td>
-                    <td>{item.GIATIEN}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <label>💰 Tổng tiền</label>
+            <input type="text" value={calculateTotalAmount().toLocaleString('vi-VN') + ' VNĐ'} readOnly />
           </div>
 
           <div>
-            <label>Số tiền cần trả</label>
-            <input type="text" value={calculateTotalAmount() + ' VNĐ'} readOnly />
-          </div>
-
-          <div>
-            <label>Tình trạng thanh toán</label>
+            <label>🏷️ Tình trạng thanh toán</label>
             <input type="text" value={candidateData.TinhTrangThanhToan} readOnly />
           </div>
 
-          {candidateData.TinhTrangThanhToan === 'Chưa thanh toán' && (
+          {candidateData.TinhTrangThanhToan !== 'Đã thanh toán' && (
             <div>
-              <button onClick={handlePayment}>Xác nhận thanh toán</button>
+              <button onClick={handlePayment}>✅ Xác nhận thanh toán</button>
             </div>
           )}
         </>

@@ -1,70 +1,74 @@
 from flask import Blueprint, jsonify, request
 from services.khachhangtudo_bus import KhachHangTuDoBUS
 from services.chitietdangky_bus import ChiTietDangKyBUS
-
+from services.phieudangky_bus import PhieuDangKyBus
+from services.phieuthanhtoan_bus import PhieuThanhToanBUS
+from middlewares.auth_decorator import login_required
 thanhtoancanhan_bp = Blueprint('thanhtoancanhan', __name__)
 
 class MH_ThanhToanCaNhan:
-    @thanhtoancanhan_bp.route('/timkiem_theo_cccd', methods=['GET'])
-    def timkiem_theo_cccd():
-        cccd = request.args.get('cccd')
-        if not cccd:
-            return jsonify({"error": "Thiếu CCCD"}), 400
-        result = KhachHangTuDoBUS.tim_theo_cccd(cccd)
-        return jsonify(result)
+    @thanhtoancanhan_bp.route('/timkiem_theo_pdk', methods=['GET'])
+    def tim_kiem_theo_pdk():
+        ma_pdk = request.args.get('ma_pdk')
+        if not ma_pdk:
+            return jsonify({"status": "error", "message": "Thiếu mã phiếu đăng ký"}), 400
 
-    @thanhtoancanhan_bp.route('/timkiem_theo_ma_ts', methods=['GET'])
-    def timkiem_theo_ma_ts():
-        ma_ts = request.args.get('ma_ts')
-        if not ma_ts:
-            return jsonify({"error": "Thiếu mã thí sinh"}), 400
-        result = KhachHangTuDoBUS.tim_theo_ma_ts(ma_ts)
-        return jsonify(result)
+        try:
+            # 1. Lấy thông tin phiếu
+            phieu = PhieuDangKyBus.KiemTraPDK(ma_pdk)
+            if not phieu:
+                return jsonify({"status": "error", "message": "Không tìm thấy phiếu đăng ký"}), 404
 
-    @thanhtoancanhan_bp.route('/timkiem_theo_ten', methods=['GET'])
-    def timkiem_theo_ten():
-        hoten = request.args.get('hoten')
-        if not hoten:
-            return jsonify({"error": "Thiếu họ tên"}), 400
-        result = KhachHangTuDoBUS.tim_theo_ten(hoten)
-        return jsonify(result)
+            # 2. Lấy danh sách chứng chỉ đã đăng ký
+            chung_chi = ChiTietDangKyBUS.LayDSMonThi(ma_pdk)
+            if not chung_chi:
+                return jsonify({"status": "error", "message": "Không tìm thấy chứng chỉ đã đăng ký"}), 404
 
-    @thanhtoancanhan_bp.route('/timkiem_theo_ma_ptt', methods=['GET'])
-    def timkiem_theo_ma_ptt():
-        ma_ptt = request.args.get('ma_ptt')
-        if not ma_ptt:
-            return jsonify({"error": "Thiếu mã phiếu thanh toán"}), 400
-        result = KhachHangTuDoBUS.tim_theo_ma_ptt(ma_ptt)
-        return jsonify(result)
+            # 3. Lấy tình trạng thanh toán
+            tinh_trang = PhieuThanhToanBUS.LayTinhTrang(ma_pdk)
 
-    @thanhtoancanhan_bp.route('/timkiem_cc_theo_cccd', methods=['GET'])
-    def timkiem_cc_theo_cccd():
-        cccd = request.args.get('cccd')
-        if not cccd:
-            return jsonify({"error": "Thiếu CCCD"}), 400
-        result = ChiTietDangKyBUS.tim_chungchi_theo_cccd(cccd)
-        return jsonify(result)
+            # 4. Nếu chưa có phiếu thanh toán thì tạo mới
+            if not tinh_trang:
+                PhieuThanhToanBUS.TaoPhieu(ma_pdk)
+                tinh_trang = "Chưa thanh toán"
 
-    @thanhtoancanhan_bp.route('/timkiem_cc_theo_ma_ts', methods=['GET'])
-    def timkiem_cc_theo_ma_ts():
-        ma_ts = request.args.get('ma_ts')
-        if not ma_ts:
-            return jsonify({"error": "Thiếu mã thí sinh"}), 400
-        result = ChiTietDangKyBUS.tim_chungchi_theo_ma_ts(ma_ts)
-        return jsonify(result)
+            # 5. Gắn tình trạng vào dữ liệu trả về
+            phieu["TinhTrangThanhToan"] = tinh_trang
 
-    @thanhtoancanhan_bp.route('/timkiem_cc_theo_ten', methods=['GET'])
-    def timkiem_cc_theo_ten():
-        hoten = request.args.get('hoten')
-        if not hoten:
-            return jsonify({"error": "Thiếu họ tên"}), 400
-        result = ChiTietDangKyBUS.tim_chungchi_theo_ten(hoten)
-        return jsonify(result)
+            return jsonify({
+                "status": "success",
+                "data": {
+                    "phieu": phieu,
+                    "chung_chi": chung_chi
+                }
+            }), 200
 
-    @thanhtoancanhan_bp.route('/timkiem_cc_theo_ma_ptt', methods=['GET'])
-    def timkiem_cc_theo_ma_ptt():
-        ma_ptt = request.args.get('ma_ptt')
-        if not ma_ptt:
-            return jsonify({"error": "Thiếu mã phiếu thanh toán"}), 400
-        result = ChiTietDangKyBUS.tim_chungchicanhan_theo_ma_ptt(ma_ptt)
-        return jsonify(result)
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 400
+
+    @thanhtoancanhan_bp.route('/xacnhan_thanh_toan_pdk', methods=['POST'])
+    def xac_nhan_thanh_toan():
+        try:
+            
+            data = request.get_json()
+            
+            ma_pdk = data.get("ma_pdk")
+            ma_nv = data.get("ma_nv")
+            if not ma_pdk:
+                return jsonify({
+                    "status": "error",
+                    "message": "Thiếu mã phiếu đăng ký (ma_pdk)"
+                }), 400
+
+            # Gọi BUS để xác nhận thanh toán
+            PhieuThanhToanBUS.cap_nhat_tinh_trang_thanh_toan(ma_pdk, ma_nv)
+            return jsonify({
+                "status": "success",
+                "message": f"Đã cập nhật tình trạng thanh toán cho phiếu {ma_pdk}"
+            }), 200
+
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "message": str(e)
+            }), 400

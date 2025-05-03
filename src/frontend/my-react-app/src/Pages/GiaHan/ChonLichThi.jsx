@@ -17,7 +17,12 @@ const ChonLichThi = () => {
     // Gọi API thật để lấy danh sách ngày thi còn trống
     const fetchAvailableDates = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/Chonlichthi/ngaycontrong?monThi=${monThi}`);
+        const res = await fetch(`http://localhost:5000/Chonlichthi/ngaycontrong?monThi=${monThi}&sobaodanh=${sobaodanh}`,
+          {
+            method: "GET",
+            credentials: "include" // ⚠️ Gửi session cookie đến Flask
+          }
+        );
         if (!res.ok) throw new Error("Không thể lấy danh sách lịch thi");
         const data = await res.json();
         setAvailableDates(data); // data là mảng ngày dạng ["2025-03-10", "2025-04-07", ...]
@@ -27,7 +32,7 @@ const ChonLichThi = () => {
     };
   
     fetchAvailableDates();
-  }, [monThi]);
+  }, [monThi, sobaodanh]);
   
 
   const handleDateClick = (dateStr) => {

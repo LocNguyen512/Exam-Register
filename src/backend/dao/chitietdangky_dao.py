@@ -15,7 +15,15 @@ class ChiTietDangKyDAO:
         })
         db.session.commit()  # Vì chỉ insert nên cần commit
 
-    # Linh them
+    
+    def LayDSMonThi(ma_pdk):
+        try:
+            sql = text("EXEC sp_lay_chung_chi_da_dang_ky :ma_pdk")
+            result = db.session.execute(sql, {"ma_pdk": ma_pdk}).fetchall()
+            return [dict(row._mapping) for row in result]
+        except Exception as e:
+            print("❌ Lỗi trong ChungChiDAO:", str(e))
+            return []
     # Khach hang tu do
     @staticmethod
     def tim_chungchi_theo_cccd(cccd):

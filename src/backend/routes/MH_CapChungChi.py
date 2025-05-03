@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from services.chungchi_bus import ChungChiBUS
-
+from middlewares.auth_decorator import login_required
 capchungchi_bp = Blueprint('Capchungchi', __name__)
 
+
 @capchungchi_bp.route('/updateTrangThai', methods=['POST'])
+@login_required
 def capnhat_trang_thai_chung_chi():
     try:
         data = request.get_json()

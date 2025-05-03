@@ -8,11 +8,12 @@ from services.lichthi_bus import LichThiBUS
 from services.khachhang_bus import  KhachHangBUS
 from services.chitietlichthi_bus import ChiTietLichThiBUS
 from services.loaidgnl_bus import LoaiDGNLBUS   
-
+from middlewares.auth_decorator import login_required
 dangKyThi_bp = Blueprint('dangKyThi', __name__)
 
 class MH_ThemKhachHangTuDo:
     @staticmethod
+    @login_required
     @dangKyThi_bp.route("/kiemtra", methods=["POST"])
     def btnKiemTraThongTinKH_Click():
         data = request.get_json()
@@ -26,6 +27,7 @@ class MH_ThemKhachHangTuDo:
         return jsonify({'message': '✅ Dữ liệu hợp lệ.'}), 200
     
     @staticmethod
+    @login_required
     @dangKyThi_bp.route("/themdsthi", methods=["POST"])
     def btnThemClick():
         """
@@ -44,6 +46,7 @@ class MH_ThemKhachHangTuDo:
     
     
     @staticmethod
+    @login_required
     @dangKyThi_bp.route("/themkhachhangtudo", methods=["POST"])
     def btnInPhieuDangKy_Click():
         try:
@@ -79,7 +82,7 @@ class MH_ThemKhachHangTuDo:
             maPDK = PhieuDangKyBus.ThemPhieuDangKy(
                 ma_nv=maNV,
                 ma_kh=maKH,
-                so_luong=len(danh_sach_dang_ky)
+                so_luong=1
             )
             if not maPDK:
                 raise Exception("Không thể tạo phiếu đăng ký.")
@@ -110,6 +113,7 @@ class MH_ThemKhachHangTuDo:
         return message
 
     @staticmethod
+    @login_required
     @dangKyThi_bp.route("/docds_dgnl", methods=["GET"])
     def cbbMonThi():
         """
@@ -124,6 +128,7 @@ class MH_ThemKhachHangTuDo:
         
     @staticmethod
     @dangKyThi_bp.route("/dslichthi", methods=["POST"])
+    @login_required
     def cbbNgayDangKy_Selected(tenloai=None):
         """
         API lấy danh sách lịch thi, nhận tên loại từ JSON body.

@@ -1,5 +1,5 @@
 from dao.phieudangky_dao import PhieuDangKyDAO  
-
+from datetime import datetime
 class PhieuDangKyBus:
     @staticmethod
     def KiemTraDSDangKy(current_items, new_item):
@@ -31,5 +31,21 @@ class PhieuDangKyBus:
     @staticmethod
     def ThemPhieuDangKy(ma_nv, ma_kh, so_luong):
         return PhieuDangKyDAO.ThemPhieuDangKy(ma_nv, ma_kh, so_luong)
+    
+    @staticmethod
+    def KiemTraPDK(ma_pdk):
+        # Lấy thông tin phiếu (gồm LOAIKH và NGAYLAP)
+        phieu = PhieuDangKyDAO.lay_thong_tin_phieu(ma_pdk)
+        if not phieu:
+            raise Exception("❌ Không tìm thấy phiếu")
+
+        if phieu["LOAIKH"] != "Tự do":
+            raise Exception("❌ Phiếu không thuộc về khách hàng cá nhân (tự do)")
+
+        ngay_lap = phieu["NGAYLAP"]
+        so_ngay = (datetime.now().date() - ngay_lap).days
+        if so_ngay > 3:
+            raise Exception(f"❌ Phiếu lập đã quá {so_ngay} ngày (> 3 ngày)")
+        return phieu  # hoặc tiếp tục xử lý khác
 
         

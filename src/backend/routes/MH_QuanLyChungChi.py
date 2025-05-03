@@ -2,16 +2,18 @@ from flask import Blueprint, jsonify, request
 from services.chungchi_bus import ChungChiBUS
 from services.thisinh_bus import ThiSinhBUS
 import traceback
-
+from middlewares.auth_decorator import login_required
 
 chungchi_bp = Blueprint('QLchungchi', __name__)
 
 @chungchi_bp.route("/laychungchi", methods=["GET"])
+@login_required
 def HienThiQuanLyChungChi():
     result = ChungChiBUS.LayDanhSachChungChi()
     return jsonify(result)
 
 @chungchi_bp.route('/timkiemcccd', methods=['POST'])
+@login_required
 def tim_kiem_chung_chi():
     # Lấy dữ liệu từ body dưới dạng JSON
     data = request.get_json()
@@ -41,6 +43,7 @@ def tim_kiem_chung_chi():
     
     
 @chungchi_bp.route('/themChungChi', methods=['POST'])
+@login_required
 def them_chung_chi():
     data = request.get_json()
 
@@ -65,6 +68,7 @@ def them_chung_chi():
     
 
 @chungchi_bp.route("/layDSLoaiDGNL", methods=["GET"])
+@login_required
 def lay_loai_dgnl_chua_cap_chung_chi():
     """
     API lấy danh sách loại đánh giá năng lực chưa cấp chứng chỉ cho thí sinh theo CCCD.

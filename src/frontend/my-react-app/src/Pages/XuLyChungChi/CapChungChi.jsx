@@ -13,13 +13,18 @@ function CapCC() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5000/QLchungchi/laychungchi")
+            fetch("http://localhost:5000/QLchungchi/laychungchi", {
+                method: "GET",
+                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
+            })
             .then((res) => res.json())
             .then((data) => {
-                if (data.success) {
+                if (data.success && Array.isArray(data.data)) {
                     setChungChiList(data.data);
+                    setNotFound(false);
                 } else {
-                    console.error("Không lấy được dữ liệu chứng chỉ");
+                    setChungChiList([]);
+                    setNotFound(true);
                 }
             })
             .catch((err) => {
@@ -32,15 +37,19 @@ function CapCC() {
     const handleSearch = () => {
         if (!searchTerm.trim()) {
             // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
-            fetch("http://localhost:5000/QLchungchi/laychungchi")
+            fetch("http://localhost:5000/QLchungchi/laychungchi" , {
+                method: "GET",
+                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
+            })
                 .then((res) => res.json())
                 .then((data) => {
-                    if (data.success) {
-                        setChungChiList(data.data);
-                        setCurrentPage(1); // Reset về trang đầu
+                    if (!Array.isArray(data) || data.length === 0) {
+                        setChungChiList([]);      // Đảm bảo là mảng
+                        setNotFound(true);
                     } else {
-                        console.error("Không lấy được dữ liệu chứng chỉ");
-                        setChungChiList([]);
+                        setChungChiList(data);    // Data là mảng hợp lệ
+                        setNotFound(false);
+                        setCurrentPage(1);
                     }
                 })
                 .catch((err) => {
@@ -53,6 +62,7 @@ function CapCC() {
         // Gọi API tìm kiếm theo CCCD
         fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
             method: "POST", // Gửi POST request
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -90,6 +100,7 @@ function CapCC() {
     
         fetch("http://localhost:5000/Capchungchi/updateTrangThai", {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -121,6 +132,7 @@ function CapCC() {
     const handleUpdateNote = (ma_chung_chi, newNote) => {
         fetch("http://localhost:5000/Capchungchi/updateNote", {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -153,7 +165,10 @@ function CapCC() {
     // Tính toán các item cần hiển thị theo trang
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = chungChiList.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Array.isArray(chungChiList)
+    ? chungChiList.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
+
 
     const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
 

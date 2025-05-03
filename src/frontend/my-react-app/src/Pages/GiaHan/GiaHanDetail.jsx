@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './GiaHanDetail.css';
 import HeaderGiaHan from '../../component/Header/NVTiepNhan/HeaderBack';
-
+import userContext from '../../component/Header/utils/context';
+import { useContext } from 'react';
 function GiaHanDetail() {
   const { sobaodanh } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const userInfo = useContext(userContext);
   const [info, setInfo] = useState(null);
   const [giaHanData, setGiaHanData] = useState(null);
 
@@ -20,6 +21,7 @@ function GiaHanDetail() {
     // TODO: gọi API thực tế
     fetch("http://localhost:5000/QLgiahan/tra-cuu", {
       method: "POST",
+      credentials: "include", // Gửi cookie session đến Flask
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sobaodanh }),
     })
@@ -63,6 +65,7 @@ function GiaHanDetail() {
     // Gọi API kiểm tra điều kiện gia hạn theo SBD
     fetch("http://localhost:5000/QLgiahan/kiem-tra-gia-han", {
       method: "POST",
+      credentials: "include", // Gửi cookie session đến Flask
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sobaodanh: mon.sobaodanh })
     })
@@ -101,13 +104,14 @@ function GiaHanDetail() {
       mon: giaHanData.monThi,
       ngay_gia_han: giaHanData.ngayGiaHan,
       truong_hop: truongHop,
-      ma_nvtn: null,
+      ma_nvtn: userInfo?.ma_nhan_vien,
       ma_nvkt: null
     };
 
     try {
       const res = await fetch("http://localhost:5000/QLgiahan/xac-nhan-gia-han", {
         method: "POST",
+        credentials: "include", // Gửi cookie session đến Flask
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });

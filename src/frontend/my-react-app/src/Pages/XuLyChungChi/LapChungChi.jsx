@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../component/Header/NVNhapLieu/HeaderBack";
 import "./LapChungChi.css";
-
+import UserContext from "../../component/Header/utils/context";
+import { useContext } from "react";
 function TaoChungChi() {
     const [monThi, setMonThi] = useState("");
     const [ketQua, setKetQua] = useState("");
     const [ngayCap, setNgayCap] = useState("");
     const [cccdThiSinh, setCccdThiSinh] = useState("");
-    const [maNhanVien, setMaNhanVien] = useState("");
+    // const [maNhanVien, setMaNhanVien] = useState("");
     const [error, setError] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errors, setErrors] = useState({});
@@ -15,7 +16,7 @@ function TaoChungChi() {
     const [showCertificateModal, setShowCertificateModal] = useState(false); // Trạng thái hiển thị modal danh sách chứng chỉ
     const [availableCertificates, setAvailableCertificates] = useState([]);
     const [isCCCDValid, setIsCCCDValid] = useState(false);
-
+    const userInfo = useContext(UserContext); // Lấy thông tin người dùng từ context
     const validateField = (name, value) => {
         let message = "";
 
@@ -41,14 +42,14 @@ function TaoChungChi() {
                 if (!/^\d{12}$/.test(value))
                     message = "CCCD phải gồm đúng 12 chữ số.";
                 break;
-            case "maNhanVien":
-                if (!value.trim()) {
-                    message = "Vui lòng nhập mã nhân viên. (Mẫu: NV0001)";
-                } else if (!/^NV\d{4}$/.test(value)) {
-                    message =
-                        "Mã nhân viên phải theo mẫu: NV0001 (2 ký tự 'NV' và 4 chữ số).";
-                }
-                break;
+            // case "maNhanVien":
+            //     if (!value.trim()) {
+            //         message = "Vui lòng nhập mã nhân viên. (Mẫu: NV0001)";
+            //     } else if (!/^NV\d{4}$/.test(value)) {
+            //         message =
+            //             "Mã nhân viên phải theo mẫu: NV0001 (2 ký tự 'NV' và 4 chữ số).";
+            //     }
+            //     break;
             default:
                 break;
         }
@@ -62,20 +63,20 @@ function TaoChungChi() {
         const ketQuaValid = validateField("ketQua", ketQua);
         const ngayCapValid = validateField("ngayCap", ngayCap);
         const cccdThiSinhValid = validateField("cccdThiSinh", cccdThiSinh);
-        const maNhanVienValid = validateField("maNhanVien", maNhanVien);
+        // const maNhanVienValid = validateField("maNhanVien", maNhanVien);
 
         return (
             monThiValid &&
             ketQuaValid &&
             ngayCapValid &&
-            cccdThiSinhValid &&
-            maNhanVienValid
+            cccdThiSinhValid 
+            //maNhanVienValid
         );
     };
 
     useEffect(() => {
         setIsFormValid(validateInputs()); // kiểm tra form
-    }, [monThi, ketQua, ngayCap, cccdThiSinh, maNhanVien]);
+    }, [monThi, ketQua, ngayCap, cccdThiSinh]);
 
     useEffect(() => {
         if (successMsg || error) {
@@ -104,13 +105,14 @@ function TaoChungChi() {
                 "http://localhost:5000/QLchungchi/themChungChi",
                 {
                     method: "POST",
+                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         mon_thi: monThi,
                         ket_qua: parseInt(ketQua),
                         ngay_cap: ngayCap,
                         cccd_thi_sinh: cccdThiSinh,
-                        ma_nhan_vien: maNhanVien,
+                        ma_nhan_vien: userInfo?.ma_nhan_vien,
                     }),
                 }
             );
@@ -123,7 +125,7 @@ function TaoChungChi() {
                 setKetQua("");
                 setNgayCap("");
                 setCccdThiSinh("");
-                setMaNhanVien("");
+                //setMaNhanVien("");
                 setErrors({});
             } else {
                 if (data.message && data.message.includes("không tìm thấy")) {
@@ -149,7 +151,11 @@ function TaoChungChi() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/QLchungchi/layDSLoaiDGNL?cccd=${cccdThiSinh}`
+                `http://localhost:5000/QLchungchi/layDSLoaiDGNL?cccd=${cccdThiSinh}`,
+                {
+                    method: "GET",
+                    credentials: "include", // ✅ gửi cookie kèm theo request
+                }
             );
             const data = await response.json();
 
@@ -169,9 +175,11 @@ function TaoChungChi() {
         if (!cccdThiSinh.trim()) return;
 
         fetch(
-            `http://localhost:5000/Capchungchi/kiemTraCCCD?cccd=${encodeURIComponent(
-                cccdThiSinh
-            )}`
+            `http://localhost:5000/Capchungchi/kiemTraCCCD?cccd=${encodeURIComponent(cccdThiSinh)}`,
+            {
+                method: "GET",
+                credentials: "include"
+            }
         )
             .then((res) => {
                 if (!res.ok) {
@@ -360,7 +368,7 @@ function TaoChungChi() {
                         )}
                     </div>
 
-                    <div className="input-group">
+                    {/* <div className="input-group">
                         <input
                             type="text"
                             id="maNhanVien"
@@ -375,7 +383,7 @@ function TaoChungChi() {
                         {errors.maNhanVien && (
                             <p className="error-msg">{errors.maNhanVien}</p>
                         )}
-                    </div>
+                    </div> */}
                     <button
                         type="submit"
                         className="submit-btn"

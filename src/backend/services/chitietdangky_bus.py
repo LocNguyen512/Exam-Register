@@ -5,7 +5,15 @@ class ChiTietDangKyBUS:
     def ThemChiTietPhieuDangKy(ma_pdk, ma_ts, ma_phong, ma_lich):
         ChiTietDangKyDAO.ThemChiTietPhieuDangKy(ma_pdk, ma_ts, ma_phong, ma_lich)
 
+    @staticmethod
+    def LayDSMonThi(ma_pdk):
+        if not ma_pdk:
+            raise ValueError("Mã phiếu đăng ký không hợp lệ")
+        return ChiTietDangKyDAO.LayDSMonThi(ma_pdk)
     # Linh them
+    @staticmethod
+    def LayMonThi(ma_pdk):
+        return ChiTietDangKyDAO.get_mon_thi_by_ma_pdk(ma_pdk)
     # Khach hang tu do
     @staticmethod
     def tim_chungchi_theo_cccd(cccd):
