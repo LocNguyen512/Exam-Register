@@ -7,11 +7,12 @@ loadlichthi_bp = Blueprint("Chonlichthi", __name__)
 def MH_ChonLichThiLoad():
     try:
         mon_thi = request.args.get("monThi")
+        sobaodanh = request.args.get("sobaodanh")
 
-        if not mon_thi:
-            return jsonify({"error": "Thiếu môn thi"}), 400
+        if not mon_thi or not sobaodanh:
+            return jsonify({"error": "Thiếu dữ liệu"}), 400
 
-        danh_sach_ngay = LichThiBUS.lay_danh_sach_ngay_con_trong(mon_thi)
+        danh_sach_ngay = LichThiBUS.lay_danh_sach_ngay_con_trong(mon_thi, sobaodanh)
         return jsonify(danh_sach_ngay), 200
     except Exception as e:
         print("Lỗi API lấy lịch thi:", str(e))

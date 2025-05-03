@@ -4,7 +4,7 @@ from services.phieugiahan_bus import phieugiahanBUS
 phieugiahan_bp = Blueprint("phieugiahan", __name__)
 
 @phieugiahan_bp.route("/lay-phieu", methods=["POST"])
-def lay_phieu():
+def MH_LapPhieuLoad():
     try:
         data = request.get_json()
         cccd = data.get("cccd")
@@ -19,7 +19,7 @@ def lay_phieu():
         return jsonify({"error": str(e)}), 500
     
 @phieugiahan_bp.route("/cap-nhat-thanh-toan", methods=["POST"])
-def cap_nhat_thanh_toan():
+def Button_XacNhanThanhToan_Click():
     try:
         data = request.get_json()
         ma_phieu = data.get("ma_phieu")

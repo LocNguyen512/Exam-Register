@@ -9,7 +9,7 @@ class LichThiBUS:
         return LichThiDAO.DocDSLich(ten_loai)
     
     @staticmethod
-    def lay_danh_sach_ngay_con_trong(mon_thi):
-        if not mon_thi:
-            raise ValueError("Thiếu tên môn thi")
-        return LichThiDAO.lay_ngay_thi_con_trong(mon_thi)
+    def lay_danh_sach_ngay_con_trong(mon_thi, sobaodanh):
+        if not mon_thi or not sobaodanh:
+            raise ValueError("Thiếu dữ liệu")
+        return LichThiDAO.lay_ngay_thi_con_trong(mon_thi, sobaodanh)
