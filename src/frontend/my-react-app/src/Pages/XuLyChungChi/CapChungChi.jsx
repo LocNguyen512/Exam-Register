@@ -12,77 +12,58 @@ function CapCC() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-            fetch("http://localhost:5000/QLchungchi/laychungchi", {
-                method: "GET",
-                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
-            })
+    const fetchAllCertificates = () => {
+        fetch("http://localhost:5000/QLchungchi/laychungchi", {
+            method: "GET",
+            credentials: "include"
+        })
             .then((res) => res.json())
             .then((data) => {
                 if (data.success && Array.isArray(data.data)) {
                     setChungChiList(data.data);
-                    setNotFound(false);
                 } else {
                     setChungChiList([]);
-                    setNotFound(true);
                 }
             })
             .catch((err) => {
                 console.error("Lỗi khi gọi API:", err);
             });
-    }, []);
+    };
 
-    
+    useEffect(() => {
+        fetchAllCertificates();
+    }, []);
 
     const handleSearch = () => {
         if (!searchTerm.trim()) {
-            // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
-            fetch("http://localhost:5000/QLchungchi/laychungchi" , {
-                method: "GET",
-                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (!Array.isArray(data) || data.length === 0) {
-                        setChungChiList([]);      // Đảm bảo là mảng
-                        setNotFound(true);
-                    } else {
-                        setChungChiList(data);    // Data là mảng hợp lệ
-                        setNotFound(false);
-                        setCurrentPage(1);
-                    }
-                })
-                .catch((err) => {
-                    console.error("Lỗi khi gọi API:", err);
-                    setChungChiList([]);
-                });
+            fetchAllCertificates();
             return;
         }
 
-        // Gọi API tìm kiếm theo CCCD
         fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
-            method: "POST", // Gửi POST request
+            method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ cccd: searchTerm }), // Truyền CCCD vào body của yêu cầu
+            body: JSON.stringify({ cccd: searchTerm }),
         })
             .then((res) => res.json())
             .then((data) => {
                 if (data.error) {
                     console.error("Không tìm thấy chứng chỉ:", data.error);
-                    setChungChiList([]); // Nếu không có kết quả, làm rỗng danh sách
+                    setChungChiList([]);
                 } else {
-                    setChungChiList(data); // Cập nhật danh sách chứng chỉ tìm được
-                    setCurrentPage(1); // Reset về trang đầu
+                    setChungChiList(data);
+                    setCurrentPage(1);
                 }
             })
             .catch((err) => {
                 console.error("Lỗi khi gọi API tìm kiếm:", err);
-                setChungChiList([]); // Xử lý lỗi và làm rỗng danh sách
+                setChungChiList([]);
             });
     };
+
     const handleJumpPage = () => {
         let page = Number(inputPage);
         if (!page || page < 1) {
@@ -91,13 +72,12 @@ function CapCC() {
             page = totalPages;
         }
         setCurrentPage(page);
-        setInputPage(String(page)); // Update input luôn đúng trang
         setInputPage("");
     };
 
     const handleToggleConfirm = (item) => {
         const newStatus = item.trang_thai === "Đã nhận" ? "Chưa nhận" : "Đã nhận";
-    
+
         fetch("http://localhost:5000/Capchungchi/updateTrangThai", {
             method: "POST",
             credentials: "include",
@@ -112,11 +92,8 @@ function CapCC() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
-                    // Tìm và cập nhật trong toàn bộ danh sách
                     const updatedList = chungChiList.map((cc) =>
-                        cc.ma_chung_chi === item.ma_chung_chi
-                            ? { ...cc, trang_thai: newStatus }
-                            : cc
+                        cc.ma_chung_chi === item.ma_chung_chi ? { ...cc, trang_thai: newStatus } : cc
                     );
                     setChungChiList(updatedList);
                 } else {
@@ -128,7 +105,7 @@ function CapCC() {
                 alert("Có lỗi xảy ra khi cập nhật trạng thái.");
             });
     };
-    
+
     const handleUpdateNote = (ma_chung_chi, newNote) => {
         fetch("http://localhost:5000/Capchungchi/updateNote", {
             method: "POST",
@@ -145,9 +122,7 @@ function CapCC() {
             .then((data) => {
                 if (data.success) {
                     const updatedList = chungChiList.map((cc) =>
-                        cc.ma_chung_chi === ma_chung_chi
-                            ? { ...cc, ghi_chu: newNote }
-                            : cc
+                        cc.ma_chung_chi === ma_chung_chi ? { ...cc, ghi_chu: newNote } : cc
                     );
                     setChungChiList(updatedList);
                 } else {
@@ -159,16 +134,10 @@ function CapCC() {
                 alert("Có lỗi xảy ra khi cập nhật ghi chú.");
             });
     };
-    
-    
 
-    // Tính toán các item cần hiển thị theo trang
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = Array.isArray(chungChiList)
-    ? chungChiList.slice(indexOfFirstItem, indexOfLastItem)
-    : [];
-
+    const currentItems = Array.isArray(chungChiList) ? chungChiList.slice(indexOfFirstItem, indexOfLastItem) : [];
 
     const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
 
@@ -230,7 +199,6 @@ function CapCC() {
                                                 {cc.trang_thai === "Đã nhận" ? "Đã nhận" : "Chưa nhận"}
                                             </button>
                                         </td>
-
                                         <td>
                                             {cc.isEditingNote ? (
                                                 <input
@@ -275,81 +243,42 @@ function CapCC() {
 
                 <div className="pagination">
                     <span>
-                        Hiển thị {indexOfFirstItem + 1} đến{" "}
-                        {Math.min(indexOfLastItem, chungChiList.length)} trong
-                        tổng {chungChiList.length} kết quả
+                        Hiển thị {indexOfFirstItem + 1} đến {Math.min(indexOfLastItem, chungChiList.length)} trong tổng {chungChiList.length} kết quả
                     </span>
 
                     <div className="page-numbers">
-                        {/* Prev button */}
-                        <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
+                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                             {"<"}
                         </button>
 
-                        {/* Trang số đầu tiên */}
                         {Array.from({ length: totalPages }).map((_, idx) => {
                             const page = idx + 1;
-
-                            // Chỉ hiện trang 1, 2, 3 hoặc trang cuối và cận cuối
                             if (
                                 page === 1 ||
                                 page === totalPages ||
-                                (page >= currentPage - 1 &&
-                                    page <= currentPage + 1)
+                                (page >= currentPage - 1 && page <= currentPage + 1)
                             ) {
                                 return (
-                                    <button
-                                        key={page}
-                                        className={
-                                            page === currentPage ? "active" : ""
-                                        }
-                                        onClick={() => handlePageChange(page)}
-                                    >
+                                    <button key={page} className={page === currentPage ? "active" : ""} onClick={() => handlePageChange(page)}>
                                         {page}
                                     </button>
                                 );
                             }
-
-                            // Thêm "..." chỉ 1 lần
-                            if (
-                                (page === 2 && currentPage > 4) ||
-                                (page === totalPages - 1 &&
-                                    currentPage < totalPages - 3)
-                            ) {
+                            if ((page === 2 && currentPage > 4) || (page === totalPages - 1 && currentPage < totalPages - 3)) {
                                 return <span key={page}>...</span>;
                             }
-
                             return null;
                         })}
 
-                        {/* Next button */}
-                        <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
+                        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                             {">"}
                         </button>
 
-                        {/* Input để nhập số trang */}
-                        <div
-                            style={{
-                                display: "inline-block",
-                                marginLeft: "10px",
-                            }}
-                        >
+                        <div style={{ display: "inline-block", marginLeft: "10px" }}>
                             <input
                                 type="text"
                                 value={inputPage}
-                                onChange={(e) => {
-                                    const value = e.target.value.replace(
-                                        /\D/g,
-                                        ""
-                                    ); // Chỉ nhận số
-                                    setInputPage(value);
-                                }}
+                                onChange={(e) => setInputPage(e.target.value.replace(/\D/g, ""))}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                         handleJumpPage();

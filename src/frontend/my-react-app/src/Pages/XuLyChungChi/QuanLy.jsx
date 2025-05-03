@@ -7,22 +7,26 @@ function QuanLyCC() {
     const [chungChiList, setChungChiList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
     const [inputPage, setInputPage] = useState("1");
     const [notFound, setNotFound] = useState(false);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
-    
     useEffect(() => {
+        fetchAllCertificates();
+    }, []);
+
+    const fetchAllCertificates = () => {
         fetch("http://localhost:5000/QLchungchi/laychungchi", {
             method: "GET",
-            credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
+            credentials: "include",
         })
             .then((res) => res.json())
             .then((data) => {
                 if (data.success && Array.isArray(data.data)) {
                     setChungChiList(data.data);
                     setNotFound(false);
+                    setCurrentPage(1);
                 } else {
                     setChungChiList([]);
                     setNotFound(true);
@@ -30,82 +34,63 @@ function QuanLyCC() {
             })
             .catch((err) => {
                 console.error("Lỗi khi gọi API:", err);
+                setChungChiList([]);
+                setNotFound(true);
             });
-    }, []);
+    };
+
+    const handleSearch = () => {
+        if (!searchTerm.trim()) {
+            fetchAllCertificates();
+            return;
+        }
+
+        fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cccd: searchTerm }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.error || !Array.isArray(data) || data.length === 0) {
+                    console.error("Không tìm thấy chứng chỉ:", data.error || "Không có dữ liệu");
+                    setChungChiList([]);
+                    setNotFound(true);
+                } else {
+                    setChungChiList(data);
+                    setNotFound(false);
+                    setCurrentPage(1);
+                }
+            })
+            .catch((err) => {
+                console.error("Lỗi khi gọi API tìm kiếm:", err);
+                setChungChiList([]);
+                setNotFound(true);
+            });
+    };
+
+    const handleJumpPage = () => {
+        let page = Number(inputPage);
+        if (!page || page < 1) page = 1;
+        else if (page > totalPages) page = totalPages;
+
+        setCurrentPage(page);
+        setInputPage("");
+    };
 
     const handleCreateCertificate = () => {
         navigate("LapChungChi");
     };
 
-    const handleSearch = () => {
-        if (!searchTerm.trim()) {
-            // Nếu ô tìm kiếm rỗng thì load lại danh sách toàn bộ chứng chỉ
-            fetch("http://localhost:5000/QLchungchi/laychungchi" , {
-                method: "GET",
-                credentials: "include" // ✅ BẮT BUỘC để gửi session cookie
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (!Array.isArray(data) || data.length === 0) {
-                        setChungChiList([]);      // Đảm bảo là mảng
-                        setNotFound(true);
-                    } else {
-                        setChungChiList(data);    // Data là mảng hợp lệ
-                        setNotFound(false);
-                        setCurrentPage(1);
-                    }
-                })
-                .catch((err) => {
-                    console.error("Lỗi khi gọi API:", err);
-                    setChungChiList([]);
-                });
-            return;
-        }
-
-        // Gọi API tìm kiếm theo CCCD
-        fetch("http://localhost:5000/QLchungchi/timkiemcccd", {
-            method: "POST", // Gửi POST request
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ cccd: searchTerm }), // Truyền CCCD vào body của yêu cầu
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.error) {
-                    console.error("Không tìm thấy chứng chỉ:", data.error);
-                    setChungChiList([]); // Nếu không có kết quả, làm rỗng danh sách
-                } else {
-                    setChungChiList(data); // Cập nhật danh sách chứng chỉ tìm được
-                    setCurrentPage(1); // Reset về trang đầu
-                }
-            })
-            .catch((err) => {
-                console.error("Lỗi khi gọi API tìm kiếm:", err);
-                setChungChiList([]); // Xử lý lỗi và làm rỗng danh sách
-            });
-    };
-    const handleJumpPage = () => {
-        let page = Number(inputPage);
-        if (!page || page < 1) {
-            page = 1;
-        } else if (page > totalPages) {
-            page = totalPages;
-        }
-        setCurrentPage(page);
-        setInputPage(String(page)); // Update input luôn đúng trang
-        setInputPage("");
-    };
-
-    // Tính toán các item cần hiển thị theo trang
+    const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = Array.isArray(chungChiList)
-    ? chungChiList.slice(indexOfFirstItem, indexOfLastItem)
-    : [];
-
-    const totalPages = Math.ceil(chungChiList.length / itemsPerPage);
+        ? chungChiList.slice(indexOfFirstItem, indexOfLastItem)
+        : [];
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -114,7 +99,7 @@ function QuanLyCC() {
     return (
         <div className="layout">
             <Header />
-            <div className="certificate-container" style={{ overflowY: 'hidden' }}>
+            <div className="certificate-container" style={{ overflowY: "hidden" }}>
                 <div className="certificate-actions">
                     <h2>Danh sách chứng chỉ</h2>
                     <input
@@ -123,18 +108,13 @@ function QuanLyCC() {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                handleSearch();
-                            }
+                            if (e.key === "Enter") handleSearch();
                         }}
                     />
                     <button className="search-btn" onClick={handleSearch}>
                         Tìm kiếm
                     </button>
-                    <button
-                        className="create-btn"
-                        onClick={handleCreateCertificate}
-                    >
+                    <button className="create-btn" onClick={handleCreateCertificate}>
                         + Lập chứng chỉ mới
                     </button>
                 </div>
@@ -181,12 +161,11 @@ function QuanLyCC() {
                 <div className="pagination">
                     <span>
                         Hiển thị {indexOfFirstItem + 1} đến{" "}
-                        {Math.min(indexOfLastItem, chungChiList.length)} trong
-                        tổng {chungChiList.length} kết quả
+                        {Math.min(indexOfLastItem, chungChiList.length)} trong tổng{" "}
+                        {chungChiList.length} kết quả
                     </span>
 
                     <div className="page-numbers">
-                        {/* Prev button */}
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
@@ -194,23 +173,17 @@ function QuanLyCC() {
                             {"<"}
                         </button>
 
-                        {/* Trang số đầu tiên */}
                         {Array.from({ length: totalPages }).map((_, idx) => {
                             const page = idx + 1;
-
-                            // Chỉ hiện trang 1, 2, 3 hoặc trang cuối và cận cuối
                             if (
                                 page === 1 ||
                                 page === totalPages ||
-                                (page >= currentPage - 1 &&
-                                    page <= currentPage + 1)
+                                (page >= currentPage - 1 && page <= currentPage + 1)
                             ) {
                                 return (
                                     <button
                                         key={page}
-                                        className={
-                                            page === currentPage ? "active" : ""
-                                        }
+                                        className={page === currentPage ? "active" : ""}
                                         onClick={() => handlePageChange(page)}
                                     >
                                         {page}
@@ -218,11 +191,9 @@ function QuanLyCC() {
                                 );
                             }
 
-                            // Thêm "..." chỉ 1 lần
                             if (
                                 (page === 2 && currentPage > 4) ||
-                                (page === totalPages - 1 &&
-                                    currentPage < totalPages - 3)
+                                (page === totalPages - 1 && currentPage < totalPages - 3)
                             ) {
                                 return <span key={page}>...</span>;
                             }
@@ -230,7 +201,6 @@ function QuanLyCC() {
                             return null;
                         })}
 
-                        {/* Next button */}
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
@@ -238,27 +208,15 @@ function QuanLyCC() {
                             {">"}
                         </button>
 
-                        {/* Input để nhập số trang */}
-                        <div
-                            style={{
-                                display: "inline-block",
-                                marginLeft: "10px",
-                            }}
-                        >
+                        <div style={{ display: "inline-block", marginLeft: "10px" }}>
                             <input
                                 type="text"
                                 value={inputPage}
-                                onChange={(e) => {
-                                    const value = e.target.value.replace(
-                                        /\D/g,
-                                        ""
-                                    ); // Chỉ nhận số
-                                    setInputPage(value);
-                                }}
+                                onChange={(e) =>
+                                    setInputPage(e.target.value.replace(/\D/g, ""))
+                                }
                                 onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        handleJumpPage();
-                                    }
+                                    if (e.key === "Enter") handleJumpPage();
                                 }}
                                 onBlur={handleJumpPage}
                                 placeholder="Trang"
